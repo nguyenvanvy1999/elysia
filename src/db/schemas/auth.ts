@@ -6,16 +6,16 @@ import {
 	text,
 	timestamp,
 	unique,
-	uuid,
 	varchar,
 } from "drizzle-orm/pg-core";
+import { DB_TABLE_NAME } from "src/common";
 
-export const users = pgTable("user", {
-	id: text("id").notNull().primaryKey(),
+export const users = pgTable(DB_TABLE_NAME.USER, {
+	id: varchar("id", { length: 32 }).notNull().primaryKey(),
 	name: text("name"),
 	username: text("username").unique().notNull(),
 	email: text("email").unique().notNull(),
-	emailVerified: timestamp("emailVerified", { mode: "date" }),
+	emailVerified: timestamp("email_verified", { mode: "date" }),
 	image: text("image"),
 	password: varchar("password", { length: 256 }),
 	createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
@@ -23,19 +23,18 @@ export const users = pgTable("user", {
 });
 
 export const userRelations = relations(users, ({ many }) => ({
-	notes: many(note),
 	roles: many(usersToRoles),
 }));
 
 export const accounts = pgTable(
-	"account",
+	DB_TABLE_NAME.ACCOUNT,
 	{
-		userId: text("userId")
+		userId: varchar("user_id", { length: 32 })
 			.notNull()
 			.references(() => users.id, { onDelete: "cascade" }),
 		type: text("type").notNull(),
 		provider: text("provider").notNull(),
-		providerAccountId: text("providerAccountId").notNull(),
+		providerAccountId: text("provider_account_id").notNull(),
 		refresh_token: text("refresh_token"),
 		access_token: text("access_token"),
 		expires_at: integer("expires_at"),
@@ -51,16 +50,8 @@ export const accounts = pgTable(
 	}),
 );
 
-export const sessions = pgTable("session", {
-	sessionToken: text("sessionToken").notNull().primaryKey(),
-	userId: text("userId")
-		.notNull()
-		.references(() => users.id, { onDelete: "cascade" }),
-	expires: timestamp("expires", { mode: "date" }).notNull(),
-});
-
 export const verificationTokens = pgTable(
-	"verificationToken",
+	DB_TABLE_NAME.VERIFICATION_TOKEN,
 	{
 		identifier: text("identifier").notNull(),
 		token: text("token").notNull(),
@@ -71,12 +62,12 @@ export const verificationTokens = pgTable(
 	}),
 );
 
-export const role = pgTable("role", {
-	id: uuid("id").primaryKey().defaultRandom(),
+export const role = pgTable(DB_TABLE_NAME.ROLE, {
+	id: varchar("id", { length: 32 }).primaryKey(),
 	name: varchar("name", { length: 256 }).unique().notNull(),
 	description: text("description").default(""),
 	createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
-	updatedAt: timestamp("updated_at", { withTimezone: true }),
+	updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
 });
 
 export const roleRelations = relations(role, ({ many }) => ({
@@ -85,12 +76,12 @@ export const roleRelations = relations(role, ({ many }) => ({
 }));
 
 export const usersToRoles = pgTable(
-	"users_to_roles",
+	DB_TABLE_NAME.USER_TO_ROLE,
 	{
-		roleId: uuid("role_id")
+		roleId: varchar("role_id", { length: 32 })
 			.notNull()
 			.references(() => role.id, { onDelete: "cascade" }),
-		userId: text("user_id")
+		userId: varchar("user_id", { length: 32 })
 			.notNull()
 			.references(() => users.id, { onDelete: "cascade" }),
 	},
@@ -111,15 +102,15 @@ export const usersToRolesRelations = relations(usersToRoles, ({ one }) => ({
 }));
 
 export const permission = pgTable(
-	"permission",
+	DB_TABLE_NAME.PERMISSION,
 	{
-		id: uuid("id").primaryKey().defaultRandom(),
+		id: varchar("id", { length: 32 }).primaryKey(),
 		action: varchar("action", { length: 256 }).notNull(),
 		entity: varchar("entity", { length: 256 }).notNull(),
 		access: varchar("access", { length: 256 }).notNull(),
 		description: text("description").default(""),
 		createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
-		updatedAt: timestamp("updated_at", { withTimezone: true }),
+		updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
 	},
 	(t) => ({
 		unq: unique().on(t.action, t.entity, t.access),
@@ -131,12 +122,12 @@ export const permissionRelations = relations(permission, ({ many }) => ({
 }));
 
 export const permissionsToRoles = pgTable(
-	"permissions_to_roles",
+	DB_TABLE_NAME.PERMISSION_TO_ROLE,
 	{
-		roleId: uuid("role_id")
+		roleId: varchar("role_id", { length: 32 })
 			.notNull()
 			.references(() => role.id, { onDelete: "cascade" }),
-		permissionId: uuid("permission_id")
+		permissionId: varchar("permission_id", { length: 32 })
 			.notNull()
 			.references(() => permission.id, { onDelete: "cascade" }),
 	},
@@ -158,18 +149,3 @@ export const permissionsToRolesRelations = relations(
 		}),
 	}),
 );
-
-export const note = pgTable("note", {
-	id: uuid("id").primaryKey().defaultRandom(),
-	title: varchar("title", { length: 256 }).notNull(),
-	content: text("content").notNull(),
-	ownerId: text("owner")
-		.notNull()
-		.references(() => users.username, { onDelete: "cascade" }),
-	createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
-	updatedAt: timestamp("updated_at", { withTimezone: true }),
-});
-
-export const noteRelations = relations(note, ({ one }) => ({
-	owner: one(users, { fields: [note.ownerId], references: [users.username] }),
-}));

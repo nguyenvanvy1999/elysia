@@ -14,8 +14,8 @@
 		"check": "bunx @biomejs/biome check --apply .",
 		"----DATABASE": "",
 		"db:drop": "drizzle-kit drop",
-		"db:generate": "drizzle-kit generate:sqlite",
-		"db:push": "drizzle-kit push:sqlite",
+		"db:generate": "drizzle-kit generate:pg",
+		"db:push": "drizzle-kit push:pg",
 		"db:view": "drizzle-kit studio",
 		"----TEST": "",
 		"test": "bun test"
@@ -41,7 +41,11 @@
 		"elysia-i18next": "^3.0.1",
 		"elysia-rate-limit": "^3.2.1",
 		"i18next": "^23.11.2",
-		"postgres": "^3.4.4"
+		"nanoid": "^5.0.7",
+		"pg": "^8.11.5",
+		"postgres": "^3.4.4",
+		"redis": "^4.6.13",
+		"redis-om": "^0.4.3"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.7.0",

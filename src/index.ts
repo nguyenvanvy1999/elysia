@@ -12,6 +12,7 @@ import { rateLimit } from "elysia-rate-limit";
 import { httpError, httpErrorDecorator } from "lib/http-error";
 import { ip } from "lib/ip";
 import { requestID } from "lib/request-id";
+import { env } from "src/config";
 
 const app = new Elysia()
 	.use(serverTiming())
@@ -52,7 +53,7 @@ const app = new Elysia()
 			ip,
 		});
 	})
-	.listen(3000);
+	.listen(env.PORT);
 
 console.log(
 	`🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`,
