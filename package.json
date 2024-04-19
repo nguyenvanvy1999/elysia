@@ -1,21 +1,23 @@
 {
-  "name": "elysia",
-  "version": "1.0.50",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "bun run --watch src/index.ts"
-  },
-  "dependencies": {
-    "@bogeychan/elysia-logger": "^0.0.21",
-    "@elysiajs/cors": "^1.0.2",
-    "@elysiajs/server-timing": "^1.0.2",
-    "@elysiajs/static": "^1.0.2",
-    "@elysiajs/swagger": "^1.0.3",
-    "elysia": "latest"
-  },
-  "devDependencies": {
-    "@biomejs/biome": "1.7.0",
-    "bun-types": "latest"
-  },
-  "module": "src/index.js"
+	"name": "elysia",
+	"version": "1.0.50",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"dev": "bun run --watch src/index.ts",
+		"format": "bunx @biomejs/biome format --write .",
+		"lint": "bunx @biomejs/biome lint --apply ."
+	},
+	"dependencies": {
+		"@bogeychan/elysia-logger": "^0.0.21",
+		"@elysiajs/cors": "^1.0.2",
+		"@elysiajs/server-timing": "^1.0.2",
+		"@elysiajs/static": "^1.0.2",
+		"@elysiajs/swagger": "^1.0.3",
+		"elysia": "latest"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "1.7.0",
+		"bun-types": "latest"
+	},
+	"module": "src/index.js"
 }
