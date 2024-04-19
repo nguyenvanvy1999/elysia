@@ -9,9 +9,9 @@ import { compression } from "elysia-compression";
 import { helmet } from "elysia-helmet";
 import { i18next } from "elysia-i18next";
 import { rateLimit } from "elysia-rate-limit";
-import { requestID } from "elysia-requestid";
 import { httpError, httpErrorDecorator } from "lib/http-error";
 import { ip } from "lib/ip";
+import { requestID } from "lib/request-id";
 
 const app = new Elysia()
 	.use(serverTiming())
