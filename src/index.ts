@@ -10,6 +10,7 @@ import { helmet } from "elysia-helmet";
 import { i18next } from "elysia-i18next";
 import { rateLimit } from "elysia-rate-limit";
 import { requestID } from "elysia-requestid";
+import { httpError, httpErrorDecorator } from "lib/http-error";
 import { ip } from "lib/ip";
 
 const app = new Elysia()
@@ -24,6 +25,8 @@ const app = new Elysia()
 	.use(ip())
 	.use(html())
 	.use(compression())
+	.use(httpErrorDecorator)
+	.use(httpError())
 	.use(
 		i18next({
 			initOptions: {
@@ -43,8 +46,11 @@ const app = new Elysia()
 			},
 		}),
 	)
-	.get("/", ({ ip }): void => {
-		throw { message: "1234", name: "MyError", ip };
+	.get("/", ({ ip, HttpError }): void => {
+		throw HttpError.Conflict("OTP is still valid", {
+			timeLeft: Date.now(),
+			ip,
+		});
 	})
 	.listen(3000);
 
