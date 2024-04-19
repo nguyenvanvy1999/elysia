@@ -44,3 +44,5 @@ package-lock.json
 # IDE
 
 .idea
+
+*.env

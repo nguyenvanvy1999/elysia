@@ -2,11 +2,23 @@
 	"name": "elysia",
 	"version": "1.0.50",
 	"scripts": {
-		"test": "bun test",
+		"----BUILD": "",
+		"build": "tailwindcss -i ./src/styles/globals.css -o ./public/globals.css",
+		"build:vercel": "bun run build && bun scripts/transform-paths.ts",
+		"----RUN": "",
 		"dev": "bun run --watch src/index.ts",
+		"start": "bun run build && bun src/index.ts",
+		"----CHECK": "",
 		"format": "bunx @biomejs/biome format --write .",
 		"lint": "bunx @biomejs/biome lint --apply .",
-		"check": "bunx @biomejs/biome check --apply ."
+		"check": "bunx @biomejs/biome check --apply .",
+		"----DATABASE": "",
+		"db:drop": "drizzle-kit drop",
+		"db:generate": "drizzle-kit generate:sqlite",
+		"db:push": "drizzle-kit push:sqlite",
+		"db:view": "drizzle-kit studio",
+		"----TEST": "",
+		"test": "bun test"
 	},
 	"dependencies": {
 		"@bogeychan/elysia-logger": "^0.0.21",
@@ -22,16 +34,19 @@
 		"@elysiajs/static": "^1.0.2",
 		"@elysiajs/swagger": "^1.0.3",
 		"crypto": "^1.0.1",
+		"drizzle-orm": "^0.30.8",
 		"elysia": "latest",
 		"elysia-compression": "^0.0.7",
 		"elysia-helmet": "^1.0.2",
 		"elysia-i18next": "^3.0.1",
 		"elysia-rate-limit": "^3.2.1",
-		"i18next": "^23.11.2"
+		"i18next": "^23.11.2",
+		"postgres": "^3.4.4"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.7.0",
-		"bun-types": "latest"
+		"bun-types": "latest",
+		"drizzle-kit": "^0.20.15"
 	},
 	"module": "src/index.js"
 }
