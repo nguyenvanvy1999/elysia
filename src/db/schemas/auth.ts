@@ -1,6 +1,5 @@
 import { relations } from "drizzle-orm";
 import {
-	integer,
 	pgTable,
 	primaryKey,
 	text,
@@ -24,45 +23,30 @@ export const users = pgTable(DB_TABLE_NAME.USER, {
 
 export const userRelations = relations(users, ({ many }) => ({
 	roles: many(usersToRoles),
+	refreshTokens: many(refreshTokens),
 }));
 
-export const accounts = pgTable(
-	DB_TABLE_NAME.ACCOUNT,
+export const refreshTokens = pgTable(
+	DB_TABLE_NAME.REFRESH_TOKEN,
 	{
-		userId: varchar("user_id", { length: 32 })
-			.notNull()
-			.references(() => users.id, { onDelete: "cascade" }),
-		type: text("type").notNull(),
-		provider: text("provider").notNull(),
-		providerAccountId: text("provider_account_id").notNull(),
-		refresh_token: text("refresh_token"),
-		access_token: text("access_token"),
-		expires_at: integer("expires_at"),
-		token_type: text("token_type"),
-		scope: text("scope"),
-		id_token: text("id_token"),
-		session_state: text("session_state"),
-	},
-	(account) => ({
-		compoundKey: primaryKey({
-			columns: [account.provider, account.providerAccountId],
-		}),
-	}),
-);
-
-export const verificationTokens = pgTable(
-	DB_TABLE_NAME.VERIFICATION_TOKEN,
-	{
-		identifier: text("identifier").notNull(),
+		id: varchar("id", { length: 32 }).notNull().primaryKey(),
+		userId: varchar("id", { length: 32 }).notNull(),
 		token: text("token").notNull(),
 		expires: timestamp("expires", { mode: "date" }).notNull(),
 	},
 	(vt) => ({
-		compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
+		compoundKey: primaryKey({ columns: [vt.id, vt.token, vt.userId] }),
 	}),
 );
 
-export const role = pgTable(DB_TABLE_NAME.ROLE, {
+export const refreshTokensRelations = relations(refreshTokens, ({ one }) => ({
+	user: one(users, {
+		fields: [refreshTokens.userId],
+		references: [users.id],
+	}),
+}));
+
+export const roles = pgTable(DB_TABLE_NAME.ROLE, {
 	id: varchar("id", { length: 32 }).primaryKey(),
 	name: varchar("name", { length: 256 }).unique().notNull(),
 	description: text("description").default(""),
@@ -70,7 +54,7 @@ export const role = pgTable(DB_TABLE_NAME.ROLE, {
 	updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
 });
 
-export const roleRelations = relations(role, ({ many }) => ({
+export const roleRelations = relations(roles, ({ many }) => ({
 	users: many(usersToRoles),
 	permissions: many(permissionsToRoles),
 }));
@@ -80,7 +64,7 @@ export const usersToRoles = pgTable(
 	{
 		roleId: varchar("role_id", { length: 32 })
 			.notNull()
-			.references(() => role.id, { onDelete: "cascade" }),
+			.references(() => roles.id, { onDelete: "cascade" }),
 		userId: varchar("user_id", { length: 32 })
 			.notNull()
 			.references(() => users.id, { onDelete: "cascade" }),
@@ -91,9 +75,9 @@ export const usersToRoles = pgTable(
 );
 
 export const usersToRolesRelations = relations(usersToRoles, ({ one }) => ({
-	role: one(role, {
+	role: one(roles, {
 		fields: [usersToRoles.roleId],
-		references: [role.id],
+		references: [roles.id],
 	}),
 	user: one(users, {
 		fields: [usersToRoles.userId],
@@ -101,7 +85,7 @@ export const usersToRolesRelations = relations(usersToRoles, ({ one }) => ({
 	}),
 }));
 
-export const permission = pgTable(
+export const permissions = pgTable(
 	DB_TABLE_NAME.PERMISSION,
 	{
 		id: varchar("id", { length: 32 }).primaryKey(),
@@ -117,7 +101,7 @@ export const permission = pgTable(
 	}),
 );
 
-export const permissionRelations = relations(permission, ({ many }) => ({
+export const permissionRelations = relations(permissions, ({ many }) => ({
 	roles: many(permissionsToRoles),
 }));
 
@@ -126,10 +110,10 @@ export const permissionsToRoles = pgTable(
 	{
 		roleId: varchar("role_id", { length: 32 })
 			.notNull()
-			.references(() => role.id, { onDelete: "cascade" }),
+			.references(() => roles.id, { onDelete: "cascade" }),
 		permissionId: varchar("permission_id", { length: 32 })
 			.notNull()
-			.references(() => permission.id, { onDelete: "cascade" }),
+			.references(() => permissions.id, { onDelete: "cascade" }),
 	},
 	(t) => ({
 		pk: primaryKey({ columns: [t.roleId, t.permissionId] }),
@@ -139,13 +123,13 @@ export const permissionsToRoles = pgTable(
 export const permissionsToRolesRelations = relations(
 	permissionsToRoles,
 	({ one }) => ({
-		role: one(role, {
+		role: one(roles, {
 			fields: [permissionsToRoles.roleId],
-			references: [role.id],
+			references: [roles.id],
 		}),
-		permission: one(permission, {
+		permission: one(permissions, {
 			fields: [permissionsToRoles.permissionId],
-			references: [permission.id],
+			references: [permissions.id],
 		}),
 	}),
 );
