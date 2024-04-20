@@ -3,7 +3,6 @@ import { cors } from "@elysiajs/cors";
 import { html } from "@elysiajs/html";
 import { serverTiming } from "@elysiajs/server-timing";
 import { staticPlugin } from "@elysiajs/static";
-import { swagger } from "@elysiajs/swagger";
 import { Elysia } from "elysia";
 import { compression } from "elysia-compression";
 import { helmet } from "elysia-helmet";
@@ -12,14 +11,19 @@ import { rateLimit } from "elysia-rate-limit";
 import { httpError, httpErrorDecorator } from "lib/http-error";
 import { ip } from "lib/ip";
 import { requestID } from "lib/request-id";
-import { env } from "src/config";
+import { env, swaggerConfig } from "src/config";
+import { authRoutes } from "src/router";
+import { fixCtxRequest } from "src/util";
 
 const app = new Elysia()
+	.derive((ctx) => fixCtxRequest(ctx.request))
 	.use(serverTiming())
-	.use(cors())
-	.use(swagger())
-	.use(helmet())
-	.use(rateLimit())
+	.use(
+		cors({ origin: "*", methods: ["GET", "POST", "PUT", "DELETE", "PATCH"] }),
+	)
+	.use(swaggerConfig())
+	// .use(helmet())
+	// .use(rateLimit())
 	.use(staticPlugin())
 	.use(logger({ level: "info", autoLogging: true }))
 	.use(requestID())
@@ -47,12 +51,7 @@ const app = new Elysia()
 			},
 		}),
 	)
-	.get("/", ({ ip, HttpError }): void => {
-		throw HttpError.Conflict("OTP is still valid", {
-			timeLeft: Date.now(),
-			ip,
-		});
-	})
+	.use(authRoutes)
 	.listen(env.PORT);
 
 console.log(
