@@ -1,3 +1,4 @@
+import { TIME_REGEX } from "src/common";
 import { z } from "zod";
 /**
  * Toggle environment variables
@@ -15,6 +16,11 @@ const envVariables = z.object({
 		.default("development"),
 	PORT: z.coerce.number().default(3001),
 	RUNTIME: z.enum(["bun", "edge"]).default("bun"),
+
+	// password config
+	SALT_LENGTH: z.preprocess(Number, z.number().min(8)).default(8),
+	PASSWORD_EXPIRED: z.string().regex(TIME_REGEX).default("180d"),
+	PASSWORD_ATTEMPT: z.number().int().min(1).default(3),
 });
 
 export const env = envVariables.parse(process.env);

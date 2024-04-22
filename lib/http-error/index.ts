@@ -90,19 +90,37 @@ export const httpError =
 		app
 			.error({ ELYSIA_HTTP_ERROR: HttpError })
 			.onError(({ code, error, set }) => {
-				if (code === "ELYSIA_HTTP_ERROR") {
-					set.status = error.statusCode;
-					if (params.customFormatter) {
-						return params.customFormatter(error);
+				switch (code) {
+					case "ELYSIA_HTTP_ERROR": {
+						set.status = error.statusCode;
+						if (params.customFormatter) {
+							return params.customFormatter(error);
+						}
+						if (params.returnStringOnly) {
+							return error.message;
+						}
+						return {
+							error: true,
+							code: error.statusCode,
+							message: error.message,
+							data: error.errorData,
+						};
 					}
-					if (params.returnStringOnly) {
-						return error.message;
+					case "VALIDATION": {
+						set.status = 400;
+						if (params.returnStringOnly) {
+							return JSON.stringify(error);
+						}
+						return {
+							error: true,
+							code: error.status,
+							message: "Validation failed.",
+							data: error.all.map((x) => ({
+								path: x.path,
+								message: x.message,
+								value: x.value,
+							})),
+						};
 					}
-					return {
-						error: true,
-						code: error.statusCode,
-						message: error.message,
-						data: error.errorData,
-					};
 				}
 			});

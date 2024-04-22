@@ -20,7 +20,6 @@ const app = new Elysia()
 	.use(logger({ level: "info", autoLogging: true }))
 	.use(requestID())
 	.use(compression())
-	.use(httpErrorDecorator)
 	.use(httpError())
 	.use(
 		i18next({

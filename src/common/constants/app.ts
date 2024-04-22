@@ -23,3 +23,7 @@ export const swaggerOptions = {
 		app: { name: "App", description: "General endpoints" },
 	},
 };
+
+export const passwordOptions = {
+	PASSWORD_EXPIRED: "182d",
+};

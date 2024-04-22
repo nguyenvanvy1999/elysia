@@ -1,20 +1,13 @@
 {
-	"version": "5",
-	"dialect": "pg",
-	"entries": [
-		{
-			"idx": 0,
-			"version": "5",
-			"when": 1713537988049,
-			"tag": "0000_round_stature",
-			"breakpoints": true
-		},
-		{
-			"idx": 1,
-			"version": "5",
-			"when": 1713607194009,
-			"tag": "0001_wandering_meltdown",
-			"breakpoints": true
-		}
-	]
+  "version": "5",
+  "dialect": "pg",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1713803532819,
+      "tag": "0000_pretty_kinsey_walden",
+      "breakpoints": true
+    }
+  ]
 }

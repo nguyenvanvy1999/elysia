@@ -1,5 +1,7 @@
 import { relations } from "drizzle-orm";
 import {
+	index,
+	integer,
 	pgTable,
 	primaryKey,
 	text,
@@ -15,10 +17,14 @@ export const users = pgTable(DB_TABLE_NAME.USER, {
 	username: text("username").unique().notNull(),
 	email: text("email").unique().notNull(),
 	emailVerified: timestamp("email_verified", { mode: "date" }),
-	image: text("image"),
-	password: varchar("password", { length: 256 }),
+	avatarUrl: text("avatar_url"),
+	password: varchar("password", { length: 256 }).notNull(),
+	salt: varchar("salt").notNull(),
+	passwordCreated: timestamp("password_created").notNull(),
+	passwordExpired: timestamp("password_expired").notNull(),
+	passwordAttempt: integer("password_attempt").notNull(),
 	createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
-	updatedAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+	updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
 });
 
 export const userRelations = relations(users, ({ many }) => ({
@@ -30,12 +36,13 @@ export const refreshTokens = pgTable(
 	DB_TABLE_NAME.REFRESH_TOKEN,
 	{
 		id: varchar("id", { length: 32 }).notNull().primaryKey(),
-		userId: varchar("id", { length: 32 }).notNull(),
+		userId: varchar("user_id", { length: 32 }).notNull(),
 		token: text("token").notNull(),
 		expires: timestamp("expires", { mode: "date" }).notNull(),
 	},
 	(vt) => ({
-		compoundKey: primaryKey({ columns: [vt.id, vt.token, vt.userId] }),
+		userIdIndex: index("user_idx").on(vt.userId),
+		tokenIdx: index("token_idx").on(vt.token),
 	}),
 );
 

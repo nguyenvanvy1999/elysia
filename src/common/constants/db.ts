@@ -10,3 +10,7 @@ export enum DB_TABLE_NAME {
 	PERMISSION_TO_ROLE = "permission_to_role",
 	REFRESH_TOKEN = "refresh_token",
 }
+
+export enum DB_ID_PREFIX {
+	USER = "user",
+}
