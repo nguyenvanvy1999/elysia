@@ -1,15 +1,12 @@
 import { swagger } from "@elysiajs/swagger";
-import { Elysia } from "elysia";
-import { AuthService } from "src/service";
+import { Elysia, t } from "elysia";
+import { swaggerOptions } from "src/common";
+import { db } from "src/db";
+import { users } from "src/db/schemas";
 
 export const authRoutes = new Elysia({
 	prefix: "/v1/auth",
-	detail: { tags: ["Auth"] },
+	detail: { tags: [swaggerOptions.tags.auth.name] },
 })
-	.decorate({
-		authService: new AuthService(),
-	})
 	.use(swagger())
-	.post("/register", ({ authService }) => {
-		return authService.register();
-	});
+	.post("/register", async () => {}, { body: t.Object({}) });
