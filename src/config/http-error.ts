@@ -1,4 +1,10 @@
 import { Elysia } from "elysia";
+import {
+	AVAILABLE_LANGUAGES,
+	DEFAULT_APP_LANGUAGE,
+	type IResponseMetadata,
+	versionOptions,
+} from "src/common";
 
 export class HttpError extends Error {
 	public constructor(
@@ -74,33 +80,39 @@ export const httpErrorDecorator = new Elysia({
 	name: "elysia-http-error-decorator",
 }).decorate("HttpError", HttpError);
 
-interface HttpErrorConstructor {
-	customFormatter?: (error: HttpError) => unknown;
-	returnStringOnly?: boolean;
-}
-
 export const httpError =
+	() =>
 	(
-		params: HttpErrorConstructor = {
-			customFormatter: undefined,
-			returnStringOnly: false,
-		},
+		app: Elysia<
+			"",
+			false,
+			{
+				derive: { readonly requestID: string };
+				decorator: Record<string, unknown>;
+				store: Record<string, unknown>;
+				resolve: Record<string, unknown>;
+			}
+		>,
 	) =>
-	(app: Elysia) =>
 		app
 			.error({ ELYSIA_HTTP_ERROR: HttpError })
-			.onError(({ code, error, set }) => {
+			.onError(({ code, error, set, request, requestID }) => {
+				const metadata = {
+					languages: Object.values(AVAILABLE_LANGUAGES),
+					language: DEFAULT_APP_LANGUAGE,
+					timestamp: Date.now(),
+					timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+					version: versionOptions.version,
+					repoVersion: versionOptions.repoVersion,
+					requestId: requestID,
+					url: request.url,
+					method: request.method,
+				} satisfies IResponseMetadata;
 				switch (code) {
 					case "ELYSIA_HTTP_ERROR": {
 						set.status = error.statusCode;
-						if (params.customFormatter) {
-							return params.customFormatter(error);
-						}
-						if (params.returnStringOnly) {
-							return error.message;
-						}
 						return {
-							error: true,
+							metadata,
 							code: error.statusCode,
 							message: error.message,
 							data: error.errorData,
@@ -108,11 +120,8 @@ export const httpError =
 					}
 					case "VALIDATION": {
 						set.status = 400;
-						if (params.returnStringOnly) {
-							return JSON.stringify(error);
-						}
 						return {
-							error: true,
+							metadata,
 							code: error.status,
 							message: "Validation failed.",
 							data: error.all.map((x) => ({
@@ -122,5 +131,25 @@ export const httpError =
 							})),
 						};
 					}
+					case "INTERNAL_SERVER_ERROR":
+					case "INVALID_COOKIE_SIGNATURE":
+					case "PARSE":
+					case "UNKNOWN": {
+						set.status = 500;
+						return {
+							metadata,
+							code: 500,
+							message: "Internal Server Error",
+							data: null,
+						};
+					}
+					case "NOT_FOUND":
+						set.status = 404;
+						return {
+							metadata,
+							code: error.status,
+							message: "Not found",
+							data: null,
+						};
 				}
 			});
