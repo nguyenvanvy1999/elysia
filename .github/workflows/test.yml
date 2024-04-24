@@ -10,7 +10,7 @@ on:
       - main
 
 jobs:
-  linter:
+  tester:
     runs-on: ubuntu-latest
     steps:
       - name: Git checkout
