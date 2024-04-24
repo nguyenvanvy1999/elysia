@@ -4,11 +4,12 @@ export const NANO_ID_LENGTH: number = 24;
 
 export enum DB_TABLE_NAME {
 	USER = "user",
-	ROLE = "roles",
+	ROLE = "role",
 	PERMISSION = "permission",
 	USER_TO_ROLE = "user_to_role",
 	PERMISSION_TO_ROLE = "permission_to_role",
 	REFRESH_TOKEN = "refresh_token",
+	SETTING = "setting",
 }
 
 export enum DB_ID_PREFIX {

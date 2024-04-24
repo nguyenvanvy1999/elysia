@@ -21,6 +21,7 @@ export const swaggerOptions = {
 	tags: {
 		auth: { name: "Auth", description: "Authentication endpoints" },
 		app: { name: "App", description: "General endpoints" },
+		user: { name: "User", description: "User endpoints" },
 	},
 };
 

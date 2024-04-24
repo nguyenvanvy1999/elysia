@@ -2,12 +2,9 @@
 	"name": "elysia",
 	"version": "1.0.50",
 	"scripts": {
-		"----BUILD": "",
-		"build": "tailwindcss -i ./src/styles/globals.css -o ./public/globals.css",
-		"build:vercel": "bun run build && bun scripts/transform-paths.ts",
 		"----RUN": "",
 		"dev": "bun run --watch src/index.ts",
-		"start": "bun run build && bun src/index.ts",
+		"start": "bun src/index.ts",
 		"----CHECK": "",
 		"format": "bunx @biomejs/biome format --write .",
 		"lint": "bunx @biomejs/biome lint --apply .",

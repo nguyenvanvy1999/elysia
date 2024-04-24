@@ -1,3 +1,9 @@
+DO $$ BEGIN
+ CREATE TYPE "setting_type_enum" AS ENUM('string', 'number', 'boolean', 'json', 'date');
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "permission" (
 	"id" varchar(32) PRIMARY KEY NOT NULL,
 	"action" varchar(256) NOT NULL,
@@ -22,13 +28,13 @@ CREATE TABLE IF NOT EXISTS "refresh_token" (
 	"expires" timestamp NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "roles" (
+CREATE TABLE IF NOT EXISTS "role" (
 	"id" varchar(32) PRIMARY KEY NOT NULL,
 	"name" varchar(256) NOT NULL,
 	"description" text DEFAULT '',
 	"created_at" timestamp with time zone DEFAULT now(),
 	"updated_at" timestamp with time zone DEFAULT now(),
-	CONSTRAINT "roles_name_unique" UNIQUE("name")
+	CONSTRAINT "role_name_unique" UNIQUE("name")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "user" (
@@ -55,10 +61,19 @@ CREATE TABLE IF NOT EXISTS "user_to_role" (
 	CONSTRAINT "user_to_role_role_id_user_id_pk" PRIMARY KEY("role_id","user_id")
 );
 --> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "setting" (
+	"id" varchar(32) PRIMARY KEY NOT NULL,
+	"key" text NOT NULL,
+	"description" text,
+	"type" "setting_type_enum" NOT NULL,
+	"value" varchar(2048) NOT NULL,
+	CONSTRAINT "setting_key_unique" UNIQUE("key")
+);
+--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "user_idx" ON "refresh_token" ("user_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "token_idx" ON "refresh_token" ("token");--> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "permission_to_role" ADD CONSTRAINT "permission_to_role_role_id_roles_id_fk" FOREIGN KEY ("role_id") REFERENCES "roles"("id") ON DELETE cascade ON UPDATE no action;
+ ALTER TABLE "permission_to_role" ADD CONSTRAINT "permission_to_role_role_id_role_id_fk" FOREIGN KEY ("role_id") REFERENCES "role"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
@@ -70,7 +85,7 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "user_to_role" ADD CONSTRAINT "user_to_role_role_id_roles_id_fk" FOREIGN KEY ("role_id") REFERENCES "roles"("id") ON DELETE cascade ON UPDATE no action;
+ ALTER TABLE "user_to_role" ADD CONSTRAINT "user_to_role_role_id_role_id_fk" FOREIGN KEY ("role_id") REFERENCES "role"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

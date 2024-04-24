@@ -5,7 +5,7 @@ import { Elysia } from "elysia";
 import { compression } from "elysia-compression";
 import { i18next } from "elysia-i18next";
 import { env, httpError, requestID, swaggerConfig } from "src/config";
-import { authRoutes } from "src/router";
+import { authRoutes, userRoutes } from "src/router";
 import { fixCtxRequest } from "src/util";
 
 const app = new Elysia()
@@ -39,6 +39,7 @@ const app = new Elysia()
 		}),
 	)
 	.use(authRoutes)
+	.use(userRoutes)
 	.listen(env.PORT);
 
 console.log(

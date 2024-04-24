@@ -1,4 +1,3 @@
-import { swagger } from "@elysiajs/swagger";
 import { eq, or } from "drizzle-orm";
 import { Elysia } from "elysia";
 import { DB_ID_PREFIX, registerBody, swaggerOptions } from "src/common";
@@ -11,7 +10,6 @@ export const authRoutes = new Elysia({
 	prefix: "/v1/auth",
 	detail: { tags: [swaggerOptions.tags.auth.name] },
 })
-	.use(swagger())
 	.use(httpErrorDecorator)
 	.post(
 		"/register",
@@ -50,5 +48,11 @@ export const authRoutes = new Elysia({
 					avatarUrl: users.avatarUrl,
 				});
 		},
-		{ body: registerBody },
+		{
+			body: registerBody,
+			detail: {
+				description: "Register new user with role user",
+				summary: "Register",
+			},
+		},
 	);
