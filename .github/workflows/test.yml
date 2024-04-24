@@ -25,5 +25,10 @@ jobs:
       - name: Install dependencies
         run: bun install
 
+
+      - name: Create env file
+        run: |
+          cp .env.example .env
+
       - name: Test
         run: bun test
