@@ -1,9 +1,9 @@
 import { describe, expect, it } from "bun:test";
 import { edenTreaty } from "@elysiajs/eden";
 import { Elysia } from "elysia";
-import { headersToCheck, ip } from "lib/ip";
+import { headersToCheck, ip } from "src/config";
 
-describe("Lib: IP testing", (): void => {
+describe("Config: IP testing", (): void => {
 	it("Default setting : Should return an local IP", async (): Promise<void> => {
 		const app = new Elysia()
 			.use(ip())

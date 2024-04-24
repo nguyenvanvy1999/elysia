@@ -1,8 +1,8 @@
 import { swagger } from "@elysiajs/swagger";
 import { eq, or } from "drizzle-orm";
 import { Elysia } from "elysia";
-import { httpErrorDecorator } from "lib/http-error";
 import { DB_ID_PREFIX, registerBody, swaggerOptions } from "src/common";
+import { httpErrorDecorator } from "src/config";
 import { db } from "src/db";
 import { users } from "src/db/schemas";
 import { createPassword, dbIdGenerator } from "src/util";

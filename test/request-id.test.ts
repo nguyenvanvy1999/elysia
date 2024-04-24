@@ -1,8 +1,8 @@
 import { describe, expect, it } from "bun:test";
 import Elysia from "elysia";
-import { requestID } from "lib/request-id";
+import { requestID } from "src/config";
 
-describe("Lib: Request ID testing", (): void => {
+describe("Config: Request ID testing", (): void => {
 	it("sets a new request ID header when one isn't set", async (): Promise<void> => {
 		const response = await new Elysia()
 			.use(requestID({ uuid: () => "some-uuid" }))

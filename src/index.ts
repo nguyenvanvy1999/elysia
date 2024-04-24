@@ -4,9 +4,7 @@ import { serverTiming } from "@elysiajs/server-timing";
 import { Elysia } from "elysia";
 import { compression } from "elysia-compression";
 import { i18next } from "elysia-i18next";
-import { httpError, httpErrorDecorator } from "lib/http-error";
-import { requestID } from "lib/request-id";
-import { env, swaggerConfig } from "src/config";
+import { env, httpError, requestID, swaggerConfig } from "src/config";
 import { authRoutes } from "src/router";
 import { fixCtxRequest } from "src/util";
 
