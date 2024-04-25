@@ -1,10 +1,9 @@
 import { Elysia } from "elysia";
 import {
 	AVAILABLE_LANGUAGES,
-	DEFAULT_APP_LANGUAGE,
+	type IRequestDerive,
 	type IResponse,
 	type IResponseMetadata,
-	versionOptions,
 } from "src/common";
 
 export class HttpError extends Error {
@@ -88,10 +87,7 @@ export const httpError =
 			"",
 			false,
 			{
-				derive: {
-					readonly requestID: string;
-					readonly requestTimezone: string;
-				};
+				derive: IRequestDerive;
 				decorator: Record<string, unknown>;
 				store: Record<string, unknown>;
 				resolve: Record<string, unknown>;
@@ -100,60 +96,73 @@ export const httpError =
 	) =>
 		app
 			.error({ ELYSIA_HTTP_ERROR: HttpError })
-			.onError(({ code, error, set, request, requestID, requestTimezone }) => {
-				const metadata = {
-					languages: Object.values(AVAILABLE_LANGUAGES),
-					language: DEFAULT_APP_LANGUAGE,
-					timestamp: Date.now(),
-					timezone: requestTimezone,
-					version: versionOptions.version,
-					repoVersion: versionOptions.repoVersion,
-					requestId: requestID,
-					url: request.url,
-					method: request.method,
-				} satisfies IResponseMetadata;
-				switch (code) {
-					case "ELYSIA_HTTP_ERROR": {
-						set.status = error.statusCode;
-						return {
-							metadata,
-							code: error.statusCode,
-							message: error.message,
-							data: error.errorData,
-						} satisfies IResponse;
+			.onError(
+				({
+					code,
+					error,
+					set,
+					request,
+					id,
+					timezone,
+					timestamp,
+					repoVersion,
+					version,
+					customLanguage,
+				}) => {
+					const metadata = {
+						languages: Object.values(AVAILABLE_LANGUAGES),
+						language: customLanguage,
+						timestamp,
+						timezone,
+						version,
+						repoVersion,
+						requestId: id,
+						url: request.url,
+						method: request.method,
+					} satisfies IResponseMetadata;
+					switch (code) {
+						case "ELYSIA_HTTP_ERROR": {
+							set.status = error.statusCode;
+							return {
+								metadata,
+								code: error.statusCode,
+								message: error.message,
+								data: error.errorData,
+							} satisfies IResponse;
+						}
+						case "VALIDATION": {
+							set.status = 400;
+							return {
+								metadata,
+								code: error.status,
+								message: "Validation failed.",
+								data: error.all.map((x) => ({
+									path: x.path,
+									message: x.message,
+									value: x.value,
+								})),
+							} satisfies IResponse;
+						}
+						case "INTERNAL_SERVER_ERROR":
+						case "INVALID_COOKIE_SIGNATURE":
+						case "PARSE":
+						case "UNKNOWN": {
+							set.status = 500;
+							return {
+								metadata,
+								code: 500,
+								message: "Internal Server Error",
+								data: null,
+							};
+						}
+						case "NOT_FOUND":
+							set.status = 404;
+							return {
+								metadata,
+								code: error.status,
+								message: "Not found",
+								data: null,
+							} satisfies IResponse;
 					}
-					case "VALIDATION": {
-						set.status = 400;
-						return {
-							metadata,
-							code: error.status,
-							message: "Validation failed.",
-							data: error.all.map((x) => ({
-								path: x.path,
-								message: x.message,
-								value: x.value,
-							})),
-						} satisfies IResponse;
-					}
-					case "INTERNAL_SERVER_ERROR":
-					case "INVALID_COOKIE_SIGNATURE":
-					case "PARSE":
-					case "UNKNOWN": {
-						set.status = 500;
-						return {
-							metadata,
-							code: 500,
-							message: "Internal Server Error",
-							data: null,
-						};
-					}
-					case "NOT_FOUND":
-						set.status = 404;
-						return {
-							metadata,
-							code: error.status,
-							message: "Not found",
-							data: null,
-						} satisfies IResponse;
-				}
-			});
+				},
+			);

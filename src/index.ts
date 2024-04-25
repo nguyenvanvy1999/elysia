@@ -25,7 +25,17 @@ try {
 		)
 		.use(swaggerConfig())
 		.use(logger({ level: "info", autoLogging: true }))
-		.use(requestHeader())
+		.use(
+			requestHeader({
+				ip: true,
+				timezone: true,
+				timestamp: true,
+				customLanguage: true,
+				id: true,
+				version: true,
+				repoVersion: true,
+			}),
+		)
 		.use(compression())
 		.use(httpError())
 		.use(httpResponse())

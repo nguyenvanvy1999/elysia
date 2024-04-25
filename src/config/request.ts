@@ -6,6 +6,7 @@ import {
 	DEFAULT_APP_LANGUAGE,
 	HEADER_KEY,
 	type IPHeaders,
+	type IRequestDerive,
 	type IRequestOption,
 	versionOptions,
 } from "src/common";
@@ -116,14 +117,15 @@ export const requestHeader =
 				}
 			})
 			.derive({ as: "global" }, ({ request, set }) => {
-				const deriveResponse: any = {
+				const deriveResponse: IRequestDerive = {
 					id: set.headers[idHeader],
 					timezone: set.headers[timezoneHeader],
-					timestamp: set.headers[timestampHeader],
+					timestamp: Number.parseInt(set.headers[timestampHeader], 10),
 					userAgent: set.headers[userAgentHeader],
 					version: set.headers[versionHeader],
 					repoVersion: set.headers[repoVersionHeader],
 					customLanguage: set.headers[customLanguageHeader],
+					ip: null,
 				};
 
 				if (ip) {

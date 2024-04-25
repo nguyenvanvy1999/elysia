@@ -33,3 +33,14 @@ export interface IRequestOption {
 	ipCheckHeaders?: IPHeaders[] | string;
 	ipHeadersOnly?: boolean;
 }
+
+export interface IRequestDerive extends Record<string, unknown> {
+	id: string;
+	timezone: string;
+	timestamp: number;
+	userAgent: unknown;
+	version: string;
+	repoVersion: string;
+	customLanguage: string;
+	ip: unknown;
+}
