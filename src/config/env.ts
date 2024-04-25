@@ -1,4 +1,4 @@
-import { TIME_REGEX } from "src/common";
+import { DATABASE_URI_REGEX, REDIS_URI_REGEX, TIME_REGEX } from "src/common";
 import { z } from "zod";
 /**
  * Toggle environment variables
@@ -10,7 +10,7 @@ const toggle = z
 	.transform((v) => v === "true" || v === "1");
 
 const envVariables = z.object({
-	DATABASE_URL: z.string().min(1),
+	DATABASE_URL: z.string().min(1).regex(DATABASE_URI_REGEX),
 	NODE_ENV: z
 		.enum(["development", "production", "test"])
 		.default("development"),
@@ -21,6 +21,10 @@ const envVariables = z.object({
 	SALT_LENGTH: z.preprocess(Number, z.number().min(8)).default(8),
 	PASSWORD_EXPIRED: z.string().regex(TIME_REGEX).default("180d"),
 	PASSWORD_ATTEMPT: z.number().int().min(1).default(3),
+
+	// redis config
+	REDIS_URL: z.string().min(1).regex(REDIS_URI_REGEX),
+	REDIS_PASSWORD: z.string().default(""),
 });
 
-export const env = envVariables.parse(process.env);
+export const env = envVariables.parse(Bun.env);

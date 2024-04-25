@@ -25,10 +25,6 @@ export const swaggerOptions = {
 	},
 };
 
-export const passwordOptions = {
-	PASSWORD_EXPIRED: "182d",
-};
-
 export enum AVAILABLE_LANGUAGES {
 	EN = "en",
 	VI = "vi",

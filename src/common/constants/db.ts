@@ -1,6 +1,6 @@
 export const NANO_ID_ALPHABET: string =
 	"0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-export const NANO_ID_LENGTH: number = 24;
+export const NANO_ID_LENGTH: number = 14;
 
 export enum DB_TABLE_NAME {
 	USER = "user",
@@ -14,4 +14,8 @@ export enum DB_TABLE_NAME {
 
 export enum DB_ID_PREFIX {
 	USER = "user",
+	ROLE = "role",
+	PERMISSION = "perm",
+	REFRESH_TOKEN = "rt",
+	SETTING = "stg",
 }

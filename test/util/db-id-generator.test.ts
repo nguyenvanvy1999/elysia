@@ -14,4 +14,18 @@ describe("Util: DbIdGenerator testing", () => {
 		const result: string = dbIdGenerator();
 		expect(result).toHaveLength(NANO_ID_LENGTH);
 	});
+
+	it("Should generate random id with length", () => {
+		const idLength: number = 10;
+		const result: string = dbIdGenerator("", idLength);
+		expect(result).toHaveLength(idLength);
+	});
+
+	it("Should generate random id with length and prefix config", () => {
+		const idLength: number = 10;
+		const prefix: string = "prefix";
+		const result: string = dbIdGenerator(prefix, idLength);
+		expect(result).toHaveLength(prefix.length + 1 + idLength);
+		expect(result.startsWith(`${prefix}_`)).toEqual(true);
+	});
 });

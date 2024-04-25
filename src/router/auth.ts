@@ -1,9 +1,8 @@
 import { eq, or } from "drizzle-orm";
 import { Elysia } from "elysia";
 import { DB_ID_PREFIX, registerBody, swaggerOptions } from "src/common";
-import { httpErrorDecorator } from "src/config";
-import { db } from "src/db";
-import { users } from "src/db/schemas";
+import { db, httpErrorDecorator } from "src/config";
+import { users } from "src/db";
 import { createPassword, dbIdGenerator } from "src/util";
 
 export const authRoutes = new Elysia({
