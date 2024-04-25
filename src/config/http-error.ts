@@ -88,7 +88,10 @@ export const httpError =
 			"",
 			false,
 			{
-				derive: { readonly requestID: string };
+				derive: {
+					readonly requestID: string;
+					readonly requestTimezone: string;
+				};
 				decorator: Record<string, unknown>;
 				store: Record<string, unknown>;
 				resolve: Record<string, unknown>;
@@ -97,12 +100,12 @@ export const httpError =
 	) =>
 		app
 			.error({ ELYSIA_HTTP_ERROR: HttpError })
-			.onError(({ code, error, set, request, requestID }) => {
+			.onError(({ code, error, set, request, requestID, requestTimezone }) => {
 				const metadata = {
 					languages: Object.values(AVAILABLE_LANGUAGES),
 					language: DEFAULT_APP_LANGUAGE,
 					timestamp: Date.now(),
-					timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+					timezone: requestTimezone,
 					version: versionOptions.version,
 					repoVersion: versionOptions.repoVersion,
 					requestId: requestID,

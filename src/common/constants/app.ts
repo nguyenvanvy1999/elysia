@@ -31,3 +31,16 @@ export enum AVAILABLE_LANGUAGES {
 }
 
 export const DEFAULT_APP_LANGUAGE = AVAILABLE_LANGUAGES.EN;
+
+export enum HEADER_KEY {
+	DEVICE_ID = "device-id",
+	AUTHORIZATION = "authorization",
+	X_TIMEZONE = "x-timezone",
+	X_CUSTOM_LANGUAGE = "x-custom-lang",
+	X_TIMESTAMP = "x-timestamp",
+	X_REQUEST_ID = "x-request-id",
+	X_VERSION = "x-version",
+	X_REPO_VERSION = "x-repo-version",
+	USER_AGENT = "User-Agent",
+	IP = "request-ip",
+}

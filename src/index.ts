@@ -9,7 +9,7 @@ import {
 	env,
 	httpError,
 	httpResponse,
-	requestID,
+	requestHeader,
 	swaggerConfig,
 } from "src/config";
 import { authRoutes, userRoutes } from "src/router";
@@ -25,7 +25,7 @@ try {
 		)
 		.use(swaggerConfig())
 		.use(logger({ level: "info", autoLogging: true }))
-		.use(requestID())
+		.use(requestHeader())
 		.use(compression())
 		.use(httpError())
 		.use(httpResponse())

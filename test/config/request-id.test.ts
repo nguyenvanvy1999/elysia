@@ -1,11 +1,11 @@
 import { describe, expect, it } from "bun:test";
 import Elysia from "elysia";
-import { requestID } from "src/config";
+import { requestHeader } from "src/config";
 
 describe("Config: Request ID testing", (): void => {
 	it("sets a new request ID header when one isn't set", async (): Promise<void> => {
 		const response = await new Elysia()
-			.use(requestID({ uuid: () => "some-uuid" }))
+			.use(requestHeader({ id: true, idUUID: () => "some-uuid" }))
 			.get("/", () => "dummy")
 			.handle(new Request("https://dummy.com/"));
 
@@ -14,7 +14,7 @@ describe("Config: Request ID testing", (): void => {
 
 	it("forwards the request ID header when it is available", async (): Promise<void> => {
 		const response = await new Elysia()
-			.use(requestID({ uuid: () => "some-uuid" }))
+			.use(requestHeader({ id: true, idUUID: () => "some-uuid" }))
 			.get("/", () => "dummy")
 			.handle(
 				new Request("https://dummy.com/", {
@@ -28,7 +28,11 @@ describe("Config: Request ID testing", (): void => {
 	it("allows the request ID header to be configured", async (): Promise<void> => {
 		const response = await new Elysia()
 			.use(
-				requestID({ uuid: () => "some-uuid", header: "X-Custom-Request-ID" }),
+				requestHeader({
+					idUUID: () => "some-uuid",
+					idHeader: "X-Custom-Request-ID",
+					id: true,
+				}),
 			)
 			.get("/", () => "dummy")
 			.handle(new Request("https://dummy.com/"));
@@ -39,7 +43,11 @@ describe("Config: Request ID testing", (): void => {
 	it("forwards custom request ID when it is available", async (): Promise<void> => {
 		const response = await new Elysia()
 			.use(
-				requestID({ uuid: () => "some-uuid", header: "X-Custom-Request-ID" }),
+				requestHeader({
+					idUUID: () => "some-uuid",
+					idHeader: "X-Custom-Request-ID",
+					id: true,
+				}),
 			)
 			.get("/", () => "dummy")
 			.handle(
@@ -53,8 +61,8 @@ describe("Config: Request ID testing", (): void => {
 
 	it("provides an accessor to the request ID", async (): Promise<void> => {
 		const response = await new Elysia()
-			.use(requestID({ uuid: () => "some-uuid" }))
-			.get("/", ({ requestID }) => `ID: ${requestID}`)
+			.use(requestHeader({ id: true, idUUID: () => "some-uuid" }))
+			.get("/", ({ id }) => `ID: ${id}`)
 			.handle(new Request("https://dummy.com/"));
 
 		expect(await response.text()).toBe("ID: some-uuid");

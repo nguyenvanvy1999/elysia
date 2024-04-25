@@ -1,10 +1,12 @@
 import { describe, expect, it } from "bun:test";
 import Elysia from "elysia";
-import { nocache } from "src/config";
+import { requestHeader } from "src/config";
 
 describe("Config: No cache testing", (): void => {
 	it("should set header no cache", async (): Promise<void> => {
-		const app = new Elysia().use(nocache).get("/", () => "Hello, World!");
+		const app = new Elysia()
+			.use(requestHeader({ noCache: true }))
+			.get("/", () => "Hello, World!");
 		const res: Response = await app.handle(new Request("http://localhost/"));
 		const headers: Headers = res.headers;
 

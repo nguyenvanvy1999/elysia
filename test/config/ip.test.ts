@@ -1,12 +1,12 @@
 import { describe, expect, it } from "bun:test";
 import { edenTreaty } from "@elysiajs/eden";
 import { Elysia } from "elysia";
-import { headersToCheck, ip } from "src/config";
+import { headersToCheck, requestHeader } from "src/config";
 
 describe("Config: IP testing", (): void => {
 	it("Default setting : Should return an local IP", async (): Promise<void> => {
 		const app = new Elysia()
-			.use(ip())
+			.use(requestHeader({ ip: true }))
 			.get("/", ({ ip }) => ip)
 			.listen(2999);
 		const api = edenTreaty<typeof app>("http://localhost:2999");
@@ -35,7 +35,13 @@ describe("Config: IP testing", (): void => {
 		async ({ headerName, port, ipAddress }): Promise<void> => {
 			it(`${headerName} : Should return an IP`, async (): Promise<void> => {
 				const app = new Elysia()
-					.use(ip({ checkHeaders: [headerName], headersOnly: true }))
+					.use(
+						requestHeader({
+							ipCheckHeaders: [headerName],
+							ipHeadersOnly: true,
+							ip: true,
+						}),
+					)
 					.get("/", ({ ip }) => ip)
 					.listen(port);
 				const api = edenTreaty<typeof app>(`http://localhost:${port}`);
@@ -52,7 +58,13 @@ describe("Config: IP testing", (): void => {
 	it("Set check headers values and headersOnly false : Should return an local IP", async (): Promise<void> => {
 		const customHeader: string = "customHeader";
 		const app = new Elysia()
-			.use(ip({ checkHeaders: [customHeader], headersOnly: false }))
+			.use(
+				requestHeader({
+					ipCheckHeaders: [customHeader],
+					ipHeadersOnly: false,
+					ip: true,
+				}),
+			)
 			.get("/", ({ ip }) => ip)
 			.listen(2998);
 		const api = edenTreaty<typeof app>("http://localhost:2998");

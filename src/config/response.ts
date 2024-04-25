@@ -16,7 +16,10 @@ export const httpResponse =
 			"",
 			false,
 			{
-				derive: { readonly requestID: string };
+				derive: {
+					readonly requestID: string;
+					readonly requestTimezone: string;
+				};
 				decorator: Record<string, unknown>;
 				store: Record<string, unknown>;
 				resolve: Record<string, unknown>;
@@ -24,7 +27,7 @@ export const httpResponse =
 		>,
 	) =>
 		app
-			.mapResponse(({ response, set, requestID, request }) => {
+			.mapResponse(({ response, set, requestID, request, requestTimezone }) => {
 				const isJson: boolean = typeof response === "object";
 				set.headers["Content-Encoding"] = "gzip";
 				if (isJson) {
@@ -32,7 +35,7 @@ export const httpResponse =
 						languages: Object.values(AVAILABLE_LANGUAGES),
 						language: DEFAULT_APP_LANGUAGE,
 						timestamp: Date.now(),
-						timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+						timezone: requestTimezone,
 						version: versionOptions.version,
 						repoVersion: versionOptions.repoVersion,
 						requestId: requestID,
