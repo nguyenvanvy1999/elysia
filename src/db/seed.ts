@@ -1,7 +1,7 @@
-import { seedSettings } from "src/db/redis-seed";
+import { seedDatabase } from "src/db/seed-db";
 
 async function main(): Promise<void> {
-	await seedSettings();
+	await seedDatabase();
 }
 
 main()

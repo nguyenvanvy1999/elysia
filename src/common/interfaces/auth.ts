@@ -1,6 +1,6 @@
 export interface IAuthPassword {
 	salt: string;
-	passwordHash: string;
+	password: string;
 	passwordExpired: Date;
 	passwordCreated: Date;
 	passwordAttempt: number;

@@ -31,9 +31,7 @@ export const authRoutes = new Elysia({
 				.insert(users)
 				.values({
 					...body,
-					emailVerified: null,
 					id: dbIdGenerator(DB_ID_PREFIX.USER),
-					avatarUrl: null,
 					...createPassword(body.password),
 				})
 				.returning({

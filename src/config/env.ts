@@ -1,4 +1,9 @@
-import { DATABASE_URI_REGEX, REDIS_URI_REGEX, TIME_REGEX } from "src/common";
+import {
+	DATABASE_URI_REGEX,
+	PASSWORD_REGEX,
+	REDIS_URI_REGEX,
+	TIME_REGEX,
+} from "src/common";
 import { z } from "zod";
 /**
  * Toggle environment variables
@@ -25,6 +30,11 @@ const envVariables = z.object({
 	// redis config
 	REDIS_URL: z.string().min(1).regex(REDIS_URI_REGEX),
 	REDIS_PASSWORD: z.string().default(""),
+
+	// admin config
+	ADMIN_EMAIL: z.string().email(),
+	ADMIN_USERNAME: z.string(),
+	ADMIN_PASSWORD: z.string().regex(PASSWORD_REGEX),
 });
 
 export const env = envVariables.parse(process.env);

@@ -10,7 +10,7 @@ export const createPassword = (password: string): IAuthPassword => {
 	const passwordExpired: Date = forwardInSeconds(ms(env.PASSWORD_EXPIRED));
 	const passwordHash: string = hashSync(password, salt);
 	return {
-		passwordHash,
+		password: passwordHash,
 		passwordExpired,
 		passwordCreated: new Date(),
 		salt,
