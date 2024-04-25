@@ -27,4 +27,4 @@ const envVariables = z.object({
 	REDIS_PASSWORD: z.string().default(""),
 });
 
-export const env = envVariables.parse(Bun.env);
+export const env = envVariables.parse(process.env);
