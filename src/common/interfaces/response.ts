@@ -9,3 +9,10 @@ export interface IResponseMetadata {
 	repoVersion: string;
 	[key: string]: unknown;
 }
+
+export interface IResponse {
+	metadata: IResponseMetadata;
+	code: number;
+	message: string;
+	data?: unknown;
+}

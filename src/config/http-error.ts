@@ -2,6 +2,7 @@ import { Elysia } from "elysia";
 import {
 	AVAILABLE_LANGUAGES,
 	DEFAULT_APP_LANGUAGE,
+	type IResponse,
 	type IResponseMetadata,
 	versionOptions,
 } from "src/common";
@@ -116,7 +117,7 @@ export const httpError =
 							code: error.statusCode,
 							message: error.message,
 							data: error.errorData,
-						};
+						} satisfies IResponse;
 					}
 					case "VALIDATION": {
 						set.status = 400;
@@ -129,7 +130,7 @@ export const httpError =
 								message: x.message,
 								value: x.value,
 							})),
-						};
+						} satisfies IResponse;
 					}
 					case "INTERNAL_SERVER_ERROR":
 					case "INVALID_COOKIE_SIGNATURE":
@@ -150,6 +151,6 @@ export const httpError =
 							code: error.status,
 							message: "Not found",
 							data: null,
-						};
+						} satisfies IResponse;
 				}
 			});

@@ -6,7 +6,7 @@ import { users } from "src/db";
 import { createPassword, dbIdGenerator } from "src/util";
 
 export const authRoutes = new Elysia({
-	prefix: "/v1/auth",
+	prefix: "api/v1/auth",
 	detail: { tags: [swaggerOptions.tags.auth.name] },
 })
 	.use(httpErrorDecorator)
@@ -50,6 +50,18 @@ export const authRoutes = new Elysia({
 			detail: {
 				description: "Register new user with role user",
 				summary: "Register",
+			},
+		},
+	)
+	.post(
+		"/login",
+		() => {
+			return { test: 1 };
+		},
+		{
+			detail: {
+				description: "Login with email and password",
+				summary: "Login",
 			},
 		},
 	);

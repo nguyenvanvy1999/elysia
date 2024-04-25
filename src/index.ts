@@ -8,6 +8,7 @@ import {
 	connectRedis,
 	env,
 	httpError,
+	httpResponse,
 	requestID,
 	swaggerConfig,
 } from "src/config";
@@ -27,6 +28,7 @@ try {
 		.use(requestID())
 		.use(compression())
 		.use(httpError())
+		.use(httpResponse())
 		.use(
 			i18next({
 				initOptions: {
