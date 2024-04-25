@@ -1,6 +1,12 @@
 import { eq, or } from "drizzle-orm";
 import { Elysia } from "elysia";
-import { DB_ID_PREFIX, registerBody, swaggerOptions } from "src/common";
+import {
+	DB_ID_PREFIX,
+	registerBody,
+	registerRes,
+	swaggerOptions,
+} from "src/common";
+import { errorRes } from "src/common/dtos/response";
 import { db, httpErrorDecorator } from "src/config";
 import { users } from "src/db";
 import { createPassword, dbIdGenerator } from "src/util";
@@ -12,7 +18,7 @@ export const authRoutes = new Elysia({
 	.use(httpErrorDecorator)
 	.post(
 		"/register",
-		async ({ body, HttpError }) => {
+		async ({ body, HttpError }): Promise<any> => {
 			const exist = await db
 				.select({ id: users.id, email: users.email, username: users.username })
 				.from(users)
@@ -39,9 +45,6 @@ export const authRoutes = new Elysia({
 					email: users.email,
 					name: users.username,
 					username: users.username,
-					emailVerified: users.emailVerified,
-					createdAt: users.createdAt,
-					updatedAt: users.updatedAt,
 					avatarUrl: users.avatarUrl,
 				});
 		},
@@ -50,6 +53,11 @@ export const authRoutes = new Elysia({
 			detail: {
 				description: "Register new user with role user",
 				summary: "Register",
+			},
+			response: {
+				201: registerRes,
+				400: errorRes,
+				409: errorRes,
 			},
 		},
 	)

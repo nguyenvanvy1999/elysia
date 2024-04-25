@@ -48,21 +48,13 @@ export const httpResponse =
 					return new Response(
 						Bun.gzipSync(encoder.encode(JSON.stringify(dataRes))),
 						{
-							headers: {
-								"Content-Type": `${
-									isJson ? "application/json" : "text/plain"
-								}; charset=utf-8`,
-							},
+							headers: { "Content-Type": `"application/json"; charset=utf-8` },
 						},
 					);
 				}
 				return new Response(
 					Bun.gzipSync(encoder.encode(response?.toString() ?? "")),
-					{
-						headers: {
-							"Content-Type": `"text/plain"; charset=utf-8`,
-						},
-					},
+					{ headers: { "Content-Type": `"text/plain"; charset=utf-8` } },
 				);
 			})
 			.onResponse(() => {
