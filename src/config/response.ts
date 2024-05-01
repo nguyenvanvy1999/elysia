@@ -27,7 +27,6 @@ export const httpResponse =
 				({
 					response,
 					set,
-					requestID,
 					request,
 					id,
 					timezone,
@@ -35,7 +34,7 @@ export const httpResponse =
 					repoVersion,
 					version,
 					customLanguage,
-				}) => {
+				}): Response => {
 					const isJson: boolean = typeof response === "object";
 					set.headers["Content-Encoding"] = "gzip";
 					if (isJson) {

@@ -3,12 +3,13 @@ import { cors } from "@elysiajs/cors";
 import { serverTiming } from "@elysiajs/server-timing";
 import { Elysia } from "elysia";
 import { compression } from "elysia-compression";
-import { i18next } from "elysia-i18next";
+import { DEFAULT_APP_LANGUAGE, HEADER_KEY } from "src/common";
 import {
 	connectRedis,
 	env,
 	httpError,
 	httpResponse,
+	i18next,
 	requestHeader,
 	swaggerConfig,
 } from "src/config";
@@ -41,6 +42,8 @@ try {
 		.use(httpResponse())
 		.use(
 			i18next({
+				detectLanguage: (ctx) =>
+					ctx.headers[HEADER_KEY.X_CUSTOM_LANGUAGE] ?? DEFAULT_APP_LANGUAGE,
 				initOptions: {
 					lng: "nl",
 					resources: {
@@ -58,6 +61,7 @@ try {
 				},
 			}),
 		)
+		// .get("/", ({ t }) => t("greeting")) // returns "Hallo"
 		.onStop(gracefulShutdown)
 		.use(authRoutes)
 		.use(userRoutes);
