@@ -11,6 +11,7 @@ export enum DB_TABLE_NAME {
 	REFRESH_TOKEN = "refresh_token",
 	SETTING = "setting",
 	TRANSLATION = "translation",
+	SESSION = "session",
 }
 
 export enum DB_ID_PREFIX {

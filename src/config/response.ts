@@ -63,7 +63,6 @@ export const httpResponse =
 						},
 					);
 				}
-				console.log(response);
 				return new Response(
 					Bun.gzipSync(encoder.encode(response?.toString() ?? "")),
 					{

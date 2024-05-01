@@ -30,7 +30,8 @@ export enum AVAILABLE_LANGUAGES {
 	VI = "vi",
 }
 
-export const DEFAULT_APP_LANGUAGE = AVAILABLE_LANGUAGES.EN;
+export const DEFAULT_APP_LANGUAGE: string = AVAILABLE_LANGUAGES.EN;
+export const DEFAULT_LANGUAGE_NS: string = "translation";
 
 export enum HEADER_KEY {
 	DEVICE_ID = "device-id",
@@ -44,3 +45,8 @@ export enum HEADER_KEY {
 	USER_AGENT = "User-Agent",
 	IP = "request-ip",
 }
+
+// cache time in redis on seconds
+export const REDIS_CACHE_EX = {
+	TRANSLATION_CACHE: 60 * 10, // 10 minutes
+};
