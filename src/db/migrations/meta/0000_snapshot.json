@@ -1,5 +1,5 @@
 {
-	"id": "b4967c0d-c359-4f78-851a-66449d3aa535",
+	"id": "9c99d1ae-cdf1-4a88-9d79-f5147829b18f",
 	"prevId": "00000000-0000-0000-0000-000000000000",
 	"version": "5",
 	"dialect": "pg",
@@ -397,6 +397,56 @@
 					"columns": ["key"]
 				}
 			}
+		},
+		"translation": {
+			"name": "translation",
+			"schema": "",
+			"columns": {
+				"lang": {
+					"name": "lang",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"ns": {
+					"name": "ns",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"key": {
+					"name": "key",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"value": {
+					"name": "value",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				}
+			},
+			"indexes": {
+				"lang_idx": {
+					"name": "lang_idx",
+					"columns": ["lang"],
+					"isUnique": false
+				},
+				"ns_idx": {
+					"name": "ns_idx",
+					"columns": ["ns"],
+					"isUnique": false
+				},
+				"key_idx": {
+					"name": "key_idx",
+					"columns": ["key"],
+					"isUnique": false
+				}
+			},
+			"foreignKeys": {},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {}
 		}
 	},
 	"enums": {

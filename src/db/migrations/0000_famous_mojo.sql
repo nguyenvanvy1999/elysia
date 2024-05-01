@@ -70,8 +70,18 @@ CREATE TABLE IF NOT EXISTS "setting" (
 	CONSTRAINT "setting_key_unique" UNIQUE("key")
 );
 --> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "translation" (
+	"lang" text NOT NULL,
+	"ns" text NOT NULL,
+	"key" text NOT NULL,
+	"value" text NOT NULL
+);
+--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "user_idx" ON "refresh_token" ("user_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "token_idx" ON "refresh_token" ("token");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "lang_idx" ON "translation" ("lang");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "ns_idx" ON "translation" ("ns");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "key_idx" ON "translation" ("key");--> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "permission_to_role" ADD CONSTRAINT "permission_to_role_role_id_role_id_fk" FOREIGN KEY ("role_id") REFERENCES "role"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION

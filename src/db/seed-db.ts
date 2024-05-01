@@ -11,14 +11,15 @@ import {
 	permissionsToRoles,
 	refreshTokens,
 	roles,
+	translations,
 	users,
 	usersToRoles,
 } from "src/db/schemas";
 import { cleanupDB, createPassword, createUser, dbIdGenerator } from "src/util";
 
-export const seedDatabase = async (): Promise<void> => {
-	console.log("🌱 Seeding...");
-	console.time("🌱 Database has been seeded");
+export const seedAuthData = async (): Promise<void> => {
+	console.log("🌱 Seeding auth data...");
+	console.time("🌱 Auth data has been seeded");
 	await db.transaction(async (ct) => {
 		console.time("🧹 Cleaned up the database...");
 		await cleanupDB(ct, refreshTokens);
@@ -124,5 +125,48 @@ export const seedDatabase = async (): Promise<void> => {
 		console.timeEnd(`👤 Creating ${totalUsers} users and Admin`);
 	});
 
-	console.timeEnd("🌱 Database has been seeded");
+	console.timeEnd("🌱 Auth data has been seeded");
+};
+
+export const seedTranslationsData = async (): Promise<void> => {
+	console.log("🌱 Seeding auth data...");
+	console.time("🌱 Auth data has been seeded");
+	await db.transaction(async (ct) => {
+		console.time("🧹 Cleaned up the database...");
+		await cleanupDB(ct, translations);
+		console.timeEnd("🧹 Cleaned up the database...");
+
+		console.time("Created Translations...");
+		const data = [
+			{
+				lang: "en",
+				ns: "translation",
+				key: "hello",
+				value: "Hello world",
+			},
+			{
+				lang: "en",
+				ns: "translation",
+				key: "bye",
+				value: "See you later",
+			},
+			{
+				lang: "vi",
+				ns: "translation",
+				key: "bye",
+				value: "Tam biet",
+			},
+			{
+				lang: "vi",
+				ns: "translation",
+				key: "hello",
+				value: "Xin chao",
+			},
+		];
+
+		await ct.insert(translations).values(data);
+		console.timeEnd("Created Translations...");
+	});
+
+	console.timeEnd("🌱 Auth data has been seeded");
 };

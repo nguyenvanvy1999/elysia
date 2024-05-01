@@ -22,54 +22,55 @@ export const httpResponse =
 			}
 		>,
 	) =>
-		app
-			.mapResponse(
-				({
-					response,
-					set,
-					request,
-					id,
-					timezone,
-					timestamp,
-					repoVersion,
-					version,
-					customLanguage,
-				}): Response => {
-					const isJson: boolean = typeof response === "object";
-					set.headers["Content-Encoding"] = "gzip";
-					if (isJson) {
-						const metadata = {
-							languages: Object.values(AVAILABLE_LANGUAGES),
-							language: customLanguage,
-							timestamp,
-							timezone,
-							version,
-							repoVersion,
-							requestId: id,
-							url: request.url,
-							method: request.method,
-						} satisfies IResponseMetadata;
-						const dataRes = {
-							metadata,
-							message: "Success",
-							code: 200,
-							data: response,
-						} satisfies IResponse;
-						return new Response(
-							Bun.gzipSync(encoder.encode(JSON.stringify(dataRes))),
-							{
-								headers: {
-									"Content-Type": `"application/json"; charset=utf-8`,
-								},
-							},
-						);
-					}
+		app.mapResponse(
+			({
+				response,
+				set,
+				request,
+				id,
+				timezone,
+				timestamp,
+				repoVersion,
+				version,
+				customLanguage,
+			}): Response => {
+				const isJson: boolean = typeof response === "object";
+				set.headers["Content-Encoding"] = "gzip";
+				if (isJson) {
+					const metadata = {
+						languages: Object.values(AVAILABLE_LANGUAGES),
+						language: customLanguage,
+						timestamp,
+						timezone,
+						version,
+						repoVersion,
+						requestId: id,
+						url: request.url,
+						method: request.method,
+					} satisfies IResponseMetadata;
+					const dataRes = {
+						metadata,
+						message: "Success",
+						code: 200,
+						data: response,
+					} satisfies IResponse;
 					return new Response(
-						Bun.gzipSync(encoder.encode(response?.toString() ?? "")),
-						{ headers: { "Content-Type": `"text/plain"; charset=utf-8` } },
+						Bun.gzipSync(encoder.encode(JSON.stringify(dataRes))),
+						{
+							headers: {
+								"Content-Type": "application/json; charset=utf-8",
+							},
+						},
 					);
-				},
-			)
-			.onResponse(() => {
-				console.log("Response", performance.now());
-			});
+				}
+				console.log(response);
+				return new Response(
+					Bun.gzipSync(encoder.encode(response?.toString() ?? "")),
+					{
+						headers: {
+							"Content-Type": "text/plain; charset=utf-8",
+						},
+					},
+				);
+			},
+		);

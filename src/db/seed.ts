@@ -1,7 +1,8 @@
-import { seedDatabase } from "src/db/seed-db";
+import { seedAuthData, seedTranslationsData } from "src/db/seed-db";
 
 async function main(): Promise<void> {
-	await seedDatabase();
+	await seedTranslationsData();
+	await seedAuthData();
 }
 
 main()

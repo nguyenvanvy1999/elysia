@@ -1,11 +1,18 @@
 import { faker } from "@faker-js/faker";
 import type { TableConfig } from "drizzle-orm";
-import type { PgTableWithColumns } from "drizzle-orm/pg-core";
-import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
+import type {
+	PgTableWithColumns,
+	PgTransaction,
+	QueryResultHKT,
+} from "drizzle-orm/pg-core";
 import { UniqueEnforcer } from "enforce-unique";
 
 export async function cleanupDB<T extends TableConfig>(
-	schema: PostgresJsDatabase<Record<string, unknown>>,
+	schema: PgTransaction<
+		QueryResultHKT,
+		Record<string, unknown>,
+		Record<string, any>
+	>,
 	table: PgTableWithColumns<T>,
 ): Promise<void> {
 	await schema.delete(table);

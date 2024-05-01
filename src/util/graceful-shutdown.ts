@@ -1,5 +1,5 @@
 import chalk from "chalk";
-import { client, queryClient } from "src/config";
+import { client, pgPool } from "src/config";
 
 export const gracefulShutdown = (): void => {
 	console.log(chalk.yellowBright("shutting down gracefully (3 seconds) ...."));
@@ -8,7 +8,7 @@ export const gracefulShutdown = (): void => {
 		.disconnect()
 		.then(() => console.log(chalk.yellowBright("shutdown redis ....")))
 		.catch((e) => console.error(e));
-	queryClient
+	pgPool
 		.end()
 		.then(() => console.log(chalk.yellowBright("shutdown database ....")))
 		.catch((e) => console.error(e));
