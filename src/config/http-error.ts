@@ -22,7 +22,7 @@ export class HttpError extends Error {
 		message?: string,
 		traceCode?: string,
 		errorData?: unknown,
-	) {
+	): HttpError {
 		return new HttpError(
 			message || "Bad Request",
 			400,
@@ -35,7 +35,7 @@ export class HttpError extends Error {
 		message?: string,
 		traceCode?: string,
 		errorData?: unknown,
-	) {
+	): HttpError {
 		return new HttpError(
 			message || "Unauthorized",
 			401,
@@ -48,7 +48,7 @@ export class HttpError extends Error {
 		message?: string,
 		traceCode?: string,
 		errorData?: unknown,
-	) {
+	): HttpError {
 		return new HttpError(
 			message || "Payment Required",
 			402,
@@ -61,7 +61,7 @@ export class HttpError extends Error {
 		message?: string,
 		traceCode?: string,
 		errorData?: unknown,
-	) {
+	): HttpError {
 		return new HttpError(
 			message || "Forbidden",
 			403,
@@ -74,7 +74,7 @@ export class HttpError extends Error {
 		message?: string,
 		traceCode?: string,
 		errorData?: unknown,
-	) {
+	): HttpError {
 		return new HttpError(
 			message || "Not Found",
 			404,
@@ -87,7 +87,7 @@ export class HttpError extends Error {
 		message?: string,
 		traceCode?: string,
 		errorData?: unknown,
-	) {
+	): HttpError {
 		return new HttpError(
 			message || "Method Not Allowed",
 			405,
@@ -100,7 +100,7 @@ export class HttpError extends Error {
 		message?: string,
 		traceCode?: string,
 		errorData?: unknown,
-	) {
+	): HttpError {
 		return new HttpError(
 			message || "Conflict",
 			409,
@@ -113,7 +113,7 @@ export class HttpError extends Error {
 		message?: string,
 		traceCode?: string,
 		errorData?: unknown,
-	) {
+	): HttpError {
 		return new HttpError(
 			message || "UnsupportedMediaType",
 			415,
@@ -126,7 +126,7 @@ export class HttpError extends Error {
 		message?: string,
 		traceCode?: string,
 		errorData?: unknown,
-	) {
+	): HttpError {
 		return new HttpError(
 			message || "IAmATeapot",
 			418,
@@ -139,7 +139,7 @@ export class HttpError extends Error {
 		message?: string,
 		traceCode?: string,
 		errorData?: unknown,
-	) {
+	): HttpError {
 		return new HttpError(
 			message || "Too Many Requests",
 			429,
@@ -152,7 +152,7 @@ export class HttpError extends Error {
 		message?: string,
 		traceCode?: string,
 		errorData?: unknown,
-	) {
+	): HttpError {
 		return new HttpError(
 			message || "Internal Server Error",
 			500,
@@ -165,7 +165,7 @@ export class HttpError extends Error {
 		message?: string,
 		traceCode?: string,
 		errorData?: unknown,
-	) {
+	): HttpError {
 		return new HttpError(
 			message || "Not Implemented",
 			501,
@@ -178,7 +178,7 @@ export class HttpError extends Error {
 		message?: string,
 		traceCode?: string,
 		errorData?: unknown,
-	) {
+	): HttpError {
 		return new HttpError(
 			message || "Bad Gateway",
 			502,
@@ -191,7 +191,7 @@ export class HttpError extends Error {
 		message?: string,
 		traceCode?: string,
 		errorData?: unknown,
-	) {
+	): HttpError {
 		return new HttpError(
 			message || "Service Unavailable",
 			503,
@@ -204,7 +204,7 @@ export class HttpError extends Error {
 		message?: string,
 		traceCode?: string,
 		errorData?: unknown,
-	) {
+	): HttpError {
 		return new HttpError(
 			message || "Gateway Timeout",
 			504,

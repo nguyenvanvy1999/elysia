@@ -2,6 +2,7 @@ import { relations } from "drizzle-orm";
 import {
 	index,
 	integer,
+	pgEnum,
 	pgTable,
 	primaryKey,
 	text,
@@ -9,7 +10,14 @@ import {
 	unique,
 	varchar,
 } from "drizzle-orm/pg-core";
-import { DB_TABLE_NAME } from "src/common";
+import { DB_TABLE_NAME, USER_STATUS } from "src/common";
+
+export const userStatusEnum = pgEnum("user_status_enum", [
+	"active",
+	"inactive",
+	"inactive_permanent",
+	"block",
+]);
 
 export const users = pgTable(DB_TABLE_NAME.USER, {
 	id: varchar("id", { length: 32 }).notNull().primaryKey(),
@@ -23,6 +31,7 @@ export const users = pgTable(DB_TABLE_NAME.USER, {
 	passwordCreated: timestamp("password_created").notNull(),
 	passwordExpired: timestamp("password_expired").notNull(),
 	passwordAttempt: integer("password_attempt").notNull(),
+	status: userStatusEnum("status").notNull().default(USER_STATUS.ACTIVE),
 	createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
 	updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
 });

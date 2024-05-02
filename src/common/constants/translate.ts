@@ -1,4 +1,5 @@
 export const translates = [
+	// error
 	{
 		lang: "en",
 		ns: "translation",
@@ -82,5 +83,115 @@ export const translates = [
 		ns: "translation",
 		key: "ERROR.USERNAME_ALREADY_EXIST",
 		value: "Username da ton tai",
+	},
+	{
+		lang: "en",
+		ns: "translation",
+		key: "ERROR.USER_NOT_FOUND",
+		value: "User not found",
+	},
+	{
+		lang: "vi",
+		ns: "translation",
+		key: "ERROR.USER_NOT_FOUND",
+		value: "Khong tim thay nguoi dung",
+	},
+	{
+		lang: "en",
+		ns: "translation",
+		key: "ERROR.USER_PASSWORD_ATTEMPT_MAX",
+		value: "Maximum password attempts",
+	},
+	{
+		lang: "vi",
+		ns: "translation",
+		key: "ERROR.USER_PASSWORD_ATTEMPT_MAX",
+		value: "So lan thu mat khau toi da",
+	},
+	{
+		lang: "en",
+		ns: "translation",
+		key: "ERROR.USER_PASSWORD_NOT_MATCH",
+		value: "Password not match",
+	},
+	{
+		lang: "vi",
+		ns: "translation",
+		key: "ERROR.USER_PASSWORD_NOT_MATCH",
+		value: "Sai mat khau",
+	},
+	{
+		lang: "en",
+		ns: "translation",
+		key: "ERROR.USER_INACTIVE",
+		value: "User inactive",
+	},
+	{
+		lang: "vi",
+		ns: "translation",
+		key: "ERROR.USER_INACTIVE",
+		value: "Nguoi dung chua kich hoat",
+	},
+	{
+		lang: "en",
+		ns: "translation",
+		key: "ERROR.USER_INACTIVE_PERMANENT",
+		value: "User inactive permanent",
+	},
+	{
+		lang: "vi",
+		ns: "translation",
+		key: "ERROR.USER_INACTIVE_PERMANENT",
+		value: "Nguoi dung khong hoat dong vinh vien",
+	},
+	{
+		lang: "en",
+		ns: "translation",
+		key: "ERROR.USER_BLOCKED",
+		value: "User blocked",
+	},
+	{
+		lang: "vi",
+		ns: "translation",
+		key: "ERROR.USER_BLOCKED",
+		value: "Nguoi dung da bi chan",
+	},
+	{
+		lang: "en",
+		ns: "translation",
+		key: "ERROR.USER_PASSWORD_EXPIRED",
+		value: "Password expired",
+	},
+	{
+		lang: "vi",
+		ns: "translation",
+		key: "ERROR.USER_PASSWORD_EXPIRED",
+		value: "Mat khau da het han",
+	},
+
+	// response
+	{
+		lang: "en",
+		ns: "translation",
+		key: "RES.REGISTER_SUCCESS",
+		value: "Register success",
+	},
+	{
+		lang: "vi",
+		ns: "translation",
+		key: "RES.REGISTER_SUCCESS",
+		value: "Dang ky thanh cong",
+	},
+	{
+		lang: "en",
+		ns: "translation",
+		key: "RES.LOGIN_SUCCESS",
+		value: "Login success",
+	},
+	{
+		lang: "vi",
+		ns: "translation",
+		key: "RES.LOGIN_SUCCESS",
+		value: "Dang nhap thanh cong",
 	},
 ];

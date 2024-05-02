@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import type { TableConfig } from "drizzle-orm";
+import { type AnyColumn, type TableConfig, sql } from "drizzle-orm";
 import type {
 	PgTableWithColumns,
 	PgTransaction,
@@ -42,3 +42,7 @@ export function createUser() {
 		email: faker.internet.email({ firstName, lastName }).toLowerCase(),
 	};
 }
+
+export const increment = (column: AnyColumn, value = 1) => {
+	return sql`${column} + ${value}`;
+};

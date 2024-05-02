@@ -24,6 +24,8 @@ const envVariables = z.object({
 
 	// password config
 	SALT_LENGTH: z.preprocess(Number, z.number().min(8)).default(8),
+	ENB_PASSWORD_ATTEMPT: toggle.default("true"),
+	ENB_PASSWORD_EXPIRED: toggle.default("true"),
 	PASSWORD_EXPIRED: z.string().regex(TIME_REGEX).default("180d"),
 	PASSWORD_ATTEMPT: z.number().int().min(1).default(3),
 

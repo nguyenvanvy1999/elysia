@@ -1,25 +1,38 @@
+import { compareSync } from "bcryptjs";
 import { eq, or } from "drizzle-orm";
 import { Elysia } from "elysia";
 import {
+	AUTH_ROUTES,
 	DB_ID_PREFIX,
-	type IResponseData,
 	RES_KEY,
+	ROUTES,
+	SW_ROUTE_DETAIL,
+	USER_STATUS,
+	errorRes,
+	errorsDefault,
+	loginBody,
+	loginRes,
 	registerBody,
 	registerRes,
 	swaggerOptions,
 } from "src/common";
-import { errorRes } from "src/common/dtos/response";
-import { db, httpErrorDecorator } from "src/config";
+import { db, env, httpErrorDecorator } from "src/config";
 import { users } from "src/db";
-import { createPassword, dbIdGenerator } from "src/util";
+import { increasePasswordAttempt } from "src/service";
+import {
+	checkPasswordExpired,
+	createPassword,
+	dbIdGenerator,
+	resBuild,
+} from "src/util";
 
 export const authRoutes = new Elysia({
-	prefix: "api/v1/auth",
+	prefix: ROUTES.AUTH_V1,
 	detail: { tags: [swaggerOptions.tags.auth.name] },
 })
 	.use(httpErrorDecorator)
 	.post(
-		"/register",
+		AUTH_ROUTES.REGISTER,
 		async ({ body, HttpError }): Promise<any> => {
 			const exist = await db
 				.select({ id: users.id, email: users.email, username: users.username })
@@ -37,7 +50,7 @@ export const authRoutes = new Elysia({
 				);
 			}
 
-			return db
+			const user = await db
 				.insert(users)
 				.values({
 					...body,
@@ -51,33 +64,83 @@ export const authRoutes = new Elysia({
 					username: users.username,
 					avatarUrl: users.avatarUrl,
 				});
+			return resBuild(user, RES_KEY.REGISTER);
 		},
 		{
 			body: registerBody,
-			detail: {
-				description: "Register new user with role user",
-				summary: "Register",
-			},
+			detail: SW_ROUTE_DETAIL.REGISTER,
 			response: {
 				201: registerRes,
-				400: errorRes,
 				409: errorRes,
+				...errorsDefault,
 			},
 		},
 	)
 	.post(
-		"/login",
-		() => {
-			return {
-				message: "hello",
-				data: { test: 1 },
-				code: "test123",
-			} satisfies IResponseData;
+		AUTH_ROUTES.LOGIN,
+		async ({ body, HttpError }): Promise<any> => {
+			const { email, password } = body;
+			const foundUsers = await db
+				.select({
+					id: users.id,
+					email: users.email,
+					password: users.password,
+					passwordAttempt: users.passwordAttempt,
+					status: users.status,
+					passwordExpired: users.passwordExpired,
+				})
+				.from(users)
+				.where(eq(users.email, email))
+				.limit(1);
+			if (!foundUsers.length) {
+				throw HttpError.NotFound(...Object.values(RES_KEY.USER_NOT_FOUND));
+			}
+
+			const user = foundUsers[0];
+			if (
+				env.ENB_PASSWORD_ATTEMPT &&
+				user.passwordAttempt >= env.PASSWORD_ATTEMPT
+			) {
+				throw HttpError.Forbidden(
+					...Object.values(RES_KEY.USER_PASSWORD_ATTEMPT_MAX),
+				);
+			}
+			const passwordMatch: boolean = compareSync(password, user.password);
+			if (!passwordMatch) {
+				await increasePasswordAttempt(user.id);
+				throw HttpError.BadRequest(
+					...Object.values(RES_KEY.USER_PASSWORD_NOT_MATCH),
+				);
+			}
+			switch (user.status) {
+				case USER_STATUS.INACTIVE:
+					throw HttpError.Forbidden(...Object.values(RES_KEY.USER_INACTIVE));
+				case USER_STATUS.INACTIVE_PERMANENT:
+					throw HttpError.Forbidden(
+						...Object.values(RES_KEY.USER_INACTIVE_PERMANENT),
+					);
+				case USER_STATUS.BLOCK:
+					throw HttpError.Forbidden(...Object.values(RES_KEY.USER_BLOCKED));
+				default:
+					break;
+			}
+			const passwordExpired: boolean = checkPasswordExpired(
+				user.passwordExpired,
+			);
+			if (env.ENB_PASSWORD_EXPIRED && passwordExpired) {
+				throw HttpError.Forbidden(
+					...Object.values(RES_KEY.USER_PASSWORD_EXPIRED),
+				);
+			}
+			return resBuild({ a: 1 }, RES_KEY.LOGIN);
 		},
 		{
-			detail: {
-				description: "Login with email and password",
-				summary: "Login",
+			body: loginBody,
+			detail: SW_ROUTE_DETAIL.LOGIN,
+			response: {
+				200: loginRes,
+				409: errorRes,
+				...errorsDefault,
 			},
 		},
 	);

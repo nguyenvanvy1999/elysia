@@ -4,3 +4,4 @@ export * from "./regex";
 export * from "./setting";
 export * from "./permission";
 export * from "./translate";
+export * from "./user";

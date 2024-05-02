@@ -14,6 +14,10 @@ export const createPassword = (password: string): IAuthPassword => {
 		passwordExpired,
 		passwordCreated: new Date(),
 		salt,
-		passwordAttempt: env.PASSWORD_ATTEMPT,
+		passwordAttempt: 0,
 	};
+};
+
+export const checkPasswordExpired = (passwordExpired: Date): boolean => {
+	return new Date() > new Date(passwordExpired);
 };

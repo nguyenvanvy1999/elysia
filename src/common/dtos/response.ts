@@ -18,3 +18,8 @@ export const responseRes = <T extends TSchema>(T: T) =>
 	});
 
 export const errorRes = responseRes(t.Null());
+
+export const errorsDefault = {
+	400: errorRes,
+	500: errorRes,
+};
