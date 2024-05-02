@@ -4,6 +4,7 @@ import {
 	POLICY_ACTION,
 	POLICY_ENTITY,
 	ROLE_NAME,
+	translates,
 } from "src/common";
 import { db, env } from "src/config";
 import {
@@ -137,34 +138,8 @@ export const seedTranslationsData = async (): Promise<void> => {
 		console.timeEnd("🧹 Cleaned up the database...");
 
 		console.time("Created Translations...");
-		const data = [
-			{
-				lang: "en",
-				ns: "translation",
-				key: "hello",
-				value: "Hello world",
-			},
-			{
-				lang: "en",
-				ns: "translation",
-				key: "bye",
-				value: "See you later",
-			},
-			{
-				lang: "vi",
-				ns: "translation",
-				key: "bye",
-				value: "Tam biet",
-			},
-			{
-				lang: "vi",
-				ns: "translation",
-				key: "hello",
-				value: "Xin chao",
-			},
-		];
 
-		await ct.insert(translations).values(data);
+		await ct.insert(translations).values(translates);
 		console.timeEnd("Created Translations...");
 	});
 
