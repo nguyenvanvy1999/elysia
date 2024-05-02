@@ -142,3 +142,29 @@ export enum AUTH_ROUTES {
 	LOGIN = "/login",
 	REGISTER = "/register",
 }
+
+export enum NODE_ENV {
+	DEVELOPMENT = "development",
+	PRODUCTION = "production",
+	TEST = "test",
+}
+
+export const DEFAULT = {
+	PORT: 3001,
+	NODE_ENV: NODE_ENV.DEVELOPMENT,
+	JWT_ACCESS_TOKEN_SECRET_KEY: "123456aA@",
+	JWT_ACCESS_TOKEN_EXPIRED: "1H", // 1 hour
+	NOT_BEFORE_EXPIRATION_TIME: "0", // immediately
+	JWT_REFRESH_TOKEN_SECRET_KEY: "123456aA@",
+	JWT_REFRESH_TOKEN_EXPIRED: "14d", // 14 days
+	JWT_REFRESH_TOKEN_NOT_BEFORE_EXPIRATION: "1h", // 1 hour
+	JWT_SUBJECT: "admin",
+	JWT_AUDIENCE: "https://example.com",
+	JWT_ISSUER: "admin",
+	JWT_ENCRYPT_METHOD: "aes-256-cbc",
+	PASSWORD_EXPIRED: "180d", // 182 days
+	PASSWORD_MAX_ATTEMPT: 5,
+	SALT_LENGTH: 8,
+	APP_LOGO: "https://s.cloudey.net/logo/v5/cloud-blue.png",
+	EXPORT_TRANSLATION_QUERY_LIMIT: 100,
+};

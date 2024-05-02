@@ -1,6 +1,8 @@
+import { randomUUID } from "node:crypto";
 import { compareSync } from "bcryptjs";
 import { eq, or } from "drizzle-orm";
 import { Elysia } from "elysia";
+import ms from "ms";
 import {
 	AUTH_ROUTES,
 	DB_ID_PREFIX,
@@ -16,12 +18,15 @@ import {
 	registerRes,
 	swaggerOptions,
 } from "src/common";
-import { db, env, httpErrorDecorator } from "src/config";
-import { users } from "src/db";
+import { db, env, httpErrorDecorator, sessionRepository } from "src/config";
+import { refreshTokens, users } from "src/db";
 import { increasePasswordAttempt } from "src/service";
 import {
+	aes256Encrypt,
 	checkPasswordExpired,
+	createAccessToken,
 	createPassword,
+	createRefreshToken,
 	dbIdGenerator,
 	resBuild,
 } from "src/util";
@@ -132,7 +137,55 @@ export const authRoutes = new Elysia({
 					...Object.values(RES_KEY.USER_PASSWORD_EXPIRED),
 				);
 			}
-			return resBuild({ a: 1 }, RES_KEY.LOGIN);
+			const sessionId: string = dbIdGenerator(DB_ID_PREFIX.SESSION);
+			const refreshSessionId: string = randomUUID();
+			let accessToken: string = createAccessToken({
+				id: user.id,
+				loginDate: new Date(),
+				sessionId,
+			});
+			let refreshToken: string = createRefreshToken({
+				id: user.id,
+				loginDate: new Date(),
+				sessionId: refreshSessionId,
+			});
+			if (env.ENB_TOKEN_ENCRYPT) {
+				accessToken = aes256Encrypt(
+					accessToken,
+					env.JWT_PAYLOAD_ACCESS_TOKEN_ENCRYPT_KEY,
+					env.JWT_PAYLOAD_ACCESS_TOKEN_ENCRYPT_IV,
+				);
+				refreshToken = aes256Encrypt(
+					refreshToken,
+					env.JWT_PAYLOAD_REFRESH_TOKEN_ENCRYPT_KEY,
+					env.JWT_PAYLOAD_REFRESH_TOKEN_ENCRYPT_IV,
+				);
+			}
+
+			await Promise.all([
+				db.insert(refreshTokens).values({
+					id: dbIdGenerator(DB_ID_PREFIX.REFRESH_TOKEN),
+					userId: user.id,
+					token: refreshSessionId,
+					expires: new Date(Date.now() + ms(env.JWT_REFRESH_TOKEN_EXPIRED)),
+				}),
+				sessionRepository.save(sessionId, {
+					id: sessionId,
+					userId: user.id,
+				}),
+			]);
+			await sessionRepository.expireAt(
+				sessionId,
+				new Date(Date.now() + ms(env.JWT_ACCESS_TOKEN_EXPIRED)),
+			);
+
+			return resBuild(
+				{
+					accessToken,
+					refreshToken,
+				},
+				RES_KEY.LOGIN,
+			);
 		},
 		{
 			body: loginBody,

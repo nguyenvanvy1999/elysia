@@ -20,4 +20,5 @@ export enum DB_ID_PREFIX {
 	PERMISSION = "perm",
 	REFRESH_TOKEN = "rt",
 	SETTING = "stg",
+	SESSION = "ss",
 }
