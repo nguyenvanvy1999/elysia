@@ -3,4 +3,4 @@ export const REDIS_URI_REGEX =
 	/^redis:\/\/(?:([^:@]+):([^:@]+)@)?([^/:]+)(?::(\d+))?(?:\/(\d+))?$/;
 export const DATABASE_URI_REGEX = /^postgresql:(?:\/\/[^\/]+\/)?(\w+)/;
 export const PASSWORD_REGEX =
-	/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
+	/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;

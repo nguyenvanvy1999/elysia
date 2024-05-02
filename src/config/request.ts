@@ -2,12 +2,12 @@ import { randomUUID } from "node:crypto";
 import type { SocketAddress } from "bun";
 import type { Elysia } from "elysia";
 import {
-	AVAILABLE_LANGUAGES,
 	DEFAULT_APP_LANGUAGE,
 	HEADER_KEY,
 	type IPHeaders,
 	type IRequestDerive,
 	type IRequestOption,
+	LANGUAGE,
 	versionOptions,
 } from "src/common";
 import { UAParser, type UAParserInstance } from "ua-parser-js";
@@ -109,9 +109,9 @@ export const requestHeader =
 
 				if (customLanguage) {
 					const language = headers.get(customLanguageHeader);
-					set.headers[customLanguageHeader] = Object.values(
-						AVAILABLE_LANGUAGES,
-					).includes(language)
+					set.headers[customLanguageHeader] = Object.values(LANGUAGE).includes(
+						language,
+					)
 						? language
 						: DEFAULT_APP_LANGUAGE;
 				}

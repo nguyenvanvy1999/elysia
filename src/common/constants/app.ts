@@ -25,12 +25,14 @@ export const swaggerOptions = {
 	},
 };
 
-export enum AVAILABLE_LANGUAGES {
+export enum LANGUAGE {
 	EN = "en",
 	VI = "vi",
 }
 
-export const DEFAULT_APP_LANGUAGE: string = AVAILABLE_LANGUAGES.EN;
+export const AVAILABLE_LANGUAGES: string[] = Object.values(LANGUAGE);
+
+export const DEFAULT_APP_LANGUAGE: string = LANGUAGE.EN;
 export const DEFAULT_LANGUAGE_NS: string = "translation";
 
 export enum HEADER_KEY {
@@ -49,4 +51,35 @@ export enum HEADER_KEY {
 // cache time in redis on seconds
 export const REDIS_CACHE_EX = {
 	TRANSLATION_CACHE: 60 * 10, // 10 minutes
+};
+
+export const RES_KEY = {
+	UNKNOWN: {
+		message: "ERROR.UNKNOWN",
+		code: "UKN",
+	},
+	VALIDATION: {
+		message: "ERROR.VALIDATION",
+		code: "VAL",
+	},
+	NOT_FOUND: {
+		message: "ERROR.NOT_FOUND",
+		code: "NFD",
+	},
+	INTERNAL_SERVER_ERROR: {
+		message: "ERROR.INTERNAL_SERVER_ERROR",
+		code: "ISE",
+	},
+	UN_AUTHORIZATION: {
+		message: "ERROR.UN_AUTHORIZATION",
+		code: "U_AUTHOR",
+	},
+	EMAIL_ALREADY_EXIST: {
+		message: "ERROR.EMAIL_ALREADY_EXIST",
+		code: "CFL01",
+	},
+	USERNAME_ALREADY_EXIST: {
+		message: "ERROR.USERNAME_ALREADY_EXIST",
+		code: "CFL02",
+	},
 };

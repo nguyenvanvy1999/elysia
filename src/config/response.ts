@@ -3,8 +3,10 @@ import {
 	AVAILABLE_LANGUAGES,
 	type IRequestDerive,
 	type IResponse,
+	type IResponseData,
 	type IResponseMetadata,
 } from "src/common";
+import { translate } from "src/util/translate";
 
 const encoder = new TextEncoder();
 
@@ -22,8 +24,8 @@ export const httpResponse =
 			}
 		>,
 	) =>
-		app.mapResponse(
-			({
+		app.onAfterHandle(
+			async ({
 				response,
 				set,
 				request,
@@ -33,12 +35,13 @@ export const httpResponse =
 				repoVersion,
 				version,
 				customLanguage,
-			}): Response => {
+			}): Promise<Response> => {
 				const isJson: boolean = typeof response === "object";
 				set.headers["Content-Encoding"] = "gzip";
 				if (isJson) {
+					const newResponse: IResponseData = response as IResponseData;
 					const metadata = {
-						languages: Object.values(AVAILABLE_LANGUAGES),
+						languages: AVAILABLE_LANGUAGES,
 						language: customLanguage,
 						timestamp,
 						timezone,
@@ -48,11 +51,12 @@ export const httpResponse =
 						url: request.url,
 						method: request.method,
 					} satisfies IResponseMetadata;
+
 					const dataRes = {
 						metadata,
-						message: "Success",
-						code: 200,
-						data: response,
+						message: await translate(newResponse.message, customLanguage),
+						code: newResponse.code,
+						data: newResponse.data,
 					} satisfies IResponse;
 					return new Response(
 						Bun.gzipSync(encoder.encode(JSON.stringify(dataRes))),

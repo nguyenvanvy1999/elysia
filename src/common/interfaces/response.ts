@@ -12,7 +12,13 @@ export interface IResponseMetadata {
 
 export interface IResponse {
 	metadata: IResponseMetadata;
-	code: number;
+	code: string;
 	message: string;
 	data?: unknown;
+}
+
+export interface IResponseData {
+	data: unknown;
+	code: string;
+	message: string;
 }

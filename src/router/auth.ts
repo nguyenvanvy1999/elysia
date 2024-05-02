@@ -2,6 +2,8 @@ import { eq, or } from "drizzle-orm";
 import { Elysia } from "elysia";
 import {
 	DB_ID_PREFIX,
+	type IResponseData,
+	RES_KEY,
 	registerBody,
 	registerRes,
 	swaggerOptions,
@@ -27,10 +29,12 @@ export const authRoutes = new Elysia({
 				)
 				.limit(1);
 			if (exist.length && exist[0].email) {
-				throw HttpError.Conflict("Email already exists");
+				throw HttpError.Conflict(...Object.values(RES_KEY.EMAIL_ALREADY_EXIST));
 			}
 			if (exist.length && exist[0].username) {
-				throw HttpError.Conflict("Username already exists");
+				throw HttpError.Conflict(
+					...Object.values(RES_KEY.USERNAME_ALREADY_EXIST),
+				);
 			}
 
 			return db
@@ -64,7 +68,11 @@ export const authRoutes = new Elysia({
 	.post(
 		"/login",
 		() => {
-			return { test: 1 };
+			return {
+				message: "hello",
+				data: { test: 1 },
+				code: "test123",
+			} satisfies IResponseData;
 		},
 		{
 			detail: {
