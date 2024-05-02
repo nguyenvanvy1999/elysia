@@ -8,6 +8,13 @@
 			"when": 1714563789965,
 			"tag": "0000_famous_mojo",
 			"breakpoints": true
+		},
+		{
+			"idx": 1,
+			"version": "5",
+			"when": 1714650380368,
+			"tag": "0001_magical_puma",
+			"breakpoints": true
 		}
 	]
 }
