@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 import type { SocketAddress } from "bun";
 import type { Elysia } from "elysia";
 import {
-	DEFAULT_APP_LANGUAGE,
+	DEFAULT,
 	HEADER_KEY,
 	type IPHeaders,
 	type IRequestDerive,
@@ -113,7 +113,7 @@ export const requestHeader =
 						language,
 					)
 						? language
-						: DEFAULT_APP_LANGUAGE;
+						: DEFAULT.LANGUAGE;
 				}
 			})
 			.derive({ as: "global" }, ({ request, set }) => {

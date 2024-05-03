@@ -4,7 +4,7 @@ import { swaggerOptions, versionOptions } from "src/common";
 import { env } from "src/config/env";
 
 export const swaggerConfig = () => (app: Elysia) => {
-	if (swaggerOptions.enable) {
+	if (env.ENB_SWAGGER_UI) {
 		return app.use(
 			swagger({
 				documentation: {

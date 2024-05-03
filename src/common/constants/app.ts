@@ -4,8 +4,6 @@ export const versionOptions = {
 };
 
 export const swaggerOptions = {
-	enable: true,
-	authEnable: true,
 	path: "/swagger",
 	info: {
 		title: "Elysia Documentation",
@@ -31,9 +29,6 @@ export enum LANGUAGE {
 }
 
 export const AVAILABLE_LANGUAGES: string[] = Object.values(LANGUAGE);
-
-export const DEFAULT_APP_LANGUAGE: string = LANGUAGE.EN;
-export const DEFAULT_LANGUAGE_NS: string = "translation";
 
 export enum HEADER_KEY {
 	DEVICE_ID = "device-id",
@@ -149,6 +144,11 @@ export enum NODE_ENV {
 	TEST = "test",
 }
 
+export enum TRANSLATION_NS {
+	BACKEND = "backend",
+	FRONTEND = "frontend",
+}
+
 export const DEFAULT = {
 	PORT: 3001,
 	NODE_ENV: NODE_ENV.DEVELOPMENT,
@@ -167,4 +167,6 @@ export const DEFAULT = {
 	SALT_LENGTH: 8,
 	APP_LOGO: "https://s.cloudey.net/logo/v5/cloud-blue.png",
 	EXPORT_TRANSLATION_QUERY_LIMIT: 100,
+	LANGUAGE: LANGUAGE.EN,
+	TRANSLATION_NS: TRANSLATION_NS.BACKEND,
 };

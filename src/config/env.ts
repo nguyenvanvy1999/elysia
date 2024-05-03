@@ -36,6 +36,8 @@ const envVariables = z.object({
 		.int()
 		.min(1)
 		.default(DEFAULT.PASSWORD_MAX_ATTEMPT),
+	// swagger config
+	ENB_SWAGGER_UI: toggle.default("true"),
 
 	// jwt config
 	ENB_TOKEN_ENCRYPT: toggle.default("true"),

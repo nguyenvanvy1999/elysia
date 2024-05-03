@@ -1,21 +1,17 @@
 import { and, eq } from "drizzle-orm";
-import {
-	DEFAULT_APP_LANGUAGE,
-	DEFAULT_LANGUAGE_NS,
-	REDIS_CACHE_EX,
-} from "src/common";
+import { DEFAULT, REDIS_CACHE_EX, TRANSLATION_NS } from "src/common";
 import { db, redisClient } from "src/config";
 import { translations } from "src/db";
 
 export const translate = async (
 	key: string,
-	lang: string = DEFAULT_APP_LANGUAGE,
-	ns: string = DEFAULT_LANGUAGE_NS,
+	lang: string = DEFAULT.LANGUAGE,
+	ns: string = DEFAULT.TRANSLATION_NS,
 	params: Record<string, string> = {},
 ): Promise<string> => {
 	let result: string = key;
 	const existInCache: string | null = await redisClient.get(
-		translateCacheKey(lang, ns, key),
+		translateCacheKey(key, lang, ns),
 	);
 	if (!existInCache) {
 		const data = await db
@@ -31,7 +27,7 @@ export const translate = async (
 			.limit(1);
 		if (data.length) {
 			result = data[0].value;
-			await redisClient.set(translateCacheKey(lang, ns, key), data[0].value, {
+			await redisClient.set(translateCacheKey(key, lang, ns), data[0].value, {
 				EX: REDIS_CACHE_EX.TRANSLATION_CACHE,
 			});
 		}
@@ -44,7 +40,7 @@ export const translate = async (
 const translateCacheKey = (
 	key: string,
 	lang: string,
-	ns = "translation",
+	ns: string = TRANSLATION_NS.BACKEND,
 ): string => {
 	return `${lang}_${ns}_${key}`;
 };
