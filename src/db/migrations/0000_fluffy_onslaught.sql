@@ -54,6 +54,7 @@ CREATE TABLE IF NOT EXISTS "user" (
 	"password_created" timestamp NOT NULL,
 	"password_expired" timestamp NOT NULL,
 	"password_attempt" integer NOT NULL,
+	"password_salt" varchar NOT NULL,
 	"status" "user_status_enum" DEFAULT 'active' NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now(),
 	"updated_at" timestamp with time zone DEFAULT now(),

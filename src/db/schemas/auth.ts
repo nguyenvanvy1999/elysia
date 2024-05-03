@@ -30,6 +30,7 @@ export const users = pgTable(DB_TABLE_NAME.USER, {
 	passwordCreated: timestamp("password_created").notNull(),
 	passwordExpired: timestamp("password_expired").notNull(),
 	passwordAttempt: integer("password_attempt").notNull(),
+	passwordSalt: varchar("password_salt").notNull(),
 	status: userStatusEnum("status").notNull().default(USER_STATUS.ACTIVE),
 	createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
 	updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),

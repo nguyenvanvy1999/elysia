@@ -23,6 +23,7 @@ import { increasePasswordAttempt } from "src/service";
 import {
 	aes256Encrypt,
 	checkPasswordExpired,
+	comparePassword,
 	createAccessToken,
 	createPassword,
 	createRefreshToken,
@@ -92,6 +93,7 @@ export const authRoutes = new Elysia({
 					passwordAttempt: users.passwordAttempt,
 					status: users.status,
 					passwordExpired: users.passwordExpired,
+					passwordSalt: users.passwordSalt,
 				})
 				.from(users)
 				.where(eq(users.email, email))
@@ -109,10 +111,10 @@ export const authRoutes = new Elysia({
 					...Object.values(RES_KEY.USER_PASSWORD_ATTEMPT_MAX),
 				);
 			}
-			const passwordMatch: boolean = Bun.password.verifySync(
+			const passwordMatch: boolean = comparePassword(
 				password,
 				user.password,
-				"bcrypt",
+				user.passwordSalt,
 			);
 			if (!passwordMatch) {
 				await increasePasswordAttempt(user.id);
@@ -195,7 +197,8 @@ export const authRoutes = new Elysia({
 			detail: SW_ROUTE_DETAIL.LOGIN,
 			response: {
 				200: loginRes,
-				409: errorRes,
+				403: errorRes,
+				404: errorRes,
 				...errorsDefault,
 			},
 		},

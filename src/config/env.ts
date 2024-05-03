@@ -24,7 +24,10 @@ const envVariables = z.object({
 	RUNTIME: z.enum(["bun", "edge"]).default("bun"),
 
 	// password config
-	SALT_LENGTH: z.preprocess(Number, z.number().min(8)).default(8),
+	PASSWORD_SALT_LENGTH: z
+		.preprocess(Number, z.number().min(4))
+		.default(DEFAULT.SALT_LENGTH),
+	PASSWORD_PEPPER: z.string().min(8),
 	ENB_PASSWORD_ATTEMPT: toggle.default("true"),
 	ENB_PASSWORD_EXPIRED: toggle.default("true"),
 	PASSWORD_EXPIRED: z
@@ -36,6 +39,7 @@ const envVariables = z.object({
 		.int()
 		.min(1)
 		.default(DEFAULT.PASSWORD_MAX_ATTEMPT),
+
 	// swagger config
 	ENB_SWAGGER_UI: toggle.default("true"),
 

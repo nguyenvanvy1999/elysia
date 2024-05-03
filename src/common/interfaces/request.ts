@@ -1,3 +1,5 @@
+import type { SocketAddress } from "bun";
+
 export type IPHeaders =
 	| "x-real-ip"
 	| "x-client-ip"
@@ -42,5 +44,5 @@ export interface IRequestDerive extends Record<string, unknown> {
 	version: string;
 	repoVersion: string;
 	customLanguage: string;
-	ip: unknown;
+	ip: SocketAddress | string | null | undefined;
 }

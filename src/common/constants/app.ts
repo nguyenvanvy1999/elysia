@@ -127,15 +127,24 @@ export const SW_ROUTE_DETAIL = {
 		description: "Register new user with role user",
 		summary: "Register",
 	},
+	USER_INFO: {
+		description: "Get user information",
+		summary: "User info",
+	},
 };
 
 export enum ROUTES {
 	AUTH_V1 = "api/v1/auth",
+	USER_V1 = "api/v1/user",
 }
 
 export enum AUTH_ROUTES {
 	LOGIN = "/login",
 	REGISTER = "/register",
+}
+
+export enum USER_ROUTES {
+	INFO = "/info",
 }
 
 export enum NODE_ENV {
@@ -157,16 +166,14 @@ export const DEFAULT = {
 	NOT_BEFORE_EXPIRATION_TIME: "0", // immediately
 	JWT_REFRESH_TOKEN_SECRET_KEY: "123456aA@",
 	JWT_REFRESH_TOKEN_EXPIRED: "14d", // 14 days
-	JWT_REFRESH_TOKEN_NOT_BEFORE_EXPIRATION: "1h", // 1 hour
 	JWT_SUBJECT: "admin",
 	JWT_AUDIENCE: "https://example.com",
 	JWT_ISSUER: "admin",
 	JWT_ENCRYPT_METHOD: "aes-256-cbc",
-	PASSWORD_EXPIRED: "180d", // 182 days
+	PASSWORD_EXPIRED: "180d", // 180 days
 	PASSWORD_MAX_ATTEMPT: 5,
 	SALT_LENGTH: 8,
 	APP_LOGO: "https://s.cloudey.net/logo/v5/cloud-blue.png",
-	EXPORT_TRANSLATION_QUERY_LIMIT: 100,
 	LANGUAGE: LANGUAGE.EN,
 	TRANSLATION_NS: TRANSLATION_NS.BACKEND,
 };

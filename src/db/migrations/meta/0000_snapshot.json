@@ -1,5 +1,5 @@
 {
-  "id": "62f89394-6f2b-4c6d-80a9-d74ed30f0553",
+  "id": "dd2c5af3-ee73-42d6-884b-82bdbb8cd2b2",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "5",
   "dialect": "pg",
@@ -287,6 +287,12 @@
         "password_attempt": {
           "name": "password_attempt",
           "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "password_salt": {
+          "name": "password_salt",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": true
         },

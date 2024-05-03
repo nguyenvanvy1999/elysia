@@ -3,4 +3,5 @@ export interface IAuthPassword {
 	passwordExpired: Date;
 	passwordCreated: Date;
 	passwordAttempt: number;
+	passwordSalt: string;
 }
