@@ -1,10 +1,5 @@
 import { t } from "elysia";
 import { responseRes } from "src/common/dtos/response";
-import { registerBody } from "src/common/dtos/user/register";
+import { userDto } from "src/common/dtos/user/user";
 
-export const userInfoRes = responseRes(
-	t.Intersect([
-		t.Omit(registerBody, ["password"] as const),
-		t.Object({ id: t.String(), avatarUrl: t.String() }),
-	]),
-);
+export const userInfoRes = responseRes(t.Omit(userDto, ["password"]));

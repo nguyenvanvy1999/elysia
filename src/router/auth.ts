@@ -69,6 +69,7 @@ export const authRoutes = new Elysia({
 					name: users.username,
 					username: users.username,
 					avatarUrl: users.avatarUrl,
+					status: users.status,
 				});
 			return resBuild(user, RES_KEY.REGISTER);
 		},
