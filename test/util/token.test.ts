@@ -54,6 +54,18 @@ describe("Util: Token testing", (): void => {
 			expect(decrypt).toBeObject();
 			expect(decrypt).toMatchObject(data);
 		});
+		it("Should encrypt and decrypt object data", (): void => {
+			const tst: Record<string, any> = { for: "bar", bar: 1 };
+			const encrypted: string = aes256Encrypt(tst, key, iv);
+			expect(typeof encrypted).toBe("string");
+			const decrypt: Record<string, any> = aes256Decrypt<Record<string, any>>(
+				encrypted,
+				key,
+				iv,
+			);
+			expect(typeof decrypt).toBe("object");
+			expect(decrypt).toEqual(tst);
+		});
 	});
 
 	describe("jwtEncrypt", (): void => {
@@ -96,7 +108,6 @@ describe("Util: Token testing", (): void => {
 			});
 			expect(token).toBeString();
 			const verify: IResponse = jwt.verify(token, secret) as IResponse;
-			console.log(verify);
 			expect(verify).toBeObject();
 			expect(verify.id).toEqual(data.id);
 			expect(verify.iss).toEqual(issuer);
