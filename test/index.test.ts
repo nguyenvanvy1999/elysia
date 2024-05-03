@@ -1,9 +1,8 @@
-// test/index.test.ts
 import { describe, expect, it } from "bun:test";
 import { Elysia } from "elysia";
 
-describe("Elysia", () => {
-	it("return a response", async () => {
+describe("Elysia", (): void => {
+	it("return a response", async (): Promise<void> => {
 		const app = new Elysia().get("/", () => "hi");
 
 		const response = await app

@@ -1,3 +1,4 @@
+import type { Cipher, Decipher } from "node:crypto";
 import crypto from "node:crypto";
 import jwt from "jsonwebtoken";
 import type { IJwtVerifyOptions } from "src/common";
@@ -8,35 +9,39 @@ export const aes256Encrypt = (
 	key: string,
 	iv: string,
 ): string => {
-	// key = crypto.createHash("sha512").update(key).digest("hex").substring(0, 32);
-	// iv = crypto.createHash("sha512").update(iv).digest("hex").substring(0, 16);
-	const cipher = crypto.createCipheriv(env.JWT_ENCRYPT_METHOD, key, iv);
+	const cipher: Cipher = crypto.createCipheriv(env.JWT_ENCRYPT_METHOD, key, iv);
 	return Buffer.from(
 		cipher.update(JSON.stringify(data), "utf8", "hex") + cipher.final("hex"),
 	).toString("base64");
 };
 
-export const aes256Decrypt = (
+export const aes256Decrypt = <
+	T extends string | Record<string, any> | Record<string, any>[],
+>(
 	encrypted: string,
 	key: string,
 	iv: string,
-): string | Record<string, any> | Record<string, any>[] => {
-	const buff = Buffer.from(encrypted, "base64");
-	const decipher = crypto.createDecipheriv(env.JWT_ENCRYPT_METHOD, key, iv);
-	return (
+): T => {
+	const buff: Buffer = Buffer.from(encrypted, "base64");
+	const decipher: Decipher = crypto.createDecipheriv(
+		env.JWT_ENCRYPT_METHOD,
+		key,
+		iv,
+	);
+	return JSON.parse(
 		decipher.update(buff.toString("utf8"), "hex", "utf8") +
-		decipher.final("utf8")
+			decipher.final("utf8"),
 	);
 };
 
 export const jwtEncrypt = (
-	payload: string | Record<string, any>,
+	payload: Record<string, any>,
 	{ secretKey, ...options }: IJwtVerifyOptions,
 ): string => {
 	return jwt.sign(payload, secretKey, { ...options });
 };
 
-export const createAccessToken = (payload: string | Record<string, any>) => {
+export const createAccessToken = (payload: Record<string, any>) => {
 	return jwtEncrypt(payload, {
 		secretKey: env.JWT_ACCESS_TOKEN_SECRET_KEY,
 		expiresIn: env.JWT_ACCESS_TOKEN_EXPIRED,
@@ -47,7 +52,7 @@ export const createAccessToken = (payload: string | Record<string, any>) => {
 	});
 };
 
-export const createRefreshToken = (payload: string | Record<string, any>) => {
+export const createRefreshToken = (payload: Record<string, any>) => {
 	return jwtEncrypt(payload, {
 		secretKey: env.JWT_REFRESH_TOKEN_SECRET_KEY,
 		expiresIn: env.JWT_REFRESH_TOKEN_EXPIRED,

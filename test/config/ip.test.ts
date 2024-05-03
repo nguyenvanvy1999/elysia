@@ -48,7 +48,7 @@ describe("Config: IP testing", (): void => {
 				const { data } = await api.index.get({
 					$headers: { [headerName]: ipAddress },
 				});
-				expect(typeof data).toBe("string");
+				expect(data).toBeString();
 				expect(data).toBe(ipAddress);
 				await app.stop();
 			});
