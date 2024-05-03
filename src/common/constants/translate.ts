@@ -170,6 +170,42 @@ export const translates = [
 		key: RES_KEY.USER_PASSWORD_EXPIRED.message,
 		value: "Mat khau da het han",
 	},
+	{
+		lang: LANGUAGE.EN,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.WRONG_TOKEN.message,
+		value: "Wrong token",
+	},
+	{
+		lang: LANGUAGE.VI,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.WRONG_TOKEN.message,
+		value: "Token loi",
+	},
+	{
+		lang: LANGUAGE.EN,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.TOKEN_EMPTY.message,
+		value: "Token empty",
+	},
+	{
+		lang: LANGUAGE.VI,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.TOKEN_EMPTY.message,
+		value: "Thieu token",
+	},
+	{
+		lang: LANGUAGE.EN,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.TOKEN_EXPIRED.message,
+		value: "Token has been expired",
+	},
+	{
+		lang: LANGUAGE.VI,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.TOKEN_EXPIRED.message,
+		value: "Token da het han",
+	},
 
 	// response
 	{
@@ -195,5 +231,17 @@ export const translates = [
 		ns: TRANSLATION_NS.BACKEND,
 		key: RES_KEY.LOGIN.message,
 		value: "Dang nhap thanh cong",
+	},
+	{
+		lang: LANGUAGE.EN,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.USER_INFO.message,
+		value: "Get user info success",
+	},
+	{
+		lang: LANGUAGE.VI,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.USER_INFO.message,
+		value: "Lay thong tin nguoi dung thanh cong",
 	},
 ];

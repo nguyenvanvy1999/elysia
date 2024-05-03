@@ -64,7 +64,19 @@ export const RES_KEY = {
 	},
 	UN_AUTHORIZATION: {
 		message: "ERROR.UN_AUTHORIZATION",
-		code: "U_AUTHOR",
+		code: "U_AUTHOR_01",
+	},
+	WRONG_TOKEN: {
+		message: "ERROR.WRONG_TOKEN",
+		code: "U_AUTHOR_02",
+	},
+	TOKEN_EMPTY: {
+		message: "ERROR.TOKEN_EMPTY",
+		code: "U_AUTHOR_03",
+	},
+	TOKEN_EXPIRED: {
+		message: "ERROR.TOKEN_EXPIRED",
+		code: "U_AUTHOR_04",
 	},
 	EMAIL_ALREADY_EXIST: {
 		message: "ERROR.EMAIL_ALREADY_EXIST",
@@ -115,6 +127,10 @@ export const RES_KEY = {
 	LOGIN: {
 		message: "RES.LOGIN_SUCCESS",
 		code: "SUC_02",
+	},
+	USER_INFO: {
+		message: "RES.GET_USER_INFO_SUCCESS",
+		code: "SUC_03",
 	},
 };
 

@@ -1,7 +1,7 @@
 import type { Cipher, Decipher } from "node:crypto";
 import crypto from "node:crypto";
 import jwt from "jsonwebtoken";
-import type { IJwtVerifyOptions } from "src/common";
+import type { IJwtPayload, IJwtVerifyOptions } from "src/common";
 import { env } from "src/config";
 
 export const aes256Encrypt = (
@@ -61,4 +61,19 @@ export const createRefreshToken = (payload: Record<string, any>) => {
 		issuer: env.JWT_ISSUER,
 		subject: env.JWT_SUBJECT,
 	});
+};
+
+export const verifyAccessToken = (token: string): IJwtPayload => {
+	let decryptedToken: string = token;
+	if (env.ENB_TOKEN_ENCRYPT) {
+		decryptedToken = aes256Decrypt(
+			token,
+			env.JWT_PAYLOAD_ACCESS_TOKEN_ENCRYPT_KEY,
+			env.JWT_PAYLOAD_ACCESS_TOKEN_ENCRYPT_IV,
+		);
+	}
+	return jwt.verify(
+		decryptedToken,
+		env.JWT_ACCESS_TOKEN_SECRET_KEY,
+	) as IJwtPayload;
 };

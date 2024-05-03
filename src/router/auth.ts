@@ -5,6 +5,7 @@ import ms from "ms";
 import {
 	AUTH_ROUTES,
 	DB_ID_PREFIX,
+	type IJwtPayload,
 	RES_KEY,
 	ROUTES,
 	SW_ROUTE_DETAIL,
@@ -142,18 +143,16 @@ export const authRoutes = new Elysia({
 					...Object.values(RES_KEY.USER_PASSWORD_EXPIRED),
 				);
 			}
-			const sessionId: string = dbIdGenerator(DB_ID_PREFIX.SESSION);
+			const accessSessionId: string = dbIdGenerator(DB_ID_PREFIX.SESSION);
 			const refreshSessionId: string = randomUUID();
 			let accessToken: string = createAccessToken({
-				id: user.id,
 				loginDate: new Date(),
-				sessionId,
-			});
+				sessionId: accessSessionId,
+			} satisfies IJwtPayload);
 			let refreshToken: string = createRefreshToken({
-				id: user.id,
 				loginDate: new Date(),
 				sessionId: refreshSessionId,
-			});
+			} satisfies IJwtPayload);
 			if (env.ENB_TOKEN_ENCRYPT) {
 				accessToken = aes256Encrypt(
 					accessToken,
@@ -174,13 +173,13 @@ export const authRoutes = new Elysia({
 					token: refreshSessionId,
 					expires: new Date(Date.now() + ms(env.JWT_REFRESH_TOKEN_EXPIRED)),
 				}),
-				sessionRepository.save(sessionId, {
-					id: sessionId,
+				sessionRepository.save(accessSessionId, {
+					id: accessSessionId,
 					userId: user.id,
 				}),
 			]);
 			await sessionRepository.expireAt(
-				sessionId,
+				accessSessionId,
 				new Date(Date.now() + ms(env.JWT_ACCESS_TOKEN_EXPIRED)),
 			);
 
