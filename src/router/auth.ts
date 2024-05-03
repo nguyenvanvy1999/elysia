@@ -1,5 +1,4 @@
 import { randomUUID } from "node:crypto";
-import { compareSync } from "bcryptjs";
 import { eq, or } from "drizzle-orm";
 import { Elysia } from "elysia";
 import ms from "ms";
@@ -110,7 +109,11 @@ export const authRoutes = new Elysia({
 					...Object.values(RES_KEY.USER_PASSWORD_ATTEMPT_MAX),
 				);
 			}
-			const passwordMatch: boolean = compareSync(password, user.password);
+			const passwordMatch: boolean = Bun.password.verifySync(
+				password,
+				user.password,
+				"bcrypt",
+			);
 			if (!passwordMatch) {
 				await increasePasswordAttempt(user.id);
 				throw HttpError.BadRequest(

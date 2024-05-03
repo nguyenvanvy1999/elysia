@@ -1,4 +1,10 @@
 DO $$ BEGIN
+ CREATE TYPE "user_status_enum" AS ENUM('active', 'inactive', 'inactive_permanent', 'block');
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
  CREATE TYPE "setting_type_enum" AS ENUM('string', 'number', 'boolean', 'json', 'date');
 EXCEPTION
  WHEN duplicate_object THEN null;
@@ -45,10 +51,10 @@ CREATE TABLE IF NOT EXISTS "user" (
 	"email_verified" timestamp,
 	"avatar_url" text,
 	"password" varchar(256) NOT NULL,
-	"salt" varchar NOT NULL,
 	"password_created" timestamp NOT NULL,
 	"password_expired" timestamp NOT NULL,
 	"password_attempt" integer NOT NULL,
+	"status" "user_status_enum" DEFAULT 'active' NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now(),
 	"updated_at" timestamp with time zone DEFAULT now(),
 	CONSTRAINT "user_username_unique" UNIQUE("username"),

@@ -27,7 +27,6 @@ export const users = pgTable(DB_TABLE_NAME.USER, {
 	emailVerified: timestamp("email_verified", { mode: "date" }),
 	avatarUrl: text("avatar_url"),
 	password: varchar("password", { length: 256 }).notNull(),
-	salt: varchar("salt").notNull(),
 	passwordCreated: timestamp("password_created").notNull(),
 	passwordExpired: timestamp("password_expired").notNull(),
 	passwordAttempt: integer("password_attempt").notNull(),
