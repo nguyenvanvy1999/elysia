@@ -9,7 +9,6 @@ import {
 	RES_KEY,
 	ROUTES,
 	SW_ROUTE_DETAIL,
-	USER_STATUS,
 	errorRes,
 	errorsDefault,
 	loginBody,
@@ -20,7 +19,7 @@ import {
 } from "src/common";
 import { db, env, httpErrorDecorator, sessionRepository } from "src/config";
 import { refreshTokens, users } from "src/db";
-import { increasePasswordAttempt } from "src/service";
+import { checkUserStatus, increasePasswordAttempt } from "src/service";
 import {
 	aes256Encrypt,
 	checkPasswordExpired,
@@ -124,18 +123,7 @@ export const authRoutes = new Elysia({
 					...Object.values(RES_KEY.USER_PASSWORD_NOT_MATCH),
 				);
 			}
-			switch (user.status) {
-				case USER_STATUS.INACTIVE:
-					throw HttpError.Forbidden(...Object.values(RES_KEY.USER_INACTIVE));
-				case USER_STATUS.INACTIVE_PERMANENT:
-					throw HttpError.Forbidden(
-						...Object.values(RES_KEY.USER_INACTIVE_PERMANENT),
-					);
-				case USER_STATUS.BLOCK:
-					throw HttpError.Forbidden(...Object.values(RES_KEY.USER_BLOCKED));
-				default:
-					break;
-			}
+			checkUserStatus(user.status);
 			const passwordExpired: boolean = checkPasswordExpired(
 				user.passwordExpired,
 			);

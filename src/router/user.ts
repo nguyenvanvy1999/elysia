@@ -18,19 +18,28 @@ export const userRoutes = new Elysia({
 	detail: { tags: [swaggerOptions.tags.user.name] },
 })
 	.use(httpErrorDecorator)
-	.group("", (app) =>
-		app.use(isAuthenticated({})).get(
-			USER_ROUTES.INFO,
-			async ({ user }): Promise<any> => {
-				return resBuild(user, RES_KEY.USER_INFO);
-			},
-			{
-				detail: SW_ROUTE_DETAIL.USER_INFO,
-				response: {
-					200: userInfoRes,
-					401: errorRes,
-					...errorsDefault,
+	.use(isAuthenticated)
+	.get(
+		USER_ROUTES.INFO,
+		async ({ user }): Promise<any> => {
+			return resBuild(
+				{
+					id: user.id,
+					email: user.email,
+					username: user.username,
+					avatarUrl: user.avatarUrl,
+					name: user.name,
+					status: user.status,
 				},
+				RES_KEY.USER_INFO,
+			);
+		},
+		{
+			detail: SW_ROUTE_DETAIL.USER_INFO,
+			response: {
+				200: userInfoRes,
+				401: errorRes,
+				...errorsDefault,
 			},
-		),
+		},
 	);
