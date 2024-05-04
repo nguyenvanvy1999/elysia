@@ -1,13 +1,26 @@
-import { describe, expect, it } from "bun:test";
+import { type Mock, describe, expect, it, spyOn } from "bun:test";
 import crypto from "node:crypto";
 import jwt from "jsonwebtoken";
+import type { IJwtPayload } from "src/common";
+import { env } from "src/config";
 import {
 	aes256Decrypt,
 	aes256Encrypt,
 	createAccessToken,
 	createRefreshToken,
 	jwtEncrypt,
+	verifyAccessToken,
 } from "src/util";
+
+interface IResponse {
+	id: string;
+	aud?: string;
+	iss?: string;
+	sub?: string;
+	nbf?: number | string;
+	exp?: string | number;
+	iat: number;
+}
 
 describe("Util: Token testing", (): void => {
 	describe("aes256Encrypt and aes256Decrypt", () => {
@@ -78,15 +91,7 @@ describe("Util: Token testing", (): void => {
 		interface IData {
 			[key: string]: string;
 		}
-		interface IResponse {
-			id: string;
-			aud?: string;
-			iss?: string;
-			sub?: string;
-			nbf?: number | string;
-			exp?: string | number;
-			iat: number;
-		}
+
 		const data: IData = { id: "test" };
 
 		it("should encrypt and return token", (): void => {
@@ -131,6 +136,41 @@ describe("Util: Token testing", (): void => {
 		it("should return refresh token", (): void => {
 			const token: string = createRefreshToken(data);
 			expect(token).toBeString();
+		});
+	});
+
+	describe("verifyAccessToken", (): void => {
+		const payload: Record<string, any> = { sessionId: "test" };
+		const token: string = createAccessToken(payload);
+		const expectRes = (verified: IJwtPayload): void => {
+			expect(verified).toBeObject();
+			expect(verified.sessionId).toEqual(payload.sessionId);
+			expect(verified).toHaveProperty("iat");
+			expect(verified).toHaveProperty("nbf");
+			expect(verified).toHaveProperty("exp");
+			expect(verified).toHaveProperty("aud");
+			expect(verified).toHaveProperty("iss");
+			expect(verified).toHaveProperty("sub");
+		};
+
+		const spy: Mock<any> = spyOn(env, "ENB_TOKEN_ENCRYPT");
+		it("Should decrypt token and verify", (): void => {
+			spy.mockReturnValue(true);
+			const encryptToken: string = aes256Encrypt(
+				token,
+				env.JWT_PAYLOAD_ACCESS_TOKEN_ENCRYPT_KEY,
+				env.JWT_PAYLOAD_ACCESS_TOKEN_ENCRYPT_IV,
+			);
+			const verified: IJwtPayload = verifyAccessToken(encryptToken);
+			expectRes(verified);
+		});
+		it("Should verify token if not enable encrypt", (): void => {
+			spy.mockReturnValue(false);
+			const verified: IJwtPayload = verifyAccessToken(token);
+			expectRes(verified);
+		});
+		it("Should throw error when token wrong", (): void => {
+			expect(() => verifyAccessToken("wrong_token")).toThrowError();
 		});
 	});
 });
