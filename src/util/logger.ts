@@ -1,8 +1,11 @@
 import chalk from "chalk";
 import type { Context } from "elysia";
+import { NODE_ENV } from "src/common";
+import { env } from "src/config";
 
-function requestLogger(ctx: Context): void {
-	if (process.env.NODE_ENV === "development") {
+export function requestLogger(ctx: Context): void {
+	if (env.NODE_ENV === NODE_ENV.DEVELOPMENT) return;
+	{
 		let coloredMethod: string;
 		switch (ctx.request.method) {
 			case "GET":
@@ -32,10 +35,10 @@ function requestLogger(ctx: Context): void {
 	}
 }
 
-function bootLogger() {
-	if (process.env.NODE_ENV === "development") {
+export function bootLogger(): void {
+	if (env.NODE_ENV === NODE_ENV.DEVELOPMENT) {
 		console.log(
-			"running on",
+			"🦊 Elysia is running at",
 			chalk.blueBright("http://localhost:") +
 				chalk.greenBright(process.env.PORT),
 		);

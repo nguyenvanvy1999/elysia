@@ -10,7 +10,7 @@ import {
 	swaggerConfig,
 } from "src/config";
 import { authRoutes, userRoutes } from "src/router";
-import { fixCtxRequest, gracefulShutdown } from "src/util";
+import { bootLogger, fixCtxRequest, gracefulShutdown } from "src/util";
 
 try {
 	await connectRedis();
@@ -41,9 +41,7 @@ try {
 	process.on("SIGTERM", app.stop);
 	app.listen(env.PORT);
 
-	console.log(
-		`🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`,
-	);
+	bootLogger();
 } catch (e) {
 	console.log("error booting the server");
 	console.error(e);
