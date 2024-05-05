@@ -206,6 +206,18 @@ export const translates = [
 		key: RES_KEY.TOKEN_EXPIRED.message,
 		value: "Token da het han",
 	},
+	{
+		lang: LANGUAGE.EN,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.MAINTENANCE.message,
+		value: "Server maintenance",
+	},
+	{
+		lang: LANGUAGE.VI,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.MAINTENANCE.message,
+		value: "Server dang trong qua trinh bao tri",
+	},
 
 	// response
 	{

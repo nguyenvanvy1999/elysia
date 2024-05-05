@@ -9,6 +9,7 @@ import {
 	requestHeader,
 	swaggerConfig,
 } from "src/config";
+import { maintenance } from "src/config/maintenace";
 import { authRoutes, userRoutes } from "src/router";
 import { bootLogger, fixCtxRequest, gracefulShutdown } from "src/util";
 
@@ -19,7 +20,7 @@ try {
 		.use(
 			cors({ origin: "*", methods: ["GET", "POST", "PUT", "DELETE", "PATCH"] }),
 		)
-		.use(swaggerConfig())
+		.use(maintenance)
 		.use(
 			requestHeader({
 				ip: true,
@@ -31,9 +32,10 @@ try {
 				repoVersion: true,
 			}),
 		)
-		.use(compression())
 		.use(httpError())
 		.use(httpResponse())
+		.use(swaggerConfig())
+		.use(compression())
 		.onStop(gracefulShutdown)
 		.use(authRoutes)
 		.use(userRoutes);
