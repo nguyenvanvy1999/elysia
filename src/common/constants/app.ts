@@ -48,75 +48,83 @@ export const REDIS_CACHE_EX = {
 	TRANSLATION_CACHE: 60 * 10, // 10 minutes
 };
 
+export enum REDIS_KEY {
+	SETTING_MAINTENANCE = "setting_maintenance",
+}
+
 export const RES_KEY = {
 	// error
 	UNKNOWN: {
 		message: "ERROR.UNKNOWN",
-		code: "UKN",
+		code: "UNKNOWN_1",
 	},
 	VALIDATION: {
 		message: "ERROR.VALIDATION",
-		code: "VAL",
+		code: "VALIDATION",
 	},
 	INTERNAL_SERVER_ERROR: {
 		message: "ERROR.INTERNAL_SERVER_ERROR",
-		code: "ISE",
+		code: "INTERNAL_SERVER_ERROR",
 	},
 	UN_AUTHORIZATION: {
 		message: "ERROR.UN_AUTHORIZATION",
-		code: "U_AUTHOR_01",
+		code: "UN_AUTHORIZATION_1",
 	},
 	WRONG_TOKEN: {
 		message: "ERROR.WRONG_TOKEN",
-		code: "U_AUTHOR_02",
+		code: "UN_AUTHORIZATION_2",
 	},
 	TOKEN_EMPTY: {
 		message: "ERROR.TOKEN_EMPTY",
-		code: "U_AUTHOR_03",
+		code: "UN_AUTHORIZATION_3",
 	},
 	TOKEN_EXPIRED: {
 		message: "ERROR.TOKEN_EXPIRED",
-		code: "U_AUTHOR_04",
+		code: "UN_AUTHORIZATION_4",
 	},
 	EMAIL_ALREADY_EXIST: {
 		message: "ERROR.EMAIL_ALREADY_EXIST",
-		code: "CFL_01",
+		code: "CONFLICT_1",
 	},
 	USERNAME_ALREADY_EXIST: {
 		message: "ERROR.USERNAME_ALREADY_EXIST",
-		code: "CFL_02",
+		code: "CONFLICT_2",
 	},
 	NOT_FOUND: {
 		message: "ERROR.NOT_FOUND",
-		code: "NFD_01",
+		code: "NOT_FOUND_1",
 	},
 	USER_NOT_FOUND: {
 		message: "ERROR.USER_NOT_FOUND",
-		code: "NFD_02",
+		code: "NOT_FOUND_2",
 	},
 	USER_PASSWORD_ATTEMPT_MAX: {
 		message: "ERROR.USER_PASSWORD_ATTEMPT_MAX",
-		code: "FBD_01",
+		code: "FORBIDDEN_RESOURCE_1",
 	},
 	USER_INACTIVE: {
 		message: "ERROR.USER_INACTIVE",
-		code: "FBD_02",
+		code: "FORBIDDEN_RESOURCE_2",
 	},
 	USER_INACTIVE_PERMANENT: {
 		message: "ERROR.USER_INACTIVE_PERMANENT",
-		code: "FBD_03",
+		code: "FORBIDDEN_RESOURCE_3",
 	},
 	USER_PASSWORD_EXPIRED: {
 		message: "ERROR.USER_PASSWORD_EXPIRED",
-		code: "FBD_04",
+		code: "FORBIDDEN_RESOURCE_4",
 	},
 	USER_BLOCKED: {
 		message: "ERROR.USER_BLOCKED",
-		code: "FBD_05",
+		code: "FORBIDDEN_RESOURCE_5",
 	},
 	USER_PASSWORD_NOT_MATCH: {
 		message: "ERROR.USER_PASSWORD_NOT_MATCH",
-		code: "BRQ_01",
+		code: "BAD_REQUEST_1",
+	},
+	MAINTENANCE: {
+		message: "ERROR.MAINTENANCE",
+		code: "SERVICE_UNAVAILABLE",
 	},
 
 	// response

@@ -35,7 +35,10 @@ export const isAuthenticated = (
 		let payload: IJwtPayload;
 		try {
 			payload = verifyAccessToken(token);
-		} catch (e) {
+		} catch (e: any) {
+			if (e?.name === "TokenExpiredError") {
+				throw HttpError.Unauthorized(...Object.values(RES_KEY.TOKEN_EXPIRED));
+			}
 			throw HttpError.Unauthorized(...Object.values(RES_KEY.WRONG_TOKEN));
 		}
 		if (!payload?.sessionId) {
