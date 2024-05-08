@@ -153,13 +153,13 @@ describe("Util: Token testing", (): void => {
 			expect(verified).toHaveProperty("sub");
 		};
 
-		const spy: Mock<any> = spyOn(env, "ENB_TOKEN_ENCRYPT");
+		const spy: Mock<any> = spyOn(env, "enbTokenEncrypt");
 		it("Should decrypt token and verify", (): void => {
 			spy.mockReturnValue(true);
 			const encryptToken: string = aes256Encrypt(
 				token,
-				env.JWT_PAYLOAD_ACCESS_TOKEN_ENCRYPT_KEY,
-				env.JWT_PAYLOAD_ACCESS_TOKEN_ENCRYPT_IV,
+				env.jwtPayloadAccessTokenEncryptKey,
+				env.jwtPayloadAccessTokenEncryptIv,
 			);
 			const verified: IJwtPayload = verifyAccessToken(encryptToken);
 			expectRes(verified);

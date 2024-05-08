@@ -6,12 +6,12 @@ import { forwardInSeconds } from "src/util/date";
 
 export const createPassword = (password: string): IAuthPassword => {
 	const passwordSalt: string = crypto
-		.randomBytes(env.PASSWORD_SALT_LENGTH)
+		.randomBytes(env.passwordSaltLength)
 		.toString("hex");
 	const passwordHash: string = Bun.password.hashSync(
-		passwordSalt + password + env.PASSWORD_PEPPER,
+		passwordSalt + password + env.passwordPepper,
 	);
-	const passwordExpired: Date = forwardInSeconds(ms(env.PASSWORD_EXPIRED));
+	const passwordExpired: Date = forwardInSeconds(ms(env.passwordExpired));
 	return {
 		password: passwordHash,
 		passwordExpired,
@@ -30,5 +30,5 @@ export const comparePassword = (
 	hash: string,
 	salt: string,
 ): boolean => {
-	return Bun.password.verifySync(salt + password + env.PASSWORD_PEPPER, hash);
+	return Bun.password.verifySync(salt + password + env.passwordPepper, hash);
 };

@@ -92,11 +92,11 @@ export const seedAuthData = async (): Promise<void> => {
 		const userCreates = [
 			{
 				id: adminId,
-				email: env.ADMIN_EMAIL,
-				name: env.ADMIN_USERNAME,
-				username: env.ADMIN_USERNAME,
+				email: env.adminEmail,
+				name: env.adminUsername,
+				username: env.adminUsername,
 				emailVerified: new Date(),
-				...createPassword(env.ADMIN_PASSWORD),
+				...createPassword(env.adminPassword),
 			},
 		];
 		const usersToRolesCreates = [

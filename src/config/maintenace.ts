@@ -9,7 +9,7 @@ import {
 import { redisClient } from "src/config/redis";
 import { translate } from "src/util/translate";
 
-export const maintenance = (app: Elysia) =>
+export const maintenance = async (app: Elysia) =>
 	app.onRequest(async ({ set, request }): Promise<IResponse | undefined> => {
 		const maintenance: string | null = await redisClient.get(
 			REDIS_KEY.SETTING_MAINTENANCE,

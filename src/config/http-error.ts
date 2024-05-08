@@ -1,4 +1,4 @@
-import { Elysia } from "elysia";
+import type { Elysia } from "elysia";
 import {
 	AVAILABLE_LANGUAGES,
 	type IRequestDerive,
@@ -213,10 +213,6 @@ export class HttpError extends Error {
 		);
 	}
 }
-
-export const httpErrorDecorator = new Elysia({
-	name: "elysia-http-error-decorator",
-}).decorate("HttpError", HttpError);
 
 export const httpError =
 	() =>

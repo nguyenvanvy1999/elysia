@@ -6,6 +6,6 @@ export default {
 	out: "./src/db/migrations",
 	driver: "pg",
 	dbCredentials: {
-		connectionString: env.DATABASE_URL,
+		connectionString: env.postgresUri,
 	},
 } satisfies Config;

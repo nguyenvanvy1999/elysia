@@ -4,9 +4,9 @@ import { env } from "src/config";
 import * as authSchema from "src/db/schemas";
 
 export const pgPool: Pool = new Pool({
-	connectionString: env.DATABASE_URL,
+	connectionString: env.postgresUri,
 });
 export const db = drizzle(pgPool, {
-	logger: true,
+	logger: env.databaseDebug,
 	schema: { ...authSchema },
 });

@@ -4,8 +4,8 @@ import { env } from "src/config/env";
 import { sessionSchema, settingSchema } from "src/db/redis-schemas";
 
 export const redisClient: RedisClientType = createClient({
-	password: env.REDIS_PASSWORD,
-	url: env.REDIS_URL,
+	password: env.redisPassword,
+	url: env.redisUrl,
 });
 
 redisClient.on("error", (error) => {

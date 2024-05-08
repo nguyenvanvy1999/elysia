@@ -171,7 +171,7 @@ export enum USER_ROUTES {
 	INFO = "/info",
 }
 
-export enum NODE_ENV {
+export enum APP_ENV {
 	DEVELOPMENT = "development",
 	PRODUCTION = "production",
 	TEST = "test",
@@ -184,7 +184,10 @@ export enum TRANSLATION_NS {
 
 export const DEFAULT = {
 	PORT: 3001,
-	NODE_ENV: NODE_ENV.DEVELOPMENT,
+	API_PREFIX: "/api",
+	API_VERSION_PREFIX: "v",
+	API_VERSION: 1,
+	APP_ENV: APP_ENV.DEVELOPMENT,
 	JWT_ACCESS_TOKEN_SECRET_KEY: "123456aA@",
 	JWT_ACCESS_TOKEN_EXPIRED: "1H", // 1 hour
 	NOT_BEFORE_EXPIRATION_TIME: "0", // immediately

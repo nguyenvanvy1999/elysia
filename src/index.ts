@@ -11,12 +11,11 @@ import {
 } from "src/config";
 import { maintenance } from "src/config/maintenace";
 import { authRoutes, userRoutes } from "src/router";
-import { bootLogger, fixCtxRequest, gracefulShutdown } from "src/util";
+import { bootLogger, gracefulShutdown } from "src/util";
 
 try {
 	await connectRedis();
 	const app = new Elysia()
-		.derive((ctx) => fixCtxRequest(ctx.request))
 		.use(
 			cors({ origin: "*", methods: ["GET", "POST", "PUT", "DELETE", "PATCH"] }),
 		)
@@ -41,7 +40,7 @@ try {
 		.use(userRoutes);
 	process.on("SIGINT", app.stop);
 	process.on("SIGTERM", app.stop);
-	app.listen(env.PORT);
+	app.listen(env.appPort);
 
 	bootLogger();
 } catch (e) {

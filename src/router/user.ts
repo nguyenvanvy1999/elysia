@@ -9,7 +9,6 @@ import {
 	swaggerOptions,
 	userInfoRes,
 } from "src/common";
-import { httpErrorDecorator } from "src/config";
 import { isAuthenticated } from "src/middleware";
 import { resBuild } from "src/util";
 
@@ -17,7 +16,6 @@ export const userRoutes = new Elysia({
 	prefix: ROUTES.USER_V1,
 	detail: { tags: [swaggerOptions.tags.user.name] },
 })
-	.use(httpErrorDecorator)
 	.use(isAuthenticated)
 	.get(
 		USER_ROUTES.INFO,

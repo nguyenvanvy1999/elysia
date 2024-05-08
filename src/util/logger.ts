@@ -1,10 +1,10 @@
 import chalk from "chalk";
 import type { Context } from "elysia";
-import { NODE_ENV } from "src/common";
+import { APP_ENV } from "src/common";
 import { env } from "src/config";
 
 export function requestLogger(ctx: Context): void {
-	if (env.NODE_ENV === NODE_ENV.DEVELOPMENT) return;
+	if (env.appEnv === APP_ENV.DEVELOPMENT) return;
 	{
 		let coloredMethod: string;
 		switch (ctx.request.method) {
@@ -36,7 +36,7 @@ export function requestLogger(ctx: Context): void {
 }
 
 export function bootLogger(): void {
-	if (env.NODE_ENV === NODE_ENV.DEVELOPMENT) {
+	if (env.appEnv === APP_ENV.DEVELOPMENT) {
 		console.log(
 			"🦊 Elysia is running at",
 			chalk.blueBright("http://localhost:") +

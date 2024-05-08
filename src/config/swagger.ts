@@ -4,14 +4,14 @@ import { swaggerOptions, versionOptions } from "src/common";
 import { env } from "src/config/env";
 
 export const swaggerConfig = () => (app: Elysia) => {
-	if (env.ENB_SWAGGER_UI) {
+	if (env.enbSwaggerUi) {
 		return app.use(
 			swagger({
 				documentation: {
 					info: { ...swaggerOptions.info, version: versionOptions.version },
 					servers: [
 						{
-							url: `http://localhost:${env.PORT}`,
+							url: `http://localhost:${env.appPort}`,
 							description: "Local server",
 						},
 					],
