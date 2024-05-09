@@ -1,5 +1,9 @@
 # Elysia with Bun runtime
 
+[![Linter](https://github.com/nguyenvanvy1999/elysia/actions/workflows/linter.yml/badge.svg)](https://github.com/nguyenvanvy1999/elysia/actions/workflows/linter.yml)
+
+[![Test](https://github.com/nguyenvanvy1999/elysia/actions/workflows/test.yml/badge.svg)](https://github.com/nguyenvanvy1999/elysia/actions/workflows/test.yml)
+
 ## Getting Started
 To get started with this template, simply paste this command into your terminal:
 ```bash
