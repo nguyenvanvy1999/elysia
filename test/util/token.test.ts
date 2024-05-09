@@ -7,7 +7,9 @@ import {
 	aes256Decrypt,
 	aes256Encrypt,
 	createAccessToken,
+	createActiveAccountToken,
 	createRefreshToken,
+	decryptActiveAccountToken,
 	jwtEncrypt,
 	verifyAccessToken,
 } from "src/util";
@@ -171,6 +173,32 @@ describe("Util: Token testing", (): void => {
 		});
 		it("Should throw error when token wrong", (): void => {
 			expect(() => verifyAccessToken("wrong_token")).toThrowError();
+		});
+	});
+
+	describe("createActiveAccountToken", (): void => {
+		it("Should return active account token", (): void => {
+			const id: string = "string_test";
+			const encrypted: string = createActiveAccountToken(id);
+			expect(encrypted).toBeString();
+			const { userId, expiredIn } = decryptActiveAccountToken(encrypted);
+			expect(userId).toBeString();
+			expect(userId).toBe(id);
+			expect(expiredIn).toBeNumber();
+			expect(expiredIn).toBeGreaterThan(Date.now());
+		});
+	});
+
+	describe("decryptActiveAccountToken", (): void => {
+		it("Should decrypt active account token", (): void => {
+			const id: string = "userId_test";
+			const encrypted: string = createActiveAccountToken(id);
+			expect(encrypted).toBeString();
+			const { userId, expiredIn } = decryptActiveAccountToken(encrypted);
+			expect(userId).toBeString();
+			expect(userId).toBe(id);
+			expect(expiredIn).toBeNumber();
+			expect(expiredIn).toBeGreaterThan(Date.now());
 		});
 	});
 });
