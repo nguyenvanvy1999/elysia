@@ -150,3 +150,34 @@ export const permissionsToRolesRelations = relations(
 		}),
 	}),
 );
+
+export const translations = pgTable(
+	DB_TABLE_NAME.TRANSLATION,
+	{
+		lang: text("lang").notNull(),
+		ns: text("ns").notNull(),
+		key: text("key").notNull(),
+		value: text("value").notNull(),
+	},
+	(vt) => ({
+		langIdx: index("lang_idx").on(vt.lang),
+		nsIdx: index("ns_idx").on(vt.ns),
+		keyIdx: index("key_idx").on(vt.key),
+	}),
+);
+
+export const settingTypeEnum = pgEnum("setting_type_enum", [
+	"string",
+	"number",
+	"boolean",
+	"json",
+	"date",
+]);
+
+export const settings = pgTable(DB_TABLE_NAME.SETTING, {
+	id: varchar("id", { length: 32 }).notNull().primaryKey(),
+	key: text("key").unique().notNull(),
+	description: text("description"),
+	type: settingTypeEnum("type").notNull(),
+	value: varchar("value", { length: 2048 }).notNull(),
+});
