@@ -122,6 +122,10 @@ export const RES_KEY = {
 		message: "ERROR.USER_PASSWORD_NOT_MATCH",
 		code: "BAD_REQUEST_1",
 	},
+	ACTIVE_ACCOUNT_EMAIL_RATE_LIMIT: {
+		message: "ERROR.ACTIVE_ACCOUNT_EMAIL_RATE_LIMIT",
+		code: "BAD_REQUEST_2",
+	},
 	MAINTENANCE: {
 		message: "ERROR.MAINTENANCE",
 		code: "SERVICE_UNAVAILABLE",
@@ -155,6 +159,10 @@ export const SW_ROUTE_DETAIL = {
 		description: "Get user information",
 		summary: "User info",
 	},
+	SEND_EMAIL_VERIFY: {
+		description: "Send email verify account",
+		summary: "Send email verify",
+	},
 };
 
 export enum ROUTES {
@@ -169,6 +177,7 @@ export enum AUTH_ROUTES {
 
 export enum USER_ROUTES {
 	INFO = "/info",
+	SEND_EMAIL_VERIFY = "/send-email-active-account",
 }
 
 export enum APP_ENV {
@@ -202,4 +211,15 @@ export const DEFAULT = {
 	LANGUAGE: LANGUAGE.EN,
 	TRANSLATION_NS: TRANSLATION_NS.BACKEND,
 	SWAGGER_UI_PATH: "/swagger",
+	ACTIVE_ACCOUNT_TOKEN_EXPIRED: "5m",
 };
+
+export enum HTTP_METHOD {
+	GET = "GET",
+	POST = "POST",
+	PUT = "PUT",
+	PATCH = "PATCH",
+	DELETE = "DELETE",
+	OPTIONS = "OPTIONS",
+	HEAD = "HEAD",
+}

@@ -1,6 +1,7 @@
 import camelcaseKeys from "camelcase-keys";
 import {
 	DEFAULT,
+	HTTP_METHOD,
 	PASSWORD_REGEX,
 	POSTGRES_URI_REGEX,
 	REDIS_URI_REGEX,
@@ -94,6 +95,14 @@ const envVariables = z
 			.string()
 			.default(DEFAULT.NOT_BEFORE_EXPIRATION_TIME),
 
+		// active token config
+		ACTIVE_ACCOUNT_TOKEN_ENCRYPT_KEY: z.string(),
+		ACTIVE_ACCOUNT_TOKEN_ENCRYPT_IV: z.string(),
+		ACTIVE_ACCOUNT_TOKEN_EXPIRED: z
+			.string()
+			.regex(TIME_REGEX)
+			.default(DEFAULT.ACTIVE_ACCOUNT_TOKEN_EXPIRED),
+
 		// redis config
 		REDIS_URL: z.string().min(1).regex(REDIS_URI_REGEX),
 		REDIS_PASSWORD: z.string().default(""),
@@ -103,6 +112,49 @@ const envVariables = z
 		ADMIN_USERNAME: z.string(),
 		ADMIN_PASSWORD: z.string().regex(PASSWORD_REGEX),
 	})
-	.transform(camelize);
+	.transform((input) => ({
+		...camelize(input),
+		cors: {
+			allowMethod: [
+				HTTP_METHOD.GET,
+				HTTP_METHOD.DELETE,
+				HTTP_METHOD.PUT,
+				HTTP_METHOD.PATCH,
+				HTTP_METHOD.POST,
+			],
+			allowOrigin: "*", // allow all origin
+			// allowOrigin: [/example\.com(\:\d{1,4})?$/], // allow all subdomain, and all port
+			// allowOrigin: [/example\.com$/], // allow all subdomain without port
+			allowHeader: [
+				"Accept",
+				"Accept-Language",
+				"Content-Language",
+				"Content-Type",
+				"Origin",
+				"Authorization",
+				"Access-Control-Request-Method",
+				"Access-Control-Request-Headers",
+				"Access-Control-Allow-Headers",
+				"Access-Control-Allow-Origin",
+				"Access-Control-Allow-Methods",
+				"Access-Control-Allow-Credentials",
+				"Access-Control-Expose-Headers",
+				"Access-Control-Max-Age",
+				"Referer",
+				"Host",
+				"X-Requested-With",
+				"x-custom-lang",
+				"x-timestamp",
+				"x-api-key",
+				"x-timezone",
+				"x-request-id",
+				"x-version",
+				"x-repo-version",
+				"X-Response-Time",
+				"user-agent",
+				"User-Agent",
+			],
+		},
+	}));
 
 export const env = envVariables.parse(process.env);
