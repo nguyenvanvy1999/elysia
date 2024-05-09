@@ -51,8 +51,8 @@ export const refreshTokens = pgTable(
 		expires: timestamp("expires", { mode: "date" }).notNull(),
 	},
 	(vt) => ({
-		userIdIndex: index("user_idx").on(vt.userId),
-		tokenIdx: index("token_idx").on(vt.token),
+		userIdIdx: index("refresh_token_user_idx").on(vt.userId),
+		tokenIdx: index("refresh_token_token_idx").on(vt.token),
 	}),
 );
 
@@ -160,9 +160,9 @@ export const translations = pgTable(
 		value: text("value").notNull(),
 	},
 	(vt) => ({
-		langIdx: index("lang_idx").on(vt.lang),
-		nsIdx: index("ns_idx").on(vt.ns),
-		keyIdx: index("key_idx").on(vt.key),
+		langIdx: index("translation_lang_idx").on(vt.lang),
+		nsIdx: index("translation_ns_idx").on(vt.ns),
+		keyIdx: index("translation_key_idx").on(vt.key),
 	}),
 );
 

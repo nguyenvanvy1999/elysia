@@ -5,3 +5,4 @@ export * from "./db";
 export * from "./redis";
 export * from "./response";
 export * from "./request-header";
+export * from "./kafka";

@@ -58,6 +58,7 @@ CREATE TABLE IF NOT EXISTS "user" (
 	"status" "user_status_enum" DEFAULT 'active' NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now(),
 	"updated_at" timestamp with time zone DEFAULT now(),
+	"active_account_token" varchar,
 	CONSTRAINT "user_username_unique" UNIQUE("username"),
 	CONSTRAINT "user_email_unique" UNIQUE("email")
 );

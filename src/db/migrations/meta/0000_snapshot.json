@@ -1,5 +1,5 @@
 {
-  "id": "dd2c5af3-ee73-42d6-884b-82bdbb8cd2b2",
+  "id": "e08f8803-aba3-4e57-92e7-25bd755d5732",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "5",
   "dialect": "pg",
@@ -316,6 +316,12 @@
           "primaryKey": false,
           "notNull": false,
           "default": "now()"
+        },
+        "active_account_token": {
+          "name": "active_account_token",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},

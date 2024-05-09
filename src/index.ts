@@ -7,6 +7,7 @@ import {
 	env,
 	httpError,
 	httpResponse,
+	producer,
 	requestHeader,
 	swaggerConfig,
 } from "src/config";
@@ -15,6 +16,8 @@ import { authRoutes, userRoutes } from "src/router";
 import { bootLogger, gracefulShutdown } from "src/util";
 
 try {
+	await producer.connect();
+
 	const allowOrigin: string =
 		env.appEnv === APP_ENV.PRODUCTION ? env.cors.allowOrigin : "*";
 	await connectRedis();

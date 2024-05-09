@@ -82,7 +82,6 @@ export const userRoutes = new Elysia({
 						email: users.email,
 						activeAccountToken: users.activeAccountToken,
 					});
-				// todo: send event send email here
 				// const eventData: IUserCreatedEvent = { user: updatedUser };
 				// this.eventEmitter.emit(ENUM_EVENT.USER_SEND_EMAIL_ACTIVE, eventData);
 			}

@@ -111,9 +111,14 @@ const envVariables = z
 		ADMIN_EMAIL: z.string().email(),
 		ADMIN_USERNAME: z.string(),
 		ADMIN_PASSWORD: z.string().regex(PASSWORD_REGEX),
+
+		// kafka config
+		KAFKA_CLIENT_ID: z.string(),
+		KAFKA_BROKERS: z.string(), // split brokers with ",". Example: localhost:9093,localhost:9094
 	})
 	.transform((input) => ({
 		...camelize(input),
+		kafkaBrokers: input.KAFKA_BROKERS.split(","),
 		cors: {
 			allowMethod: [
 				HTTP_METHOD.GET,

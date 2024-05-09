@@ -254,7 +254,6 @@ export const httpError =
 						url: request.url,
 						method: request.method,
 					} satisfies IResponseMetadata;
-
 					switch (code) {
 						case "ELYSIA_HTTP_ERROR": {
 							set.status = error.statusCode;

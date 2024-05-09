@@ -12,6 +12,8 @@ export enum DB_TABLE_NAME {
 	SETTING = "setting",
 	TRANSLATION = "translation",
 	SESSION = "session",
+	EMAIL_TRACKING = "email_tracking",
+	SMS_TRACKING = "sms_tracking",
 }
 
 export enum DB_ID_PREFIX {
