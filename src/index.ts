@@ -1,6 +1,7 @@
 import { cors } from "@elysiajs/cors";
 import { Elysia } from "elysia";
 import { compression } from "elysia-compression";
+import { APP_ENV } from "src/common";
 import {
 	connectRedis,
 	env,
@@ -14,10 +15,17 @@ import { authRoutes, userRoutes } from "src/router";
 import { bootLogger, gracefulShutdown } from "src/util";
 
 try {
+	const allowOrigin: string =
+		env.appEnv === APP_ENV.PRODUCTION ? env.cors.allowOrigin : "*";
 	await connectRedis();
 	const app = new Elysia({ prefix: env.apiPrefix })
 		.use(
-			cors({ origin: "*", methods: ["GET", "POST", "PUT", "DELETE", "PATCH"] }),
+			cors({
+				origin: allowOrigin,
+				methods: env.cors.allowMethod,
+				allowedHeaders: env.cors.allowHeader,
+				preflight: false,
+			}),
 		)
 		.use(maintenance)
 		.use(
