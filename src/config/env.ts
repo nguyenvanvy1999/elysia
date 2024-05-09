@@ -33,8 +33,6 @@ const envVariables = z
 		// API config
 		API_PREFIX: z.string().default(DEFAULT.API_PREFIX),
 		ENB_API_VERSION: toggle.default("true"),
-		API_VERSION_PREFIX: z.string().default(DEFAULT.API_VERSION_PREFIX),
-		API_VERSION: z.number().default(DEFAULT.API_VERSION),
 
 		// database config
 		POSTGRES_URI: z.string().min(1).regex(POSTGRES_URI_REGEX),
@@ -59,6 +57,7 @@ const envVariables = z
 
 		// swagger config
 		ENB_SWAGGER_UI: toggle.default("true"),
+		SWAGGER_UI_PATH: z.string().default(DEFAULT.SWAGGER_UI_PATH),
 
 		// jwt config
 		ENB_TOKEN_ENCRYPT: toggle.default("true"),

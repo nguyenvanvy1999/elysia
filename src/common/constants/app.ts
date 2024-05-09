@@ -158,8 +158,8 @@ export const SW_ROUTE_DETAIL = {
 };
 
 export enum ROUTES {
-	AUTH_V1 = "api/v1/auth",
-	USER_V1 = "api/v1/user",
+	AUTH_V1 = "/v1/auth",
+	USER_V1 = "/v1/user",
 }
 
 export enum AUTH_ROUTES {
@@ -185,8 +185,6 @@ export enum TRANSLATION_NS {
 export const DEFAULT = {
 	PORT: 3001,
 	API_PREFIX: "/api",
-	API_VERSION_PREFIX: "v",
-	API_VERSION: 1,
 	APP_ENV: APP_ENV.DEVELOPMENT,
 	JWT_ACCESS_TOKEN_SECRET_KEY: "123456aA@",
 	JWT_ACCESS_TOKEN_EXPIRED: "1H", // 1 hour
@@ -203,4 +201,5 @@ export const DEFAULT = {
 	APP_LOGO: "https://s.cloudey.net/logo/v5/cloud-blue.png",
 	LANGUAGE: LANGUAGE.EN,
 	TRANSLATION_NS: TRANSLATION_NS.BACKEND,
+	SWAGGER_UI_PATH: "/swagger",
 };

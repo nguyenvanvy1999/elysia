@@ -20,7 +20,7 @@ export const swaggerConfig = () => (app: Elysia) => {
 				version: versionOptions.version,
 				provider: "scalar",
 				scalarConfig: { theme: "solarized" },
-				path: swaggerOptions.path,
+				path: env.swaggerUiPath,
 			}),
 		);
 	}

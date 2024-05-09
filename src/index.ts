@@ -15,7 +15,7 @@ import { bootLogger, gracefulShutdown } from "src/util";
 
 try {
 	await connectRedis();
-	const app = new Elysia()
+	const app = new Elysia({ prefix: env.apiPrefix })
 		.use(
 			cors({ origin: "*", methods: ["GET", "POST", "PUT", "DELETE", "PATCH"] }),
 		)
