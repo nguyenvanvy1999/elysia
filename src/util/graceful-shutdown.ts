@@ -1,24 +1,42 @@
 import chalk from "chalk";
-import { pgPool, producer, redisClient } from "src/config";
+import {
+	kafkaLogger,
+	logger,
+	pgPool,
+	postgresLogger,
+	producer,
+	redisClient,
+	redisLogger,
+} from "src/config";
 
 export const gracefulShutdown = (): void => {
-	console.log(chalk.yellowBright("shutting down gracefully (3 seconds) ...."));
+	logger.warn(chalk.yellowBright("Shutting down gracefully (2 seconds) ...."));
 	// disconnect DB and other services...
 	redisClient
 		.disconnect()
-		.then(() => console.log(chalk.yellowBright("shutdown redis ....")))
-		.catch((e) => console.error(e));
+		.then(() => redisLogger.warn(chalk.yellow("✅  Shutdown redis success")))
+		.catch((e) =>
+			redisLogger.error(`❌  Shutdown redis failed: ${JSON.stringify(e)}`),
+		);
 	pgPool
 		.end()
-		.then(() => console.log(chalk.yellowBright("shutdown database ....")))
-		.catch((e) => console.error(e));
+		.then(() =>
+			postgresLogger.warn(chalk.yellow("✅  Shutdown postgres success")),
+		)
+		.catch((e) =>
+			postgresLogger.error(
+				`❌  Shutdown postgres failed: ${JSON.stringify(e)}`,
+			),
+		);
 
 	producer
 		.disconnect()
-		.then(() => console.log(chalk.yellowBright("shutdown kafka ....")))
-		.catch((e) => console.error(e));
+		.then(() => kafkaLogger.warn(chalk.yellow("✅  Shutdown kafka success")))
+		.catch((e) =>
+			kafkaLogger.error(`❌  Shutdown kafka failed: ${JSON.stringify(e)}`),
+		);
 	setTimeout((): void => {
-		console.log("good bye");
+		logger.warn(chalk.yellowBright("✅  Shutdown success"));
 		process.exit();
 	}, 2000);
 };

@@ -223,3 +223,9 @@ export enum HTTP_METHOD {
 	OPTIONS = "OPTIONS",
 	HEAD = "HEAD",
 }
+
+export enum APP_SERVICE {
+	REDIS = "redis",
+	KAFKA = "kafka",
+	POSTGRES = "postgres",
+}

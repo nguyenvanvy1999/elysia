@@ -3,11 +3,11 @@ import { Elysia } from "elysia";
 import { compression } from "elysia-compression";
 import { APP_ENV } from "src/common";
 import {
+	connectKafka,
 	connectRedis,
 	env,
 	httpError,
 	httpResponse,
-	producer,
 	requestHeader,
 	swaggerConfig,
 } from "src/config";
@@ -16,11 +16,10 @@ import { authRoutes, userRoutes } from "src/router";
 import { bootLogger, gracefulShutdown } from "src/util";
 
 try {
-	await producer.connect();
-
 	const allowOrigin: string =
 		env.appEnv === APP_ENV.PRODUCTION ? env.cors.allowOrigin : "*";
 	await connectRedis();
+	await connectKafka();
 	const app = new Elysia({ prefix: env.apiPrefix })
 		.use(
 			cors({
@@ -51,7 +50,7 @@ try {
 		.use(userRoutes);
 	process.on("SIGINT", app.stop);
 	process.on("SIGTERM", app.stop);
-	app.listen(env.appPort);
+	app.listen({ port: env.appPort, maxRequestBodySize: 1_000_000_000 });
 
 	bootLogger();
 } catch (e) {

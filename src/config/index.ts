@@ -6,3 +6,4 @@ export * from "./redis";
 export * from "./response";
 export * from "./request-header";
 export * from "./kafka";
+export * from "./logger";

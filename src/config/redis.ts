@@ -1,6 +1,8 @@
+import chalk from "chalk";
 import { type RedisClientType, createClient } from "redis";
 import { Repository } from "redis-om";
 import { env } from "src/config/env";
+import { redisLogger } from "src/config/logger";
 import { sessionSchema, settingSchema } from "src/db/redis-schemas";
 
 export const redisClient: RedisClientType = createClient({
@@ -9,7 +11,7 @@ export const redisClient: RedisClientType = createClient({
 });
 
 redisClient.on("error", (error) => {
-	console.error(`Redis client error: ${JSON.stringify(error)}`);
+	redisLogger.error(`❌  Redis client error: ${JSON.stringify(error)}`);
 });
 
 export const settingRepository: Repository = new Repository(
@@ -23,7 +25,18 @@ export const sessionRepository: Repository = new Repository(
 );
 
 export const connectRedis = async (): Promise<void> => {
-	await redisClient.connect().then(() => console.log("Connect redis success"));
-	await settingRepository.createIndex();
-	await sessionRepository.createIndex();
+	try {
+		await redisClient.connect();
+		redisLogger.info(chalk.green("✅  Connect redis success"));
+		await settingRepository.createIndex();
+		redisLogger.info(
+			chalk.green("✅  Create setting repository index success"),
+		);
+		await sessionRepository.createIndex();
+		redisLogger.info(
+			chalk.green("✅  Create session repository index success"),
+		);
+	} catch (e) {
+		redisLogger.error(`❌  Connect redis failed: ${JSON.stringify(e)}`);
+	}
 };
