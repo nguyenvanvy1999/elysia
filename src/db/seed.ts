@@ -1,3 +1,4 @@
+import { logger } from "src/config";
 import { seedAuthData, seedTranslationsData } from "src/db/seed-db";
 
 async function main(): Promise<void> {
@@ -7,10 +8,10 @@ async function main(): Promise<void> {
 
 main()
 	.catch((e): void => {
-		console.error(e);
+		logger.error(`Seeding error ${JSON.stringify(e)}`);
 		process.exit(1);
 	})
 	.finally((): void => {
-		console.log("Seeding done!");
+		logger.info("Seeding done!");
 		process.exit(0);
 	});

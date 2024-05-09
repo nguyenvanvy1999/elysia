@@ -8,6 +8,7 @@ import {
 	env,
 	httpError,
 	httpResponse,
+	logger,
 	requestHeader,
 	swaggerConfig,
 } from "src/config";
@@ -21,6 +22,7 @@ try {
 	await connectRedis();
 	await connectKafka();
 	const app = new Elysia({ prefix: env.apiPrefix })
+		.use(logger.into({ autoLogging: true }))
 		.use(
 			cors({
 				origin: allowOrigin,

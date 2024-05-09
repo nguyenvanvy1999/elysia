@@ -1,23 +1,24 @@
 import { join } from "node:path";
-import pino from "pino";
+import { createPinoLogger } from "@bogeychan/elysia-logger";
+import { APP_SERVICE } from "src/common";
 
-const transport = pino.transport({
-	targets: [
-		{
-			target: "pino-roll",
-			options: { file: join("logs", "log"), frequency: "daily", mkdir: true },
-		},
-		{
-			target: "pino-pretty",
-			options: {
-				colorize: true,
+export const logger = createPinoLogger({
+	transport: {
+		targets: [
+			{
+				target: "pino-roll",
+				options: { file: join("logs", "log"), frequency: "daily", mkdir: true },
 			},
-		},
-	],
+			{
+				target: "pino-pretty",
+				options: {
+					colorize: true,
+				},
+			},
+		],
+	},
 });
 
-export const logger = pino(transport);
-
-export const redisLogger = logger.child({ service: "redis" });
-export const kafkaLogger = logger.child({ service: "kafka" });
-export const postgresLogger = logger.child({ service: "postgres" });
+export const redisLogger = logger.child({ service: APP_SERVICE.REDIS });
+export const kafkaLogger = logger.child({ service: APP_SERVICE.KAFKA });
+export const postgresLogger = logger.child({ service: APP_SERVICE.POSTGRES });

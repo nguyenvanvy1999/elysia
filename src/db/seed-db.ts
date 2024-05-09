@@ -6,7 +6,7 @@ import {
 	ROLE_NAME,
 	translates,
 } from "src/common";
-import { db, env } from "src/config";
+import { db, env, logger } from "src/config";
 import {
 	permissions,
 	permissionsToRoles,
@@ -19,7 +19,7 @@ import {
 import { cleanupDB, createPassword, createUser, dbIdGenerator } from "src/util";
 
 export const seedAuthData = async (): Promise<void> => {
-	console.log("🌱 Seeding auth data...");
+	logger.info("🌱 Seeding auth data...");
 	console.time("🌱 Auth data has been seeded");
 	await db.transaction(async (ct) => {
 		console.time("🧹 Cleaned up the database...");
@@ -130,7 +130,7 @@ export const seedAuthData = async (): Promise<void> => {
 };
 
 export const seedTranslationsData = async (): Promise<void> => {
-	console.log("🌱 Seeding auth data...");
+	logger.info("🌱 Seeding translation data...");
 	console.time("🌱 Auth data has been seeded");
 	await db.transaction(async (ct) => {
 		console.time("🧹 Cleaned up the database...");
