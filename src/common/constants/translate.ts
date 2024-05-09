@@ -218,6 +218,18 @@ export const translates = [
 		key: RES_KEY.MAINTENANCE.message,
 		value: "Server dang trong qua trinh bao tri",
 	},
+	{
+		lang: LANGUAGE.EN,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.ACTIVE_ACCOUNT_EMAIL_RATE_LIMIT.message,
+		value: "Please wait 5 minutes before retry send email again",
+	},
+	{
+		lang: LANGUAGE.VI,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.ACTIVE_ACCOUNT_EMAIL_RATE_LIMIT.message,
+		value: "Vui long kiem tra hop thu truoc khi yeu cau gui email moi",
+	},
 
 	// response
 	{

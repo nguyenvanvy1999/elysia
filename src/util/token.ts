@@ -1,8 +1,10 @@
 import type { Cipher, Decipher } from "node:crypto";
 import crypto from "node:crypto";
 import jwt from "jsonwebtoken";
+import ms from "ms";
 import type { IJwtPayload, IJwtVerifyOptions } from "src/common";
 import { env } from "src/config";
+import { forwardInSeconds } from "src/util/date";
 
 export const aes256Encrypt = (
 	data: string | Record<string, any> | Record<string, any>[],
@@ -73,4 +75,32 @@ export const verifyAccessToken = (token: string): IJwtPayload => {
 		);
 	}
 	return jwt.verify(decryptedToken, env.jwtAccessTokenSecretKey) as IJwtPayload;
+};
+
+export const decryptActiveAccountToken = (
+	token: string,
+): {
+	userId: string;
+	expiredIn: number;
+} => {
+	const decrypt: any = aes256Decrypt(
+		token,
+		env.activeAccountTokenEncryptKey,
+		env.activeAccountTokenEncryptIv,
+	);
+	return {
+		userId: decrypt?.userId,
+		expiredIn: Number.parseInt(decrypt?.expiredIn),
+	};
+};
+
+export const createActiveAccountToken = (userId: string): string => {
+	return aes256Encrypt(
+		{
+			userId,
+			expiredIn: forwardInSeconds(ms(env.activeAccountTokenExpired)).getTime(),
+		},
+		env.activeAccountTokenEncryptKey,
+		env.activeAccountTokenEncryptIv,
+	);
 };
