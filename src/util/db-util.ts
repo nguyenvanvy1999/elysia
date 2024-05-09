@@ -1,18 +1,11 @@
 import { faker } from "@faker-js/faker";
-import {
-	type AnyColumn,
-	type TableConfig,
-	getTableColumns,
-	sql,
-} from "drizzle-orm";
+import { type AnyColumn, type TableConfig, sql } from "drizzle-orm";
 import type {
 	PgTableWithColumns,
 	PgTransaction,
 	QueryResultHKT,
-	SelectedFields,
 } from "drizzle-orm/pg-core";
 import { UniqueEnforcer } from "enforce-unique";
-import { users } from "src/db";
 
 export async function cleanupDB<T extends TableConfig>(
 	schema: PgTransaction<
@@ -52,18 +45,4 @@ export function createUser() {
 
 export const increment = (column: AnyColumn, value = 1) => {
 	return sql`${column} + ${value}`;
-};
-
-export const userSafeSelect = (): SelectedFields => {
-	const {
-		password,
-		passwordSalt,
-		passwordAttempt,
-		passwordExpired,
-		passwordCreated,
-		createdAt,
-		updatedAt,
-		...rest
-	} = getTableColumns(users);
-	return rest;
 };

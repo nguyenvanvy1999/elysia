@@ -15,6 +15,7 @@ export const maintenance = async (app: Elysia) =>
 			REDIS_KEY.SETTING_MAINTENANCE,
 		);
 		if (maintenance === "true") {
+			set.status = 503;
 			const metadata = {
 				languages: AVAILABLE_LANGUAGES,
 				timestamp: Date.now(),
