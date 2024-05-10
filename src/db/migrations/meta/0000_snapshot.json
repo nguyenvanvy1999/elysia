@@ -1,10 +1,8 @@
 {
-  "id": "e08f8803-aba3-4e57-92e7-25bd755d5732",
-  "prevId": "00000000-0000-0000-0000-000000000000",
-  "version": "5",
-  "dialect": "pg",
+  "version": "6",
+  "dialect": "postgresql",
   "tables": {
-    "permission": {
+    "public.permission": {
       "name": "permission",
       "schema": "",
       "columns": {
@@ -60,16 +58,16 @@
       "uniqueConstraints": {
         "permission_action_entity_access_unique": {
           "name": "permission_action_entity_access_unique",
-          "nullsNotDistinct": false,
           "columns": [
             "action",
             "entity",
             "access"
-          ]
+          ],
+          "nullsNotDistinct": false
         }
       }
     },
-    "permission_to_role": {
+    "public.permission_to_role": {
       "name": "permission_to_role",
       "schema": "",
       "columns": {
@@ -91,28 +89,28 @@
         "permission_to_role_role_id_role_id_fk": {
           "name": "permission_to_role_role_id_role_id_fk",
           "tableFrom": "permission_to_role",
-          "tableTo": "role",
           "columnsFrom": [
             "role_id"
           ],
+          "tableTo": "role",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         },
         "permission_to_role_permission_id_permission_id_fk": {
           "name": "permission_to_role_permission_id_permission_id_fk",
           "tableFrom": "permission_to_role",
-          "tableTo": "permission",
           "columnsFrom": [
             "permission_id"
           ],
+          "tableTo": "permission",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {
@@ -126,7 +124,7 @@
       },
       "uniqueConstraints": {}
     },
-    "refresh_token": {
+    "public.refresh_token": {
       "name": "refresh_token",
       "schema": "",
       "columns": {
@@ -175,7 +173,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "role": {
+    "public.role": {
       "name": "role",
       "schema": "",
       "columns": {
@@ -219,14 +217,14 @@
       "uniqueConstraints": {
         "role_name_unique": {
           "name": "role_name_unique",
-          "nullsNotDistinct": false,
           "columns": [
             "name"
-          ]
+          ],
+          "nullsNotDistinct": false
         }
       }
     },
-    "user": {
+    "public.user": {
       "name": "user",
       "schema": "",
       "columns": {
@@ -330,21 +328,21 @@
       "uniqueConstraints": {
         "user_username_unique": {
           "name": "user_username_unique",
-          "nullsNotDistinct": false,
           "columns": [
             "username"
-          ]
+          ],
+          "nullsNotDistinct": false
         },
         "user_email_unique": {
           "name": "user_email_unique",
-          "nullsNotDistinct": false,
           "columns": [
             "email"
-          ]
+          ],
+          "nullsNotDistinct": false
         }
       }
     },
-    "user_to_role": {
+    "public.user_to_role": {
       "name": "user_to_role",
       "schema": "",
       "columns": {
@@ -366,28 +364,28 @@
         "user_to_role_role_id_role_id_fk": {
           "name": "user_to_role_role_id_role_id_fk",
           "tableFrom": "user_to_role",
-          "tableTo": "role",
           "columnsFrom": [
             "role_id"
           ],
+          "tableTo": "role",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         },
         "user_to_role_user_id_user_id_fk": {
           "name": "user_to_role_user_id_user_id_fk",
           "tableFrom": "user_to_role",
-          "tableTo": "user",
           "columnsFrom": [
             "user_id"
           ],
+          "tableTo": "user",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {
@@ -401,7 +399,7 @@
       },
       "uniqueConstraints": {}
     },
-    "setting": {
+    "public.setting": {
       "name": "setting",
       "schema": "",
       "columns": {
@@ -442,14 +440,14 @@
       "uniqueConstraints": {
         "setting_key_unique": {
           "name": "setting_key_unique",
-          "nullsNotDistinct": false,
           "columns": [
             "key"
-          ]
+          ],
+          "nullsNotDistinct": false
         }
       }
     },
-    "translation": {
+    "public.translation": {
       "name": "translation",
       "schema": "",
       "columns": {
@@ -507,30 +505,34 @@
     }
   },
   "enums": {
-    "user_status_enum": {
+    "public.user_status_enum": {
       "name": "user_status_enum",
-      "values": {
-        "active": "active",
-        "inactive": "inactive",
-        "inactive_permanent": "inactive_permanent",
-        "block": "block"
-      }
+      "schema": "public",
+      "values": [
+        "active",
+        "inactive",
+        "inactive_permanent",
+        "block"
+      ]
     },
-    "setting_type_enum": {
+    "public.setting_type_enum": {
       "name": "setting_type_enum",
-      "values": {
-        "string": "string",
-        "number": "number",
-        "boolean": "boolean",
-        "json": "json",
-        "date": "date"
-      }
+      "schema": "public",
+      "values": [
+        "string",
+        "number",
+        "boolean",
+        "json",
+        "date"
+      ]
     }
   },
   "schemas": {},
   "_meta": {
-    "columns": {},
     "schemas": {},
-    "tables": {}
-  }
+    "tables": {},
+    "columns": {}
+  },
+  "id": "e08f8803-aba3-4e57-92e7-25bd755d5732",
+  "prevId": "00000000-0000-0000-0000-000000000000"
 }
