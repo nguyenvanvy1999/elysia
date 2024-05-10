@@ -6,6 +6,7 @@ import {
 	type IResponseMetadata,
 	RES_KEY,
 } from "src/common";
+import { logger } from "src/config/logger";
 import { translate } from "src/util/translate";
 
 export class HttpError extends Error {
@@ -254,20 +255,30 @@ export const httpError =
 						url: request.url,
 						method: request.method,
 					} satisfies IResponseMetadata;
+
 					switch (code) {
 						case "ELYSIA_HTTP_ERROR": {
 							set.status = error.statusCode;
-							return {
-								metadata,
+							const errorRes = {
 								code: error.traceCode,
 								message: await translate(error.message, customLanguage),
 								data: error.errorData,
+							};
+							logger.error(
+								{
+									rq: { method: request.method, url: request.url },
+									...errorRes,
+								},
+								"ELYSIA_HTTP_ERROR",
+							);
+							return {
+								metadata,
+								...errorRes,
 							} satisfies IResponse;
 						}
 						case "VALIDATION": {
 							set.status = 400;
-							return {
-								metadata,
+							const errorRes = {
 								code: RES_KEY.VALIDATION.code,
 								message: await translate(
 									RES_KEY.VALIDATION.message,
@@ -278,12 +289,22 @@ export const httpError =
 									message: x.message,
 									value: x.value,
 								})),
+							};
+							logger.error(
+								{
+									rq: { method: request.method, url: request.url },
+									...errorRes,
+								},
+								"VALIDATION",
+							);
+							return {
+								metadata,
+								...errorRes,
 							} satisfies IResponse;
 						}
 						case "INTERNAL_SERVER_ERROR": {
 							set.status = 500;
-							return {
-								metadata,
+							const errorRes = {
 								code: RES_KEY.INTERNAL_SERVER_ERROR.code,
 								message: await translate(
 									RES_KEY.INTERNAL_SERVER_ERROR.message,
@@ -291,11 +312,21 @@ export const httpError =
 								),
 								data: null,
 							};
-						}
-						case "INVALID_COOKIE_SIGNATURE": {
-							set.status = 500;
+							logger.error(
+								{
+									rq: { method: request.method, url: request.url },
+									...errorRes,
+								},
+								"INTERNAL_SERVER_ERROR",
+							);
 							return {
 								metadata,
+								...errorRes,
+							};
+						}
+						case "INVALID_COOKIE_SIGNATURE": {
+							set.status = 401;
+							const errorRes = {
 								code: RES_KEY.UN_AUTHORIZATION.code,
 								message: await translate(
 									RES_KEY.UN_AUTHORIZATION.message,
@@ -303,11 +334,21 @@ export const httpError =
 								),
 								data: null,
 							};
+							logger.error(
+								{
+									rq: { method: request.method, url: request.url },
+									...errorRes,
+								},
+								"INVALID_COOKIE_SIGNATURE",
+							);
+							return {
+								metadata,
+								...errorRes,
+							};
 						}
 						case "PARSE": {
 							set.status = 500;
-							return {
-								metadata,
+							const errorRes = {
 								code: RES_KEY.INTERNAL_SERVER_ERROR.code,
 								message: await translate(
 									RES_KEY.INTERNAL_SERVER_ERROR.message,
@@ -315,11 +356,21 @@ export const httpError =
 								),
 								data: null,
 							};
+							logger.error(
+								{
+									rq: { method: request.method, url: request.url },
+									...errorRes,
+								},
+								"PARSE",
+							);
+							return {
+								metadata,
+								...errorRes,
+							};
 						}
 						case "UNKNOWN": {
 							set.status = 500;
-							return {
-								metadata,
+							const errorRes = {
 								code: RES_KEY.UNKNOWN.code,
 								message: await translate(
 									RES_KEY.UNKNOWN.message,
@@ -327,17 +378,38 @@ export const httpError =
 								),
 								data: null,
 							};
+							logger.error(
+								{
+									rq: { method: request.method, url: request.url },
+									...errorRes,
+								},
+								"UNKNOWN",
+							);
+							return {
+								metadata,
+								...errorRes,
+							};
 						}
 						case "NOT_FOUND": {
 							set.status = 404;
-							return {
-								metadata,
+							const errorRes = {
 								code: RES_KEY.NOT_FOUND.code,
 								message: await translate(
 									RES_KEY.NOT_FOUND.message,
 									customLanguage,
 								),
 								data: null,
+							};
+							logger.error(
+								{
+									rq: { method: request.method, url: request.url },
+									...errorRes,
+								},
+								"NOT_FOUND",
+							);
+							return {
+								metadata,
+								...errorRes,
 							} satisfies IResponse;
 						}
 					}

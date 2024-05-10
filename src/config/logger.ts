@@ -1,5 +1,5 @@
 import { join } from "node:path";
-import { createPinoLogger } from "@bogeychan/elysia-logger";
+import { createPinoLogger, pino } from "@bogeychan/elysia-logger";
 import { APP_SERVICE } from "src/common";
 
 export const logger = createPinoLogger({
@@ -7,7 +7,12 @@ export const logger = createPinoLogger({
 		targets: [
 			{
 				target: "pino-roll",
-				options: { file: join("logs", "log"), frequency: "daily", mkdir: true },
+				options: {
+					file: join("logs", "log"),
+					frequency: "daily",
+					mkdir: true,
+					sync: false,
+				},
 			},
 			{
 				target: "pino-pretty",
@@ -17,6 +22,7 @@ export const logger = createPinoLogger({
 			},
 		],
 	},
+	timestamp: pino.stdTimeFunctions.isoTime,
 });
 
 export const redisLogger = logger.child({ service: APP_SERVICE.REDIS });
