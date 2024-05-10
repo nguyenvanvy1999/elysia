@@ -212,6 +212,7 @@ export const DEFAULT = {
 	TRANSLATION_NS: TRANSLATION_NS.BACKEND,
 	SWAGGER_UI_PATH: "/swagger",
 	ACTIVE_ACCOUNT_TOKEN_EXPIRED: "5m",
+	LOG_LEVEL: "trace",
 };
 
 export enum HTTP_METHOD {

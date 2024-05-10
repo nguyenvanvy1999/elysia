@@ -1,6 +1,7 @@
 import { join } from "node:path";
 import { createPinoLogger, pino } from "@bogeychan/elysia-logger";
 import { APP_SERVICE } from "src/common";
+import { env } from "src/config/env";
 
 export const logger = createPinoLogger({
 	transport: {
@@ -23,6 +24,7 @@ export const logger = createPinoLogger({
 		],
 	},
 	timestamp: pino.stdTimeFunctions.isoTime,
+	level: env.logLevel,
 });
 
 export const redisLogger = logger.child({ service: APP_SERVICE.REDIS });
