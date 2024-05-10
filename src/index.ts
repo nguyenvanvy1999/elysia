@@ -56,6 +56,5 @@ try {
 
 	bootLogger();
 } catch (e) {
-	console.log("error booting the server");
-	console.error(e);
+	logger.error(e, "Error booting the server");
 }

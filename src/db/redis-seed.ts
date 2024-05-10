@@ -5,12 +5,11 @@ import {
 	SETTINGS,
 	SETTING_DATA_TYPE,
 } from "src/common";
-import { connectRedis, settingRepository } from "src/config";
+import { connectRedis, logger, settingRepository } from "src/config";
 import { dbIdGenerator } from "src/util";
 
 export async function seedSettings(): Promise<void> {
-	console.log("Seeding settings...");
-	console.time("Settings has been seeded!");
+	logger.info("Seeding settings...");
 	await connectRedis();
 
 	const versionOptions = {
@@ -70,5 +69,5 @@ export async function seedSettings(): Promise<void> {
 	];
 
 	await Promise.all(settings.map((x) => settingRepository.save(x.id, x)));
-	console.timeEnd("Settings has been seeded!");
+	logger.info("Settings has been seeded!");
 }

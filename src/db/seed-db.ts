@@ -20,18 +20,15 @@ import { cleanupDB, createPassword, createUser, dbIdGenerator } from "src/util";
 
 export const seedAuthData = async (): Promise<void> => {
 	logger.info("🌱 Seeding auth data...");
-	console.time("🌱 Auth data has been seeded");
 	await db.transaction(async (ct) => {
-		console.time("🧹 Cleaned up the database...");
 		await cleanupDB(ct, refreshTokens);
 		await cleanupDB(ct, permissionsToRoles);
 		await cleanupDB(ct, usersToRoles);
 		await cleanupDB(ct, users);
 		await cleanupDB(ct, roles);
 		await cleanupDB(ct, permissions);
-		console.timeEnd("🧹 Cleaned up the database...");
+		logger.info("🧹 Cleaned up the database...");
 
-		console.time("🔑 Created Permissions...");
 		const permCreates = [];
 		for (const entity of Object.values(POLICY_ENTITY)) {
 			for (const action of Object.values(POLICY_ACTION)) {
@@ -46,9 +43,8 @@ export const seedAuthData = async (): Promise<void> => {
 			}
 		}
 		await ct.insert(permissions).values(permCreates);
-		console.timeEnd("🔑 Created Permissions...");
+		logger.info("🔑 Created Permissions...");
 
-		console.time("👑 Created roles...");
 		const permissionAdmin = permCreates.filter(
 			(x) => x.access === POLICY_ACCESS.ANY,
 		);
@@ -84,10 +80,9 @@ export const seedAuthData = async (): Promise<void> => {
 			ct.insert(roles).values(roleCreates),
 			ct.insert(permissionsToRoles).values(permissionsToRolesCreates),
 		]);
-		console.timeEnd("👑 Created roles...");
+		logger.info("👑 Created roles...");
 
 		const totalUsers: number = 3;
-		console.time(`👤 Creating ${totalUsers} users and Admin`);
 		const adminId = dbIdGenerator(DB_ID_PREFIX.USER);
 		const userCreates = [
 			{
@@ -123,25 +118,21 @@ export const seedAuthData = async (): Promise<void> => {
 			ct.insert(users).values(userCreates),
 			ct.insert(usersToRoles).values(usersToRolesCreates),
 		]);
-		console.timeEnd(`👤 Creating ${totalUsers} users and Admin`);
+		logger.info(`👤 Creating ${totalUsers} users and Admin`);
 	});
 
-	console.timeEnd("🌱 Auth data has been seeded");
+	logger.info("🌱 Auth data has been seeded");
 };
 
 export const seedTranslationsData = async (): Promise<void> => {
 	logger.info("🌱 Seeding translation data...");
-	console.time("🌱 Auth data has been seeded");
 	await db.transaction(async (ct) => {
-		console.time("🧹 Cleaned up the database...");
 		await cleanupDB(ct, translations);
-		console.timeEnd("🧹 Cleaned up the database...");
-
-		console.time("Created Translations...");
+		logger.info("🧹 Cleaned up the database...");
 
 		await ct.insert(translations).values(translates);
-		console.timeEnd("Created Translations...");
+		logger.info("Created Translations...");
 	});
 
-	console.timeEnd("🌱 Auth data has been seeded");
+	logger.info("🌱 Auth data has been seeded");
 };
