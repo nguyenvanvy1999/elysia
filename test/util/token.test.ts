@@ -2,7 +2,7 @@ import { type Mock, describe, expect, it, spyOn } from "bun:test";
 import crypto from "node:crypto";
 import jwt from "jsonwebtoken";
 import type { IJwtPayload } from "src/common";
-import { env } from "src/config";
+import { config } from "src/config";
 import {
 	aes256Decrypt,
 	aes256Encrypt,
@@ -155,13 +155,13 @@ describe("Util: Token testing", (): void => {
 			expect(verified).toHaveProperty("sub");
 		};
 
-		const spy: Mock<any> = spyOn(env, "enbTokenEncrypt");
+		const spy: Mock<any> = spyOn(config, "enbTokenEncrypt");
 		it("Should decrypt token and verify", (): void => {
 			spy.mockReturnValue(true);
 			const encryptToken: string = aes256Encrypt(
 				token,
-				env.jwtPayloadAccessTokenEncryptKey,
-				env.jwtPayloadAccessTokenEncryptIv,
+				config.jwtPayloadAccessTokenEncryptKey,
+				config.jwtPayloadAccessTokenEncryptIv,
 			);
 			const verified: IJwtPayload = verifyAccessToken(encryptToken);
 			expectRes(verified);

@@ -3,9 +3,9 @@ import { Elysia } from "elysia";
 import { compression } from "elysia-compression";
 import { APP_ENV } from "src/common";
 import {
+	config,
 	connectKafka,
 	connectRedis,
-	env,
 	httpError,
 	httpResponse,
 	logger,
@@ -18,16 +18,16 @@ import { bootLogger, gracefulShutdown } from "src/util";
 
 try {
 	const allowOrigin: string =
-		env.appEnv === APP_ENV.PRODUCTION ? env.cors.allowOrigin : "*";
+		config.appEnv === APP_ENV.PRODUCTION ? config.cors.allowOrigin : "*";
 	await connectRedis();
 	await connectKafka();
-	const app = new Elysia({ prefix: env.apiPrefix })
+	const app = new Elysia({ prefix: config.apiPrefix })
 		.use(logger.into({ autoLogging: true }))
 		.use(
 			cors({
 				origin: allowOrigin,
-				methods: env.cors.allowMethod,
-				allowedHeaders: env.cors.allowHeader,
+				methods: config.cors.allowMethod,
+				allowedHeaders: config.cors.allowHeader,
 				preflight: false,
 			}),
 		)
@@ -52,7 +52,7 @@ try {
 		.use(userRoutes);
 	process.on("SIGINT", app.stop);
 	process.on("SIGTERM", app.stop);
-	app.listen({ port: env.appPort, maxRequestBodySize: 1_000_000_000 });
+	app.listen({ port: config.appPort, maxRequestBodySize: 1_000_000_000 });
 
 	bootLogger();
 } catch (e) {

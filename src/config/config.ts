@@ -165,4 +165,4 @@ const envVariables = z
 		},
 	}));
 
-export const env = envVariables.parse(process.env);
+export const config = envVariables.parse(process.env);

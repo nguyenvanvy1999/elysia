@@ -6,7 +6,7 @@ import {
 	ROLE_NAME,
 	translates,
 } from "src/common";
-import { db, env, logger } from "src/config";
+import { config, db, logger } from "src/config";
 import {
 	permissions,
 	permissionsToRoles,
@@ -87,11 +87,11 @@ export const seedAuthData = async (): Promise<void> => {
 		const userCreates = [
 			{
 				id: adminId,
-				email: env.adminEmail,
-				name: env.adminUsername,
-				username: env.adminUsername,
+				email: config.adminEmail,
+				name: config.adminUsername,
+				username: config.adminUsername,
 				emailVerified: new Date(),
-				...createPassword(env.adminPassword),
+				...createPassword(config.adminPassword),
 			},
 		];
 		const usersToRolesCreates = [

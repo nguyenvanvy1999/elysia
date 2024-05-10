@@ -1,17 +1,17 @@
 import crypto from "node:crypto";
 import ms from "ms";
 import type { IAuthPassword } from "src/common";
-import { env } from "src/config";
+import { config } from "src/config";
 import { forwardInSeconds } from "src/util/date";
 
 export const createPassword = (password: string): IAuthPassword => {
 	const passwordSalt: string = crypto
-		.randomBytes(env.passwordSaltLength)
+		.randomBytes(config.passwordSaltLength)
 		.toString("hex");
 	const passwordHash: string = Bun.password.hashSync(
-		passwordSalt + password + env.passwordPepper,
+		passwordSalt + password + config.passwordPepper,
 	);
-	const passwordExpired: Date = forwardInSeconds(ms(env.passwordExpired));
+	const passwordExpired: Date = forwardInSeconds(ms(config.passwordExpired));
 	return {
 		password: passwordHash,
 		passwordExpired,
@@ -30,5 +30,5 @@ export const comparePassword = (
 	hash: string,
 	salt: string,
 ): boolean => {
-	return Bun.password.verifySync(salt + password + env.passwordPepper, hash);
+	return Bun.password.verifySync(salt + password + config.passwordPepper, hash);
 };

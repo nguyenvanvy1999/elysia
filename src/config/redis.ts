@@ -1,13 +1,13 @@
 import chalk from "chalk";
 import { type RedisClientType, createClient } from "redis";
 import { Repository } from "redis-om";
-import { env } from "src/config/env";
+import { config } from "src/config/config";
 import { redisLogger } from "src/config/logger";
 import { sessionSchema, settingSchema } from "src/db/redis-schemas";
 
 export const redisClient: RedisClientType = createClient({
-	password: env.redisPassword,
-	url: env.redisUrl,
+	password: config.redisPassword,
+	url: config.redisUrl,
 });
 
 redisClient.on("error", (error) => {

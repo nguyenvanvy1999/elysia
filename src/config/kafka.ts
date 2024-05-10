@@ -1,11 +1,11 @@
 import chalk from "chalk";
 import { Kafka, Partitioners, type Producer } from "kafkajs";
-import { env } from "src/config/env";
+import { config } from "src/config/config";
 import { kafkaLogger } from "src/config/logger";
 
 export const kafkaClient: Kafka = new Kafka({
-	clientId: env.kafkaClientId,
-	brokers: env.kafkaBrokers,
+	clientId: config.kafkaClientId,
+	brokers: config.kafkaBrokers,
 });
 
 export const producer: Producer = kafkaClient.producer({

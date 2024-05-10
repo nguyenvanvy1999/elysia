@@ -3,7 +3,7 @@ import crypto from "node:crypto";
 import jwt from "jsonwebtoken";
 import ms from "ms";
 import type { IJwtPayload, IJwtVerifyOptions } from "src/common";
-import { env } from "src/config";
+import { config } from "src/config";
 import { forwardInSeconds } from "src/util/date";
 
 export const aes256Encrypt = (
@@ -11,7 +11,11 @@ export const aes256Encrypt = (
 	key: string,
 	iv: string,
 ): string => {
-	const cipher: Cipher = crypto.createCipheriv(env.jwtEncryptMethod, key, iv);
+	const cipher: Cipher = crypto.createCipheriv(
+		config.jwtEncryptMethod,
+		key,
+		iv,
+	);
 	return Buffer.from(
 		cipher.update(JSON.stringify(data), "utf8", "hex") + cipher.final("hex"),
 	).toString("base64");
@@ -26,7 +30,7 @@ export const aes256Decrypt = <
 ): T => {
 	const buff: Buffer = Buffer.from(encrypted, "base64");
 	const decipher: Decipher = crypto.createDecipheriv(
-		env.jwtEncryptMethod,
+		config.jwtEncryptMethod,
 		key,
 		iv,
 	);
@@ -45,36 +49,39 @@ export const jwtEncrypt = (
 
 export const createAccessToken = (payload: Record<string, any>) => {
 	return jwtEncrypt(payload, {
-		secretKey: env.jwtAccessTokenSecretKey,
-		expiresIn: env.jwtAccessTokenExpired,
-		notBefore: env.jwtAccessTokenNotBeforeExpiration,
-		audience: env.jwtAudience,
-		issuer: env.jwtIssuer,
-		subject: env.jwtSubject,
+		secretKey: config.jwtAccessTokenSecretKey,
+		expiresIn: config.jwtAccessTokenExpired,
+		notBefore: config.jwtAccessTokenNotBeforeExpiration,
+		audience: config.jwtAudience,
+		issuer: config.jwtIssuer,
+		subject: config.jwtSubject,
 	});
 };
 
 export const createRefreshToken = (payload: Record<string, any>) => {
 	return jwtEncrypt(payload, {
-		secretKey: env.jwtRefreshTokenSecretKey,
-		expiresIn: env.jwtRefreshTokenExpired,
-		notBefore: env.jwtRefreshTokenNotBeforeExpiration,
-		audience: env.jwtAudience,
-		issuer: env.jwtIssuer,
-		subject: env.jwtSubject,
+		secretKey: config.jwtRefreshTokenSecretKey,
+		expiresIn: config.jwtRefreshTokenExpired,
+		notBefore: config.jwtRefreshTokenNotBeforeExpiration,
+		audience: config.jwtAudience,
+		issuer: config.jwtIssuer,
+		subject: config.jwtSubject,
 	});
 };
 
 export const verifyAccessToken = (token: string): IJwtPayload => {
 	let decryptedToken: string = token;
-	if (env.enbTokenEncrypt) {
+	if (config.enbTokenEncrypt) {
 		decryptedToken = aes256Decrypt(
 			token,
-			env.jwtPayloadAccessTokenEncryptKey,
-			env.jwtPayloadAccessTokenEncryptIv,
+			config.jwtPayloadAccessTokenEncryptKey,
+			config.jwtPayloadAccessTokenEncryptIv,
 		);
 	}
-	return jwt.verify(decryptedToken, env.jwtAccessTokenSecretKey) as IJwtPayload;
+	return jwt.verify(
+		decryptedToken,
+		config.jwtAccessTokenSecretKey,
+	) as IJwtPayload;
 };
 
 export const decryptActiveAccountToken = (
@@ -85,8 +92,8 @@ export const decryptActiveAccountToken = (
 } => {
 	const decrypt: any = aes256Decrypt(
 		token,
-		env.activeAccountTokenEncryptKey,
-		env.activeAccountTokenEncryptIv,
+		config.activeAccountTokenEncryptKey,
+		config.activeAccountTokenEncryptIv,
 	);
 	return {
 		userId: decrypt?.userId,
@@ -98,9 +105,11 @@ export const createActiveAccountToken = (userId: string): string => {
 	return aes256Encrypt(
 		{
 			userId,
-			expiredIn: forwardInSeconds(ms(env.activeAccountTokenExpired)).getTime(),
+			expiredIn: forwardInSeconds(
+				ms(config.activeAccountTokenExpired),
+			).getTime(),
 		},
-		env.activeAccountTokenEncryptKey,
-		env.activeAccountTokenEncryptIv,
+		config.activeAccountTokenEncryptKey,
+		config.activeAccountTokenEncryptIv,
 	);
 };

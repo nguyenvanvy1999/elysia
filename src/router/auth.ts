@@ -17,7 +17,7 @@ import {
 	registerRes,
 	swaggerOptions,
 } from "src/common";
-import { HttpError, db, env, sessionRepository } from "src/config";
+import { HttpError, config, db, sessionRepository } from "src/config";
 import { refreshTokens, users } from "src/db";
 import { checkUserStatus, increasePasswordAttempt } from "src/service";
 import {
@@ -104,8 +104,8 @@ export const authRoutes = new Elysia({
 
 			const user = foundUsers[0];
 			if (
-				env.enbPasswordAttempt &&
-				user.passwordAttempt >= env.passwordAttempt
+				config.enbPasswordAttempt &&
+				user.passwordAttempt >= config.passwordAttempt
 			) {
 				throw HttpError.Forbidden(
 					...Object.values(RES_KEY.USER_PASSWORD_ATTEMPT_MAX),
@@ -126,7 +126,7 @@ export const authRoutes = new Elysia({
 			const passwordExpired: boolean = checkPasswordExpired(
 				user.passwordExpired,
 			);
-			if (env.enbPasswordExpired && passwordExpired) {
+			if (config.enbPasswordExpired && passwordExpired) {
 				throw HttpError.Forbidden(
 					...Object.values(RES_KEY.USER_PASSWORD_EXPIRED),
 				);
@@ -141,16 +141,16 @@ export const authRoutes = new Elysia({
 				loginDate: new Date(),
 				sessionId: refreshSessionId,
 			} satisfies IJwtPayload);
-			if (env.enbTokenEncrypt) {
+			if (config.enbTokenEncrypt) {
 				accessToken = aes256Encrypt(
 					accessToken,
-					env.jwtPayloadAccessTokenEncryptKey,
-					env.jwtPayloadAccessTokenEncryptIv,
+					config.jwtPayloadAccessTokenEncryptKey,
+					config.jwtPayloadAccessTokenEncryptIv,
 				);
 				refreshToken = aes256Encrypt(
 					refreshToken,
-					env.jwtPayloadRefreshTokenEncryptKey,
-					env.jwtPayloadRefreshTokenEncryptIv,
+					config.jwtPayloadRefreshTokenEncryptKey,
+					config.jwtPayloadRefreshTokenEncryptIv,
 				);
 			}
 
@@ -159,7 +159,7 @@ export const authRoutes = new Elysia({
 					id: dbIdGenerator(DB_ID_PREFIX.REFRESH_TOKEN),
 					userId: user.id,
 					token: refreshSessionId,
-					expires: new Date(Date.now() + ms(env.jwtRefreshTokenExpired)),
+					expires: new Date(Date.now() + ms(config.jwtRefreshTokenExpired)),
 				}),
 				sessionRepository.save(accessSessionId, {
 					id: accessSessionId,
@@ -168,7 +168,7 @@ export const authRoutes = new Elysia({
 			]);
 			await sessionRepository.expireAt(
 				accessSessionId,
-				new Date(Date.now() + ms(env.jwtAccessTokenExpired)),
+				new Date(Date.now() + ms(config.jwtAccessTokenExpired)),
 			);
 
 			return resBuild(
