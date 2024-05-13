@@ -23,7 +23,7 @@ try {
 
 	const allowOrigin: string =
 		config.appEnv === APP_ENV.PRODUCTION ? config.cors.allowOrigin : "*";
-	const app = new Elysia()
+	const app = new Elysia({ prefix: config.apiPrefix })
 		.use(logger.into({ autoLogging: true }))
 		.use(
 			cors({

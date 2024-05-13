@@ -52,6 +52,9 @@ const envVariables = z
 			.min(1)
 			.default(DEFAULT.PASSWORD_MAX_ATTEMPT),
 
+		// API config
+		API_PREFIX: z.string().default(DEFAULT.API_PREFIX),
+
 		// swagger config
 		ENB_SWAGGER_UI: toggle.default("true"),
 		SWAGGER_UI_PATH: z.string().default(DEFAULT.SWAGGER_UI_PATH),

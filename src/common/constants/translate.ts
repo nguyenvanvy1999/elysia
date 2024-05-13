@@ -254,6 +254,18 @@ export const translates = [
 		key: RES_KEY.SETTING_VALUE_NOT_ALLOWED_ERROR.message,
 		value: "Gia tri cai dat khong hop le",
 	},
+	{
+		lang: LANGUAGE.EN,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.SETTING_NOT_FOUND.message,
+		value: "Setting not found",
+	},
+	{
+		lang: LANGUAGE.VI,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.SETTING_NOT_FOUND.message,
+		value: "Khong tim thay cai dat",
+	},
 
 	// response
 	{
@@ -303,5 +315,17 @@ export const translates = [
 		ns: TRANSLATION_NS.BACKEND,
 		key: RES_KEY.CREATE_SETTING.message,
 		value: "Tao cai dat thanh cong",
+	},
+	{
+		lang: LANGUAGE.EN,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.GET_SETTING.message,
+		value: "Get setting success",
+	},
+	{
+		lang: LANGUAGE.VI,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.GET_SETTING.message,
+		value: "Lay cai dat thanh cong",
 	},
 ];

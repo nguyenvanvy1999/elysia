@@ -4,10 +4,12 @@ import {
 	DB_ID_PREFIX,
 	RES_KEY,
 	ROUTES,
+	SETTING_ROUTES,
 	SW_ROUTE_DETAIL,
 	createSettingBody,
 	errorRes,
 	errorsDefault,
+	getSettingParam,
 	settingRes,
 	swaggerOptions,
 } from "src/common";
@@ -23,7 +25,7 @@ export const settingRoutes = new Elysia({
 })
 	.use(isAuthenticated)
 	.post(
-		"/",
+		SETTING_ROUTES.CREATE,
 		async ({ body }): Promise<any> => {
 			const { key, value, type, isEncrypt, description } = body;
 			const exist = await db.query.settings.findFirst({
@@ -65,7 +67,7 @@ export const settingRoutes = new Elysia({
 					description: settings.description,
 				});
 			return resBuild(
-				{ ...setting[0], value: getValue<Record<string, any>>(setting[0]) },
+				{ ...setting[0], value: getValue(setting[0]) },
 				RES_KEY.CREATE_SETTING,
 			);
 		},
@@ -75,6 +77,30 @@ export const settingRoutes = new Elysia({
 			response: {
 				200: settingRes,
 				409: errorRes,
+				...errorsDefault,
+			},
+		},
+	)
+	.get(
+		SETTING_ROUTES.GET,
+		async ({ params: { id } }): Promise<any> => {
+			const setting = await db.query.settings.findFirst({
+				where: eq(settings.id, id),
+			});
+			if (!setting) {
+				throw HttpError.NotFound(...Object.values(RES_KEY.SETTING_NOT_FOUND));
+			}
+			return resBuild(
+				{ ...setting, value: getValue(setting) },
+				RES_KEY.GET_SETTING,
+			);
+		},
+		{
+			params: getSettingParam,
+			detail: SW_ROUTE_DETAIL.GET_SETTING,
+			response: {
+				200: settingRes,
+				404: errorRes,
 				...errorsDefault,
 			},
 		},

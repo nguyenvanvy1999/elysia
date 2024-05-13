@@ -63,6 +63,8 @@ export const RES_KEY = {
 		message: "ERROR.INTERNAL_SERVER_ERROR",
 		code: "INTERNAL_SERVER_ERROR",
 	},
+
+	// un authorization error
 	UN_AUTHORIZATION: {
 		message: "ERROR.UN_AUTHORIZATION",
 		code: "UN_AUTHORIZATION_1",
@@ -79,6 +81,8 @@ export const RES_KEY = {
 		message: "ERROR.TOKEN_EXPIRED",
 		code: "UN_AUTHORIZATION_4",
 	},
+
+	// conflict error
 	EMAIL_ALREADY_EXIST: {
 		message: "ERROR.EMAIL_ALREADY_EXIST",
 		code: "CONFLICT_1",
@@ -91,6 +95,8 @@ export const RES_KEY = {
 		message: "ERROR.SETTING_ALREADY_EXIST",
 		code: "CONFLICT_3",
 	},
+
+	// not found error
 	NOT_FOUND: {
 		message: "ERROR.NOT_FOUND",
 		code: "NOT_FOUND_1",
@@ -99,6 +105,12 @@ export const RES_KEY = {
 		message: "ERROR.USER_NOT_FOUND",
 		code: "NOT_FOUND_2",
 	},
+	SETTING_NOT_FOUND: {
+		message: "ERROR.SETTING_NOT_FOUND",
+		code: "NOT_FOUND_3",
+	},
+
+	// forbidden resource error
 	USER_PASSWORD_ATTEMPT_MAX: {
 		message: "ERROR.USER_PASSWORD_ATTEMPT_MAX",
 		code: "FORBIDDEN_RESOURCE_1",
@@ -119,6 +131,8 @@ export const RES_KEY = {
 		message: "ERROR.USER_BLOCKED",
 		code: "FORBIDDEN_RESOURCE_5",
 	},
+
+	// bad request error
 	USER_PASSWORD_NOT_MATCH: {
 		message: "ERROR.USER_PASSWORD_NOT_MATCH",
 		code: "BAD_REQUEST_1",
@@ -153,6 +167,10 @@ export const RES_KEY = {
 		message: "RES.CREATE_SETTING_SUCCESS",
 		code: "SUC_04",
 	},
+	GET_SETTING: {
+		message: "RES.GET_SETTING_SUCCESS",
+		code: "SUC_05",
+	},
 };
 
 export const SW_ROUTE_DETAIL = {
@@ -181,12 +199,16 @@ export const SW_ROUTE_DETAIL = {
 		description: "Create setting",
 		summary: "Create setting",
 	},
+	GET_SETTING: {
+		description: "Get setting detail",
+		summary: "Get setting",
+	},
 };
 
 export enum ROUTES {
-	AUTH_V1 = "api/v1/auth",
-	USER_V1 = "api/v1/user",
-	SETTING_V1 = "api/v1/setting",
+	AUTH_V1 = "/v1/auth",
+	USER_V1 = "/v1/user",
+	SETTING_V1 = "/v1/setting",
 }
 
 export enum AUTH_ROUTES {
@@ -197,6 +219,11 @@ export enum AUTH_ROUTES {
 export enum USER_ROUTES {
 	INFO = "/info",
 	SEND_EMAIL_VERIFY = "/send-email-active-account",
+}
+
+export enum SETTING_ROUTES {
+	CREATE = "/",
+	GET = "/:id",
 }
 
 export enum APP_ENV {
@@ -214,6 +241,7 @@ export const DEFAULT = {
 	PORT: 3001,
 	APP_ENV: APP_ENV.DEVELOPMENT,
 	JWT_ACCESS_TOKEN_SECRET_KEY: "123456aA@",
+	API_PREFIX: "/api",
 	JWT_ACCESS_TOKEN_EXPIRED: "1H", // 1 hour
 	NOT_BEFORE_EXPIRATION_TIME: "0", // immediately
 	JWT_REFRESH_TOKEN_SECRET_KEY: "123456aA@",

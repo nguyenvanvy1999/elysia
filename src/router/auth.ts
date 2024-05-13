@@ -38,17 +38,15 @@ export const authRoutes = new Elysia({
 	.post(
 		AUTH_ROUTES.REGISTER,
 		async ({ body }): Promise<any> => {
+			const { email, username, password } = body;
 			const exist = await db.query.users.findFirst({
-				where: or(
-					eq(users.email, body.email),
-					eq(users.username, body.username),
-				),
+				where: or(eq(users.email, email), eq(users.username, username)),
 				columns: { id: true, email: true, username: true },
 			});
-			if (exist?.email) {
+			if (exist?.email === email) {
 				throw HttpError.Conflict(...Object.values(RES_KEY.EMAIL_ALREADY_EXIST));
 			}
-			if (exist?.username) {
+			if (exist?.username === username) {
 				throw HttpError.Conflict(
 					...Object.values(RES_KEY.USERNAME_ALREADY_EXIST),
 				);
@@ -59,7 +57,7 @@ export const authRoutes = new Elysia({
 				.values({
 					...body,
 					id: dbIdGenerator(DB_ID_PREFIX.USER),
-					...createPassword(body.password),
+					...createPassword(password),
 				})
 				.returning({
 					id: users.id,

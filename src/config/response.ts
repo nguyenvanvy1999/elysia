@@ -38,9 +38,8 @@ export const httpResponse =
 				customLanguage,
 				path,
 			}): Promise<Response | undefined> => {
-				const ignorePaths: string[] = [config.swaggerUiPath, "/swagger/json"];
-				console.log(path);
-				if (ignorePaths.includes(path)) {
+				const ignorePaths: string[] = [config.swaggerUiPath];
+				if (ignorePaths.some((a) => path.includes(a.replaceAll("/", "")))) {
 					return;
 				}
 				const isJson: boolean = typeof response === "object";
