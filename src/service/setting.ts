@@ -19,18 +19,23 @@ export const getValue = <T>(setting: Setting): T | undefined => {
 	if (!setting) {
 		return;
 	}
-	if (
-		setting.type === SETTING_DATA_TYPE.BOOLEAN &&
-		(setting.value === "true" || setting.value === "false")
-	) {
-		return (setting.value === "true") as any;
-	}
-	if (setting.type === SETTING_DATA_TYPE.NUMBER && checkNumber(setting.value)) {
-		return Number(setting.value) as any;
-	}
-	if (setting.type === SETTING_DATA_TYPE.JSON) {
-		return setting.value.split(",") as any;
+	let value: string = setting.value;
+	if (setting.isEncrypt) {
+		value = "";
 	}
 
-	return setting.value as any;
+	if (
+		setting.type === SETTING_DATA_TYPE.BOOLEAN &&
+		(value === "true" || value === "false")
+	) {
+		return (value === "true") as any;
+	}
+	if (setting.type === SETTING_DATA_TYPE.NUMBER && checkNumber(value)) {
+		return Number(value) as any;
+	}
+	if (setting.type === SETTING_DATA_TYPE.JSON) {
+		return value.split(",") as any;
+	}
+
+	return value as T;
 };

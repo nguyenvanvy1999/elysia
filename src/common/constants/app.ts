@@ -49,10 +49,6 @@ export const REDIS_CACHE_EX = {
 	TRANSLATION_CACHE: 60 * 10, // 10 minutes
 };
 
-export enum REDIS_KEY {
-	SETTING_MAINTENANCE = "setting_maintenance",
-}
-
 export const RES_KEY = {
 	// error
 	UNKNOWN: {

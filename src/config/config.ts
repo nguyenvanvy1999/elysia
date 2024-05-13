@@ -118,6 +118,10 @@ const envVariables = z
 
 		// logger config
 		LOG_LEVEL: z.string().default(DEFAULT.LOG_LEVEL),
+
+		// setting config
+		SETTING_ENCRYPT_KEY: z.string(),
+		SETTING_ENCRYPT_IV: z.string(),
 	})
 	.transform((input) => ({
 		...camelize(input),

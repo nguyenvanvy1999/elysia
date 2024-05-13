@@ -38,17 +38,17 @@ export const authRoutes = new Elysia({
 	.post(
 		AUTH_ROUTES.REGISTER,
 		async ({ body }): Promise<any> => {
-			const exist = await db
-				.select({ id: users.id, email: users.email, username: users.username })
-				.from(users)
-				.where(
-					or(eq(users.email, body.email), eq(users.username, body.username)),
-				)
-				.limit(1);
-			if (exist.length && exist[0].email) {
+			const exist = await db.query.users.findFirst({
+				where: or(
+					eq(users.email, body.email),
+					eq(users.username, body.username),
+				),
+				columns: { id: true, email: true, username: true },
+			});
+			if (exist?.email) {
 				throw HttpError.Conflict(...Object.values(RES_KEY.EMAIL_ALREADY_EXIST));
 			}
-			if (exist.length && exist[0].username) {
+			if (exist?.username) {
 				throw HttpError.Conflict(
 					...Object.values(RES_KEY.USERNAME_ALREADY_EXIST),
 				);
@@ -85,24 +85,21 @@ export const authRoutes = new Elysia({
 		AUTH_ROUTES.LOGIN,
 		async ({ body }): Promise<any> => {
 			const { email, password } = body;
-			const foundUsers = await db
-				.select({
-					id: users.id,
-					email: users.email,
-					password: users.password,
-					passwordAttempt: users.passwordAttempt,
-					status: users.status,
-					passwordExpired: users.passwordExpired,
-					passwordSalt: users.passwordSalt,
-				})
-				.from(users)
-				.where(eq(users.email, email))
-				.limit(1);
-			if (!foundUsers.length) {
+			const user = await db.query.users.findFirst({
+				where: eq(users.email, email),
+				columns: {
+					id: true,
+					email: true,
+					password: true,
+					passwordAttempt: true,
+					status: true,
+					passwordExpired: true,
+					passwordSalt: true,
+				},
+			});
+			if (!user) {
 				throw HttpError.NotFound(...Object.values(RES_KEY.USER_NOT_FOUND));
 			}
-
-			const user = foundUsers[0];
 			if (
 				config.enbPasswordAttempt &&
 				user.passwordAttempt >= config.passwordAttempt

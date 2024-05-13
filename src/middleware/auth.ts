@@ -50,14 +50,12 @@ export const isAuthenticated = (
 		if (!session.userId) {
 			throw HttpError.Unauthorized(...Object.values(RES_KEY.TOKEN_EXPIRED));
 		}
-		const foundUsers = await db
-			.select()
-			.from(users)
-			.where(eq(users.id, session.userId))
-			.limit(1);
-		if (!foundUsers.length) {
+		const user = await db.query.users.findFirst({
+			where: eq(users.id, session.userId),
+		});
+		if (!user) {
 			throw HttpError.NotFound(...Object.values(RES_KEY.USER_NOT_FOUND));
 		}
-		checkUserStatus(foundUsers[0].status);
-		return { user: foundUsers[0] };
+		checkUserStatus(user.status);
+		return { user };
 	});
