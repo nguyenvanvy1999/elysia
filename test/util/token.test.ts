@@ -10,6 +10,8 @@ import {
 	createActiveAccountToken,
 	createRefreshToken,
 	decryptActiveAccountToken,
+	decryptSetting,
+	encryptSetting,
 	jwtEncrypt,
 	verifyAccessToken,
 } from "src/util";
@@ -199,6 +201,62 @@ describe("Util: Token testing", (): void => {
 			expect(userId).toBe(id);
 			expect(expiredIn).toBeNumber();
 			expect(expiredIn).toBeGreaterThan(Date.now());
+		});
+	});
+
+	describe("encryptSetting", (): void => {
+		it("Should return encrypt setting when data type is string", (): void => {
+			const data: string = "string_test";
+			const encrypted: string = encryptSetting(data);
+			expect(encrypted).toBeString();
+		});
+
+		it("Should return encrypt setting when data type is boolean", (): void => {
+			const data: boolean = false;
+			const encrypted: string = encryptSetting(data);
+			expect(encrypted).toBeString();
+		});
+
+		it("Should return encrypt setting when data type is number", (): void => {
+			const data: number = 1;
+			const encrypted: string = encryptSetting(data);
+			expect(encrypted).toBeString();
+		});
+
+		it("Should return encrypt setting when data type is object", (): void => {
+			const data: Record<string, any> = { id: "test" };
+			const encrypted: string = encryptSetting(data);
+			expect(encrypted).toBeString();
+		});
+	});
+
+	describe("decryptSetting", (): void => {
+		it("Should return decrypt setting when data type is string", (): void => {
+			const data: string = "string_test";
+			const encrypted: string = encryptSetting(data);
+			const res: string = decryptSetting<string>(encrypted);
+			expect(res).toEqual(data);
+		});
+
+		it("Should return decrypt setting when data type is boolean", (): void => {
+			const data: boolean = false;
+			const encrypted: string = encryptSetting(data);
+			const res: boolean = decryptSetting<boolean>(encrypted);
+			expect(res).toEqual(data);
+		});
+
+		it("Should return decrypt setting when data type is number", (): void => {
+			const data: number = 1;
+			const encrypted: string = encryptSetting(data);
+			const res: number = decryptSetting<number>(encrypted);
+			expect(res).toEqual(data);
+		});
+
+		it("Should return decrypt setting when data type is object", (): void => {
+			const data: Record<string, any> = { id: "test" };
+			const encrypted: string = encryptSetting(data);
+			const res: string = decryptSetting<string>(encrypted);
+			expect(res).toMatchObject(data);
 		});
 	});
 });
