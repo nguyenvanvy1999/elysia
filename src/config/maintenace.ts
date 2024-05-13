@@ -13,11 +13,10 @@ import { settings } from "src/db";
 import { getValue } from "src/service";
 import { translate } from "src/util/translate";
 
-export const loadMaintenanceStatus = async (): Promise<void> => {
+export const loadMaintenance = async (): Promise<void> => {
 	let maintenance = false;
 	const maintenanceConfig = await db.query.settings.findFirst({
 		where: eq(settings.key, SETTING_KEY.MAINTENANCE),
-		// columns: { value: true, isEncrypt: true, type: true },
 	});
 	if (maintenanceConfig) {
 		maintenance = getValue<boolean>(maintenanceConfig) ?? maintenance;

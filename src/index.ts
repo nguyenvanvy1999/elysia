@@ -12,15 +12,17 @@ import {
 	requestHeader,
 	swaggerConfig,
 } from "src/config";
-import { maintenance } from "src/config/maintenace";
+import { loadMaintenance, maintenance } from "src/config/maintenace";
 import { authRoutes, userRoutes } from "src/router";
 import { bootLogger, gracefulShutdown } from "src/util";
 
 try {
-	const allowOrigin: string =
-		config.appEnv === APP_ENV.PRODUCTION ? config.cors.allowOrigin : "*";
 	await connectRedis();
 	await connectKafka();
+	await loadMaintenance();
+
+	const allowOrigin: string =
+		config.appEnv === APP_ENV.PRODUCTION ? config.cors.allowOrigin : "*";
 	const app = new Elysia({ prefix: config.apiPrefix })
 		.use(logger.into({ autoLogging: true }))
 		.use(

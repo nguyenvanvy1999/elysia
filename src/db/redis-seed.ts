@@ -10,7 +10,7 @@ export async function seedSettings(): Promise<void> {
 	// remove old setting
 	const oldSettings: Entity[] = await settingRepository.search().all();
 	await settingRepository.remove(
-		oldSettings.map((x) => x.id?.toString() ?? ""),
+		oldSettings.map((x: Entity) => x.id?.toString() ?? ""),
 	);
 
 	const settings = [
