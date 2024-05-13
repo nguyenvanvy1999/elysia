@@ -230,6 +230,30 @@ export const translates = [
 		key: RES_KEY.ACTIVE_ACCOUNT_EMAIL_RATE_LIMIT.message,
 		value: "Vui long kiem tra hop thu truoc khi yeu cau gui email moi",
 	},
+	{
+		lang: LANGUAGE.EN,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.SETTING_ALREADY_EXIST.message,
+		value: "Setting with key {{key}} has been exist",
+	},
+	{
+		lang: LANGUAGE.VI,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.SETTING_ALREADY_EXIST.message,
+		value: "Cai dat {{key}} da ton tai",
+	},
+	{
+		lang: LANGUAGE.EN,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.SETTING_VALUE_NOT_ALLOWED_ERROR.message,
+		value: "Setting value not allowed",
+	},
+	{
+		lang: LANGUAGE.VI,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.SETTING_VALUE_NOT_ALLOWED_ERROR.message,
+		value: "Gia tri cai dat khong hop le",
+	},
 
 	// response
 	{
@@ -267,5 +291,17 @@ export const translates = [
 		ns: TRANSLATION_NS.BACKEND,
 		key: RES_KEY.USER_INFO.message,
 		value: "Lay thong tin nguoi dung thanh cong",
+	},
+	{
+		lang: LANGUAGE.EN,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.CREATE_SETTING.message,
+		value: "Create setting success",
+	},
+	{
+		lang: LANGUAGE.VI,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.CREATE_SETTING.message,
+		value: "Tao cai dat thanh cong",
 	},
 ];

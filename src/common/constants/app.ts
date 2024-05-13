@@ -87,6 +87,10 @@ export const RES_KEY = {
 		message: "ERROR.USERNAME_ALREADY_EXIST",
 		code: "CONFLICT_2",
 	},
+	SETTING_ALREADY_EXIST: {
+		message: "ERROR.SETTING_ALREADY_EXIST",
+		code: "CONFLICT_3",
+	},
 	NOT_FOUND: {
 		message: "ERROR.NOT_FOUND",
 		code: "NOT_FOUND_1",
@@ -123,6 +127,10 @@ export const RES_KEY = {
 		message: "ERROR.ACTIVE_ACCOUNT_EMAIL_RATE_LIMIT",
 		code: "BAD_REQUEST_2",
 	},
+	SETTING_VALUE_NOT_ALLOWED_ERROR: {
+		message: "ERROR.SETTING_VALUE_NOT_ALLOWED_ERROR",
+		code: "BAD_REQUEST_3",
+	},
 	MAINTENANCE: {
 		message: "ERROR.MAINTENANCE",
 		code: "SERVICE_UNAVAILABLE",
@@ -140,6 +148,10 @@ export const RES_KEY = {
 	USER_INFO: {
 		message: "RES.GET_USER_INFO_SUCCESS",
 		code: "SUC_03",
+	},
+	CREATE_SETTING: {
+		message: "RES.CREATE_SETTING_SUCCESS",
+		code: "SUC_04",
 	},
 };
 
@@ -172,9 +184,9 @@ export const SW_ROUTE_DETAIL = {
 };
 
 export enum ROUTES {
-	AUTH_V1 = "/v1/auth",
-	USER_V1 = "/v1/user",
-	SETTING_V1 = "/v1/setting",
+	AUTH_V1 = "api/v1/auth",
+	USER_V1 = "api/v1/user",
+	SETTING_V1 = "api/v1/setting",
 }
 
 export enum AUTH_ROUTES {
@@ -200,7 +212,6 @@ export enum TRANSLATION_NS {
 
 export const DEFAULT = {
 	PORT: 3001,
-	API_PREFIX: "/api",
 	APP_ENV: APP_ENV.DEVELOPMENT,
 	JWT_ACCESS_TOKEN_SECRET_KEY: "123456aA@",
 	JWT_ACCESS_TOKEN_EXPIRED: "1H", // 1 hour

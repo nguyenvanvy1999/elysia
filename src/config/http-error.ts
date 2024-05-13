@@ -5,6 +5,7 @@ import {
 	type IResponse,
 	type IResponseMetadata,
 	RES_KEY,
+	TRANSLATION_NS,
 } from "src/common";
 import { logger } from "src/config/logger";
 import { translate } from "src/util/translate";
@@ -14,7 +15,8 @@ export class HttpError extends Error {
 		public message: string,
 		public statusCode: number,
 		public traceCode: string,
-		public errorData: unknown = undefined,
+		public errorData: Record<string, any> = {},
+		public errorParams: Record<string, any> = {},
 	) {
 		super(message);
 	}
@@ -22,195 +24,225 @@ export class HttpError extends Error {
 	public static BadRequest(
 		message?: string,
 		traceCode?: string,
-		errorData?: unknown,
+		errorData?: Record<string, any>,
+		errorParams?: Record<string, any>,
 	): HttpError {
 		return new HttpError(
 			message || "Bad Request",
 			400,
 			traceCode ?? RES_KEY.UNKNOWN.code,
 			errorData,
+			errorParams,
 		);
 	}
 
 	public static Unauthorized(
 		message?: string,
 		traceCode?: string,
-		errorData?: unknown,
+		errorData?: Record<string, any>,
+		errorParams?: Record<string, any>,
 	): HttpError {
 		return new HttpError(
 			message || "Unauthorized",
 			401,
 			traceCode ?? RES_KEY.UNKNOWN.code,
 			errorData,
+			errorParams,
 		);
 	}
 
 	public static PaymentRequired(
 		message?: string,
 		traceCode?: string,
-		errorData?: unknown,
+		errorData?: Record<string, any>,
+		errorParams?: Record<string, any>,
 	): HttpError {
 		return new HttpError(
 			message || "Payment Required",
 			402,
 			traceCode ?? RES_KEY.UNKNOWN.code,
 			errorData,
+			errorParams,
 		);
 	}
 
 	public static Forbidden(
 		message?: string,
 		traceCode?: string,
-		errorData?: unknown,
+		errorData?: Record<string, any>,
+		errorParams?: Record<string, any>,
 	): HttpError {
 		return new HttpError(
 			message || "Forbidden",
 			403,
 			traceCode ?? RES_KEY.UNKNOWN.code,
 			errorData,
+			errorParams,
 		);
 	}
 
 	public static NotFound(
 		message?: string,
 		traceCode?: string,
-		errorData?: unknown,
+		errorData?: Record<string, any>,
+		errorParams?: Record<string, any>,
 	): HttpError {
 		return new HttpError(
 			message || "Not Found",
 			404,
 			traceCode ?? RES_KEY.UNKNOWN.code,
 			errorData,
+			errorParams,
 		);
 	}
 
 	public static MethodNotAllowed(
 		message?: string,
 		traceCode?: string,
-		errorData?: unknown,
+		errorData?: Record<string, any>,
+		errorParams?: Record<string, any>,
 	): HttpError {
 		return new HttpError(
 			message || "Method Not Allowed",
 			405,
 			traceCode ?? RES_KEY.UNKNOWN.code,
 			errorData,
+			errorParams,
 		);
 	}
 
 	public static Conflict(
 		message?: string,
 		traceCode?: string,
-		errorData?: unknown,
+		errorData?: Record<string, any>,
+		errorParams?: Record<string, any>,
 	): HttpError {
 		return new HttpError(
 			message || "Conflict",
 			409,
 			traceCode ?? RES_KEY.UNKNOWN.code,
 			errorData,
+			errorParams,
 		);
 	}
 
 	public static UnsupportedMediaType(
 		message?: string,
 		traceCode?: string,
-		errorData?: unknown,
+		errorData?: Record<string, any>,
+		errorParams?: Record<string, any>,
 	): HttpError {
 		return new HttpError(
 			message || "UnsupportedMediaType",
 			415,
 			traceCode ?? RES_KEY.UNKNOWN.code,
 			errorData,
+			errorParams,
 		);
 	}
 
 	public static IAmATeapot(
 		message?: string,
 		traceCode?: string,
-		errorData?: unknown,
+		errorData?: Record<string, any>,
+		errorParams?: Record<string, any>,
 	): HttpError {
 		return new HttpError(
 			message || "IAmATeapot",
 			418,
 			traceCode ?? RES_KEY.UNKNOWN.code,
 			errorData,
+			errorParams,
 		);
 	}
 
 	public static TooManyRequests(
 		message?: string,
 		traceCode?: string,
-		errorData?: unknown,
+		errorData?: Record<string, any>,
+		errorParams?: Record<string, any>,
 	): HttpError {
 		return new HttpError(
 			message || "Too Many Requests",
 			429,
 			traceCode ?? RES_KEY.UNKNOWN.code,
 			errorData,
+			errorParams,
 		);
 	}
 
 	public static Internal(
 		message?: string,
 		traceCode?: string,
-		errorData?: unknown,
+		errorData?: Record<string, any>,
+		errorParams?: Record<string, any>,
 	): HttpError {
 		return new HttpError(
 			message || "Internal Server Error",
 			500,
 			traceCode ?? RES_KEY.UNKNOWN.code,
 			errorData,
+			errorParams,
 		);
 	}
 
 	public static NotImplemented(
 		message?: string,
 		traceCode?: string,
-		errorData?: unknown,
+		errorData?: Record<string, any>,
+		errorParams?: Record<string, any>,
 	): HttpError {
 		return new HttpError(
 			message || "Not Implemented",
 			501,
 			traceCode ?? RES_KEY.UNKNOWN.code,
 			errorData,
+			errorParams,
 		);
 	}
 
 	public static BadGateway(
 		message?: string,
 		traceCode?: string,
-		errorData?: unknown,
+		errorData?: Record<string, any>,
+		errorParams?: Record<string, any>,
 	): HttpError {
 		return new HttpError(
 			message || "Bad Gateway",
 			502,
 			traceCode ?? RES_KEY.UNKNOWN.code,
 			errorData,
+			errorParams,
 		);
 	}
 
 	public static ServiceUnavailable(
 		message?: string,
 		traceCode?: string,
-		errorData?: unknown,
+		errorData?: Record<string, any>,
+		errorParams?: Record<string, any>,
 	): HttpError {
 		return new HttpError(
 			message || "Service Unavailable",
 			503,
 			traceCode ?? RES_KEY.UNKNOWN.code,
 			errorData,
+			errorParams,
 		);
 	}
 
 	public static GatewayTimeout(
 		message?: string,
 		traceCode?: string,
-		errorData?: unknown,
+		errorData?: Record<string, any>,
+		errorParams?: Record<string, any>,
 	): HttpError {
 		return new HttpError(
 			message || "Gateway Timeout",
 			504,
 			traceCode ?? RES_KEY.UNKNOWN.code,
 			errorData,
+			errorParams,
 		);
 	}
 }
@@ -264,7 +296,12 @@ export const httpError =
 							return {
 								metadata,
 								code: error.traceCode,
-								message: await translate(error.message, customLanguage),
+								message: await translate(
+									error.message,
+									customLanguage,
+									TRANSLATION_NS.BACKEND,
+									error.errorParams,
+								),
 								data: error.errorData,
 							} satisfies IResponse;
 						}

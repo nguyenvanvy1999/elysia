@@ -54,14 +54,13 @@ export const userRoutes = new Elysia({
 		USER_ROUTES.SEND_EMAIL_VERIFY,
 		async ({ body }): Promise<any> => {
 			const { email } = body;
-			const foundUsers = await db
-				.select({ id: users.id, activeAccountToken: users.activeAccountToken })
-				.from(users)
-				.where(eq(users.email, email));
-			if (!foundUsers.length) {
+			const user = await db.query.users.findFirst({
+				where: eq(users.email, email),
+				columns: { id: true, activeAccountToken: true },
+			});
+			if (!user) {
 				throw HttpError.NotFound(...Object.values(RES_KEY.USER_NOT_FOUND));
 			}
-			const user = foundUsers[0];
 			if (user.activeAccountToken) {
 				const { expiredIn } = decryptActiveAccountToken(
 					user.activeAccountToken,
@@ -91,7 +90,7 @@ export const userRoutes = new Elysia({
 			detail: SW_ROUTE_DETAIL.SEND_EMAIL_VERIFY,
 			response: {
 				200: sendEmailVerifyRes,
-				401: errorRes,
+				404: errorRes,
 				...errorsDefault,
 			},
 		},

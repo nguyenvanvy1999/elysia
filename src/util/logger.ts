@@ -7,7 +7,7 @@ export function bootLogger(): void {
 		logger.info(
 			`🦊 Elysia is running at ${chalk.blueBright(
 				"http://localhost:",
-			)}${chalk.greenBright(process.env.PORT)}`,
+			)}${chalk.greenBright(config.appPort)}`,
 		);
 	}
 }

@@ -114,12 +114,12 @@ export const createActiveAccountToken = (userId: string): string => {
 	);
 };
 
-export const decryptSetting = <T>(token: string): T => {
+export const decryptSetting = (setting: string): string => {
 	return aes256Decrypt(
-		token,
+		setting,
 		config.settingEncryptKey,
 		config.settingEncryptIv,
-	) as T;
+	);
 };
 
 export const encryptSetting = (setting: any): string => {

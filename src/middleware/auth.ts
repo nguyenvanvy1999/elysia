@@ -6,7 +6,7 @@ import {
 	type ISession,
 	RES_KEY,
 } from "src/common";
-import { type HttpError, db, sessionRepository } from "src/config";
+import { HttpError, db, sessionRepository } from "src/config";
 import { users } from "src/db";
 import { checkUserStatus } from "src/service";
 import { verifyAccessToken } from "src/util";
@@ -23,7 +23,7 @@ export const isAuthenticated = (
 		}
 	>,
 ) =>
-	app.derive(async ({ request: { headers }, HttpError }) => {
+	app.derive(async ({ request: { headers } }) => {
 		const authorization: string | null = headers.get(HEADER_KEY.AUTHORIZATION);
 		if (!authorization) {
 			throw HttpError.Unauthorized(...Object.values(RES_KEY.TOKEN_EMPTY));

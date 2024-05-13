@@ -14,20 +14,16 @@ export const translate = async (
 		translateCacheKey(key, lang, ns),
 	);
 	if (!existInCache) {
-		const data = await db
-			.select()
-			.from(translations)
-			.where(
-				and(
-					eq(translations.lang, lang),
-					eq(translations.ns, ns),
-					eq(translations.key, key),
-				),
-			)
-			.limit(1);
-		if (data.length) {
-			result = data[0].value;
-			await redisClient.set(translateCacheKey(key, lang, ns), data[0].value, {
+		const data = await db.query.translations.findFirst({
+			where: and(
+				eq(translations.lang, lang),
+				eq(translations.ns, ns),
+				eq(translations.key, key),
+			),
+		});
+		if (data) {
+			result = data.value;
+			await redisClient.set(translateCacheKey(key, lang, ns), data.value, {
 				EX: REDIS_CACHE_EX.TRANSLATION_CACHE,
 			});
 		}

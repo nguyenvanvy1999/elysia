@@ -6,6 +6,7 @@ import {
 	type IResponseData,
 	type IResponseMetadata,
 } from "src/common";
+import { config } from "src/config/config";
 import { translate } from "src/util/translate";
 
 const encoder = new TextEncoder();
@@ -35,7 +36,13 @@ export const httpResponse =
 				repoVersion,
 				version,
 				customLanguage,
-			}): Promise<Response> => {
+				path,
+			}): Promise<Response | undefined> => {
+				const ignorePaths: string[] = [config.swaggerUiPath, "/swagger/json"];
+				console.log(path);
+				if (ignorePaths.includes(path)) {
+					return;
+				}
 				const isJson: boolean = typeof response === "object";
 				set.headers["Content-Encoding"] = "gzip";
 				if (isJson) {
@@ -67,13 +74,5 @@ export const httpResponse =
 						},
 					);
 				}
-				return new Response(
-					Bun.gzipSync(encoder.encode(response?.toString() ?? "")),
-					{
-						headers: {
-							"Content-Type": "text/plain; charset=utf-8",
-						},
-					},
-				);
 			},
 		);

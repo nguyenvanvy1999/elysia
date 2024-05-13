@@ -21,7 +21,7 @@ Another technology is:
 - User: Get user profile, Admin CRUD users.
 - Setting: Admin CRUD settings, cache some useful setting.
 - Translation: Admin CRUD translations, i18n for response message.
-- Other: logger, swagger UI, graceful shutdown, env validate and parser, seed data.
+- Other: logger, swagger UI, graceful shutdown, env validate and parser, seed data, maintenance status.
 
 ## Todo:
 

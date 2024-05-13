@@ -1,4 +1,4 @@
-import { cors } from "@elysiajs/cors";
+import cors from "@elysiajs/cors";
 import { Elysia } from "elysia";
 import { compression } from "elysia-compression";
 import { APP_ENV } from "src/common";
@@ -13,7 +13,7 @@ import {
 	swaggerConfig,
 } from "src/config";
 import { loadMaintenance, maintenance } from "src/config/maintenace";
-import { authRoutes, userRoutes } from "src/router";
+import { authRoutes, settingRoutes, userRoutes } from "src/router";
 import { bootLogger, gracefulShutdown } from "src/util";
 
 try {
@@ -23,7 +23,7 @@ try {
 
 	const allowOrigin: string =
 		config.appEnv === APP_ENV.PRODUCTION ? config.cors.allowOrigin : "*";
-	const app = new Elysia({ prefix: config.apiPrefix })
+	const app = new Elysia()
 		.use(logger.into({ autoLogging: true }))
 		.use(
 			cors({
@@ -51,7 +51,8 @@ try {
 		.use(compression())
 		.onStop(gracefulShutdown)
 		.use(authRoutes)
-		.use(userRoutes);
+		.use(userRoutes)
+		.use(settingRoutes);
 	process.on("SIGINT", app.stop);
 	process.on("SIGTERM", app.stop);
 	app.listen({ port: config.appPort, maxRequestBodySize: 1_000_000_000 });

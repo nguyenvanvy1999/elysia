@@ -31,10 +31,6 @@ const envVariables = z
 		RUNTIME: z.enum(["bun", "edge"]).default("bun"),
 		ENABLE_SSL: toggle.default("false"),
 
-		// API config
-		API_PREFIX: z.string().default(DEFAULT.API_PREFIX),
-		ENB_API_VERSION: toggle.default("true"),
-
 		// database config
 		POSTGRES_URI: z.string().min(1).regex(POSTGRES_URI_REGEX),
 		DATABASE_DEBUG: toggle.default("false"),

@@ -5,4 +5,4 @@ export * from "./password";
 export * from "./db-util";
 export * from "./response";
 export * from "./token";
-export * from "./number";
+export * from "./validate";
