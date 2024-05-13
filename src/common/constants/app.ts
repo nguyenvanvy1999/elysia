@@ -20,6 +20,7 @@ export const swaggerOptions = {
 		auth: { name: "Auth", description: "Authentication endpoints" },
 		app: { name: "App", description: "General endpoints" },
 		user: { name: "User", description: "User endpoints" },
+		setting: { name: "Setting", description: "Setting endpoints" },
 	},
 };
 
@@ -147,6 +148,7 @@ export const RES_KEY = {
 };
 
 export const SW_ROUTE_DETAIL = {
+	// auth APIs
 	LOGIN: {
 		description: "Login with email and password",
 		summary: "Login",
@@ -155,6 +157,8 @@ export const SW_ROUTE_DETAIL = {
 		description: "Register new user with role user",
 		summary: "Register",
 	},
+
+	// user APIs
 	USER_INFO: {
 		description: "Get user information",
 		summary: "User info",
@@ -163,11 +167,18 @@ export const SW_ROUTE_DETAIL = {
 		description: "Send email verify account",
 		summary: "Send email verify",
 	},
+
+	// setting APIs
+	CREATE_SETTING: {
+		description: "Create setting",
+		summary: "Create setting",
+	},
 };
 
 export enum ROUTES {
 	AUTH_V1 = "/v1/auth",
 	USER_V1 = "/v1/user",
+	SETTING_V1 = "/v1/setting",
 }
 
 export enum AUTH_ROUTES {

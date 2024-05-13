@@ -1,5 +1,6 @@
-import { relations } from "drizzle-orm";
+import { type InferSelectModel, relations } from "drizzle-orm";
 import {
+	boolean,
 	index,
 	integer,
 	pgEnum,
@@ -177,7 +178,10 @@ export const settingTypeEnum = pgEnum("setting_type_enum", [
 export const settings = pgTable(DB_TABLE_NAME.SETTING, {
 	id: varchar("id", { length: 32 }).notNull().primaryKey(),
 	key: text("key").unique().notNull(),
+	isEncrypt: boolean("is_encrypted").default(false),
 	description: text("description"),
 	type: settingTypeEnum("type").notNull(),
 	value: varchar("value", { length: 2048 }).notNull(),
 });
+
+export type Setting = InferSelectModel<typeof settings>;
