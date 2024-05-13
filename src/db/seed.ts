@@ -1,10 +1,15 @@
 import { logger } from "src/config";
-import { seedSettings } from "src/db/redis-seed";
-import { seedAuthData, seedTranslationsData } from "src/db/seed-db";
+import { seedSettings } from "src/db/seed-cache";
+import {
+	seedAuthData,
+	seedSetting,
+	seedTranslationsData,
+} from "src/db/seed-db";
 
 async function main(): Promise<void> {
 	await seedTranslationsData();
 	await seedAuthData();
+	await seedSetting();
 	await seedSettings();
 }
 
