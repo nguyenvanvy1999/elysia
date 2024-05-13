@@ -4,7 +4,29 @@
 
 [![Test](https://github.com/nguyenvanvy1999/elysia/actions/workflows/test.yml/badge.svg)](https://github.com/nguyenvanvy1999/elysia/actions/workflows/test.yml)
 
+## Description
+
+A backend project, build with [Elysia](https://elysiajs.com/), [Bun](https://bun.sh/).
+Another technology is:
+- [Drizzle ORM](https://orm.drizzle.team/)
+- DB: PostgreSQL
+- Cache: Redis
+- Message Queue: Kafka
+- SMS: Twilio
+- Email sender: Sendgrid
+
+## Feature of project:
+
+- Auth: Signup, sign in, JWT, RBAC, encrypt token, session control for deleted/inactive/block user.
+- User: Get user profile, Admin CRUD users.
+- Setting: Admin CRUD settings, cache some useful setting.
+- Translation: Admin CRUD translations, i18n for response message.
+- Other: logger, swagger UI, graceful shutdown, env validate and parser, seed data.
+
+## Todo:
+
 ## Getting Started
+
 To run this project local, first let this command to start docker compose:
 ```bash
 cp ./docker/local/.env.example ./docker/local/.env
