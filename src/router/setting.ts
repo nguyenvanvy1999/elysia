@@ -15,7 +15,7 @@ import {
 } from "src/common";
 import { HttpError, db } from "src/config";
 import { settings } from "src/db";
-import { isAuthenticated } from "src/middleware";
+import { hasPermissions, isAuthenticated } from "src/middleware";
 import { checkValue, getValue } from "src/service";
 import { dbIdGenerator, encryptSetting, resBuild } from "src/util";
 
@@ -58,16 +58,10 @@ export const settingRoutes = new Elysia({
 					isEncrypt,
 					description,
 				})
-				.returning({
-					id: settings.id,
-					key: settings.key,
-					value: settings.value,
-					type: settings.type,
-					isEncrypt: settings.isEncrypt,
-					description: settings.description,
-				});
+				.returning()
+				.then((res) => res[0]);
 			return resBuild(
-				{ ...setting[0], value: getValue(setting[0]) },
+				{ ...setting, value: getValue(setting) },
 				RES_KEY.CREATE_SETTING,
 			);
 		},
@@ -96,6 +90,7 @@ export const settingRoutes = new Elysia({
 			);
 		},
 		{
+			beforeHandle: hasPermissions(["test:owner"]),
 			params: getSettingParam,
 			detail: SW_ROUTE_DETAIL.GET_SETTING,
 			response: {

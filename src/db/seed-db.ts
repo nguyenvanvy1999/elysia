@@ -19,7 +19,7 @@ import {
 	translations,
 	users,
 	usersToRoles,
-} from "src/db/schemas";
+} from "src/db";
 import { cleanupDB, createPassword, createUser, dbIdGenerator } from "src/util";
 
 export const seedAuthData = async (): Promise<void> => {

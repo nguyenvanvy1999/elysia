@@ -1,4 +1,3 @@
-import { eq } from "drizzle-orm";
 import type { Elysia } from "elysia";
 import {
 	HEADER_KEY,
@@ -6,9 +5,9 @@ import {
 	type ISession,
 	RES_KEY,
 } from "src/common";
-import { HttpError, db, sessionRepository } from "src/config";
-import { users } from "src/db";
-import { checkUserStatus } from "src/service";
+import { HttpError, sessionRepository } from "src/config";
+import type { UserWithRoles } from "src/db";
+import { checkUserStatus, getUserDetail } from "src/service";
 import { verifyAccessToken } from "src/util";
 
 export const isAuthenticated = (
@@ -50,12 +49,16 @@ export const isAuthenticated = (
 		if (!session.userId) {
 			throw HttpError.Unauthorized(...Object.values(RES_KEY.TOKEN_EXPIRED));
 		}
-		const user = await db.query.users.findFirst({
-			where: eq(users.id, session.userId),
-		});
+		const user: UserWithRoles | undefined = await getUserDetail(session.userId);
 		if (!user) {
 			throw HttpError.NotFound(...Object.values(RES_KEY.USER_NOT_FOUND));
 		}
 		checkUserStatus(user.status);
 		return { user };
 	});
+
+export const hasPermissions = (
+	pers: string[],
+): (({ user }: { user: UserWithRoles }) => Promise<void>) => {
+	return async ({ user }): Promise<void> => {};
+};

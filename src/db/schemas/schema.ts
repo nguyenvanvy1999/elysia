@@ -1,4 +1,4 @@
-import { type InferSelectModel, relations } from "drizzle-orm";
+import { relations } from "drizzle-orm";
 import {
 	boolean,
 	index,
@@ -183,5 +183,3 @@ export const settings = pgTable(DB_TABLE_NAME.SETTING, {
 	type: settingTypeEnum("type").notNull(),
 	value: varchar("value", { length: 2048 }).notNull(),
 });
-
-export type Setting = InferSelectModel<typeof settings>;
