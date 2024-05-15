@@ -12,14 +12,22 @@ import {
 	requestHeader,
 	swaggerConfig,
 } from "src/config";
-import { loadMaintenance, maintenance } from "src/config/maintenace";
+import { maintenance } from "src/config/maintenace";
+import { cacheSetting, ensureSettings } from "src/config/setting";
 import { authRoutes, settingRoutes, userRoutes } from "src/router";
 import { bootLogger, gracefulShutdown } from "src/util";
 
 try {
+	await ensureSettings();
+} catch (e: any) {
+	console.error(`Error when start server: ${e?.message}`);
+	process.exit();
+}
+
+try {
 	await connectRedis();
 	await connectKafka();
-	await loadMaintenance();
+	await cacheSetting();
 
 	const allowOrigin: string =
 		config.appEnv === APP_ENV.PRODUCTION ? config.cors.allowOrigin : "*";

@@ -8,4 +8,5 @@ export enum SETTING_DATA_TYPE {
 
 export enum SETTING_KEY {
 	MAINTENANCE = "maintenance",
+	ENB_REGISTER = "enb_register",
 }

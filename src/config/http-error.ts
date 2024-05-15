@@ -8,7 +8,7 @@ import {
 	TRANSLATION_NS,
 } from "src/common";
 import { logger } from "src/config/logger";
-import { translate } from "src/util/translate";
+import { translate } from "src/util";
 
 export class HttpError extends Error {
 	public constructor(

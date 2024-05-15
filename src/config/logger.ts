@@ -1,7 +1,7 @@
 import { join } from "node:path";
 import { createPinoLogger, pino } from "@bogeychan/elysia-logger";
 import { APP_SERVICE } from "src/common";
-import { config } from "src/config/config";
+import { config } from "src/config/env";
 
 export const logger = createPinoLogger({
 	transport: {

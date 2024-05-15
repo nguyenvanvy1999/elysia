@@ -1,7 +1,7 @@
 import { swagger } from "@elysiajs/swagger";
 import type { Elysia } from "elysia";
 import { swaggerOptions, versionOptions } from "src/common";
-import { config } from "src/config/config";
+import { config } from "src/config/env";
 
 export const swaggerConfig = () => (app: Elysia) => {
 	if (config.enbSwaggerUi) {

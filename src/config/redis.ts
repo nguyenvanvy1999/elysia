@@ -1,7 +1,7 @@
 import chalk from "chalk";
 import { type RedisClientType, createClient } from "redis";
 import { Repository } from "redis-om";
-import { config } from "src/config/config";
+import { config } from "src/config/env";
 import { redisLogger } from "src/config/logger";
 import { sessionSchema, settingSchema } from "src/db/redis-schemas";
 

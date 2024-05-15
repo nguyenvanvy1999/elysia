@@ -18,6 +18,14 @@ async function main(): Promise<void> {
 				type: SETTING_DATA_TYPE.BOOLEAN,
 				description: "Maintenance status of app",
 			},
+			{
+				id: dbIdGenerator(DB_ID_PREFIX.SETTING),
+				key: SETTING_KEY.ENB_REGISTER,
+				value: "true",
+				isEncrypt: false,
+				type: SETTING_DATA_TYPE.BOOLEAN,
+				description: "Enable register in app",
+			},
 		];
 		await ct.insert(settings).values(settingCreate);
 	});

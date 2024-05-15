@@ -6,8 +6,8 @@ import {
 	type IResponseMetadata,
 	type IResponsePagingData,
 } from "src/common";
-import { config } from "src/config/config";
-import { translate } from "src/util/translate";
+import { config } from "src/config/env";
+import { translate } from "src/util";
 
 const encoder = new TextEncoder();
 

@@ -1,6 +1,6 @@
 import chalk from "chalk";
 import { Kafka, Partitioners, type Producer } from "kafkajs";
-import { config } from "src/config/config";
+import { config } from "src/config/env";
 import { kafkaLogger } from "src/config/logger";
 
 export const kafkaClient: Kafka = new Kafka({

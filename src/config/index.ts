@@ -1,4 +1,4 @@
-export * from "./config";
+export * from "./env";
 export * from "./swagger";
 export * from "./http-error";
 export * from "./db";
