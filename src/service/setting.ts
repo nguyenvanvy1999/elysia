@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { SETTING_DATA_TYPE } from "src/common";
+import { SETTING_DATA_TYPE, SETTING_KEY } from "src/common";
 import type { Setting } from "src/db";
 import { checkJSONString, checkNumber, decryptSetting } from "src/util";
 
@@ -20,6 +20,22 @@ export const checkValue = (value: string, type: SETTING_DATA_TYPE): boolean => {
 		return true;
 	}
 	return type === SETTING_DATA_TYPE.STRING;
+};
+
+export const stringifyValue = (
+	value:
+		| string
+		| boolean
+		| number
+		| Date
+		| Record<string, any>
+		| Record<string, any>[],
+): string => {
+	return typeof value === "object" ? JSON.stringify(value) : value.toString();
+};
+
+export const isProtected = (key: string): boolean => {
+	return Object.values<string>(SETTING_KEY).includes(key);
 };
 
 export const getValue = <T>(setting: Setting, raw = false): T => {

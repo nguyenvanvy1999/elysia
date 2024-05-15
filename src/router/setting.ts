@@ -8,7 +8,6 @@ import {
 	POLICY_ENTITY,
 	RES_KEY,
 	ROUTES,
-	SETTING_KEY,
 	SETTING_ROUTES,
 	SW_ROUTE_DETAIL,
 	createSettingBody,
@@ -20,10 +19,11 @@ import {
 	settingRes,
 	swaggerOptions,
 } from "src/common";
-import { HttpError, db } from "src/config";
+import { updateSettingBody } from "src/common/dtos/setting/update";
+import { HttpError, db, redisClient } from "src/config";
 import { settings } from "src/db";
 import { hasPermissions, isAuthenticated } from "src/middleware";
-import { checkValue, getValue } from "src/service";
+import { checkValue, getValue, isProtected, stringifyValue } from "src/service";
 import {
 	customCount,
 	dbIdGenerator,
@@ -56,8 +56,8 @@ export const settingRoutes = new Elysia({
 					{ key },
 				);
 			}
-			const strValue: string =
-				typeof value === "object" ? JSON.stringify(value) : value.toString();
+
+			const strValue: string = stringifyValue(value);
 			const check: boolean = checkValue(strValue, type);
 			if (!check) {
 				throw HttpError.BadRequest(
@@ -186,7 +186,7 @@ export const settingRoutes = new Elysia({
 			if (!setting) {
 				throw HttpError.NotFound(...Object.values(RES_KEY.SETTING_NOT_FOUND));
 			}
-			if (Object.values<string>(SETTING_KEY).includes(setting.key)) {
+			if (isProtected(setting.key)) {
 				throw HttpError.BadRequest(
 					...Object.values(RES_KEY.CAN_NOT_DELETE_THIS_SETTING),
 				);
@@ -204,6 +204,67 @@ export const settingRoutes = new Elysia({
 			]),
 			params: settingParam,
 			detail: SW_ROUTE_DETAIL.DELETE_SETTING,
+			response: {
+				200: settingRes,
+				404: errorRes,
+				...errorsDefault,
+			},
+		},
+	)
+	.put(
+		SETTING_ROUTES.UPDATE,
+		async ({
+			params: { id },
+			body: { value, description, isEncrypt, type },
+		}): Promise<any> => {
+			const strValue: string = stringifyValue(value);
+			const check: boolean = checkValue(strValue, type);
+			if (!check) {
+				throw HttpError.BadRequest(
+					...Object.values(RES_KEY.SETTING_VALUE_NOT_ALLOWED_ERROR),
+				);
+			}
+			const setting = await db.query.settings.findFirst({
+				where: eq(settings.id, id),
+				columns: { type: true, id: true, key: true },
+			});
+			if (!setting) {
+				throw HttpError.NotFound(...Object.values(RES_KEY.SETTING_NOT_FOUND));
+			}
+			if (setting.type !== type && isProtected(setting.key)) {
+				throw HttpError.BadRequest(
+					...Object.values(RES_KEY.CAN_NOT_CHANGE_TYPE_OF_THIS_SETTING),
+				);
+			}
+			const updatedSetting = await db
+				.update(settings)
+				.set({
+					description,
+					type,
+					value: isEncrypt ? encryptSetting(strValue) : strValue,
+					isEncrypt,
+				})
+				.where(eq(settings.id, id))
+				.returning();
+			if (isProtected(setting.key)) {
+				await redisClient.set(setting.key, getValue(updatedSetting[0], true));
+			}
+			return resBuild(
+				{ ...updatedSetting[0], value: getValue(updatedSetting[0]) },
+				RES_KEY.DELETE_SETTING,
+			);
+		},
+		{
+			beforeHandle: hasPermissions([
+				{
+					entity: POLICY_ENTITY.SETTING,
+					access: POLICY_ACCESS.ANY,
+					action: POLICY_ACTION.UPDATE,
+				},
+			]),
+			params: settingParam,
+			body: updateSettingBody,
+			detail: SW_ROUTE_DETAIL.UPDATE_SETTING,
 			response: {
 				200: settingRes,
 				404: errorRes,

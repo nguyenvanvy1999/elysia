@@ -153,6 +153,10 @@ export const RES_KEY = {
 		message: "ERROR.CAN_NOT_DELETE_THIS_SETTING",
 		code: "BAD_REQUEST_4",
 	},
+	CAN_NOT_CHANGE_TYPE_OF_THIS_SETTING: {
+		message: "ERROR.CAN_NOT_CHANGE_TYPE_OF_THIS_SETTING",
+		code: "BAD_REQUEST_5",
+	},
 
 	// service unavailable error
 	MAINTENANCE: {
@@ -232,6 +236,10 @@ export const SW_ROUTE_DETAIL = {
 	DELETE_SETTING: {
 		description: "Delete setting with id",
 		summary: "Delete setting",
+	},
+	UPDATE_SETTING: {
+		description: "Update setting with id",
+		summary: "Update setting",
 	},
 };
 

@@ -303,6 +303,18 @@ export const translates = [
 		key: RES_KEY.CAN_NOT_DELETE_THIS_SETTING.message,
 		value: "Khong the xoa cai dat nay",
 	},
+	{
+		lang: LANGUAGE.EN,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.CAN_NOT_CHANGE_TYPE_OF_THIS_SETTING.message,
+		value: "Can not change type of protected setting",
+	},
+	{
+		lang: LANGUAGE.VI,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.CAN_NOT_CHANGE_TYPE_OF_THIS_SETTING.message,
+		value: "Khong the thay doi type cua cai dat duoc bao ve",
+	},
 
 	// response
 	{
