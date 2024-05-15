@@ -4,25 +4,19 @@ import {
 	POLICY_ACTION,
 	POLICY_ENTITY,
 	ROLE_NAME,
-	SETTING_DATA_TYPE,
-	SETTING_KEY,
-	translates,
 } from "src/common";
 import { config, db, logger } from "src/config";
 import {
-	type Setting,
 	permissions,
 	permissionsToRoles,
 	refreshTokens,
 	roles,
-	settings,
-	translations,
 	users,
 	usersToRoles,
-} from "src/db";
+} from "src/db/schemas";
 import { cleanupDB, createPassword, createUser, dbIdGenerator } from "src/util";
 
-export const seedAuthData = async (): Promise<void> => {
+async function main(): Promise<void> {
 	logger.info("🌱 Seeding auth data...");
 	await db.transaction(async (ct) => {
 		await cleanupDB(ct, refreshTokens);
@@ -126,37 +120,14 @@ export const seedAuthData = async (): Promise<void> => {
 	});
 
 	logger.info("🌱 Auth data has been seeded");
-};
+}
 
-export const seedTranslationsData = async (): Promise<void> => {
-	logger.info("🌱 Seeding translation data...");
-	await db.transaction(async (ct) => {
-		logger.info("Created translations...");
-		await cleanupDB(ct, translations);
-
-		await ct.insert(translations).values(translates);
+main()
+	.catch((e): void => {
+		logger.error(`Seeding error ${JSON.stringify(e)}`);
+		process.exit(1);
+	})
+	.finally((): void => {
+		logger.info("Seeding done!");
+		process.exit(0);
 	});
-
-	logger.info("🌱 Translation data has been seeded");
-};
-
-export const seedSetting = async (): Promise<void> => {
-	logger.info("🌱 Seeding setting data...");
-	await db.transaction(async (ct) => {
-		logger.info("Created settings...");
-		await cleanupDB(ct, settings);
-		const settingCreate: Setting[] = [
-			{
-				id: dbIdGenerator(DB_ID_PREFIX.SETTING),
-				key: SETTING_KEY.MAINTENANCE,
-				value: "false",
-				isEncrypt: false,
-				type: SETTING_DATA_TYPE.BOOLEAN,
-				description: "Maintenance status of app",
-			},
-		];
-		await ct.insert(settings).values(settingCreate);
-	});
-
-	logger.info("🌱 Setting data has been seeded");
-};
