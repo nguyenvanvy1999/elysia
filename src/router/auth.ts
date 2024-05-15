@@ -8,6 +8,7 @@ import {
 	type IJwtPayload,
 	RES_KEY,
 	ROUTES,
+	SETTING_KEY,
 	SW_ROUTE_DETAIL,
 	errorRes,
 	errorsDefault,
@@ -17,7 +18,13 @@ import {
 	registerRes,
 	swaggerOptions,
 } from "src/common";
-import { HttpError, config, db, sessionRepository } from "src/config";
+import {
+	HttpError,
+	config,
+	db,
+	redisClient,
+	sessionRepository,
+} from "src/config";
 import { refreshTokens, users } from "src/db";
 import { checkUserStatus, increasePasswordAttempt } from "src/service";
 import {
@@ -38,6 +45,12 @@ export const authRoutes = new Elysia({
 	.post(
 		AUTH_ROUTES.REGISTER,
 		async ({ body }): Promise<any> => {
+			const enbRegister: string | null = await redisClient.get(
+				SETTING_KEY.ENB_REGISTER,
+			);
+			if (enbRegister === "false") {
+				throw HttpError.BadRequest(...Object.values(RES_KEY.DISABLE_REGISTER));
+			}
 			const { email, username, password } = body;
 			const exist = await db.query.users.findFirst({
 				where: or(eq(users.email, email), eq(users.username, username)),

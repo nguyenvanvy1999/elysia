@@ -18,15 +18,9 @@ import { authRoutes, settingRoutes, userRoutes } from "src/router";
 import { bootLogger, gracefulShutdown } from "src/util";
 
 try {
-	await ensureSettings();
-} catch (e: any) {
-	console.error(`Error when start server: ${e?.message}`);
-	process.exit();
-}
-
-try {
 	await connectRedis();
 	await connectKafka();
+	await ensureSettings();
 
 	const allowOrigin: string =
 		config.appEnv === APP_ENV.PRODUCTION ? config.cors.allowOrigin : "*";
@@ -67,4 +61,5 @@ try {
 	bootLogger();
 } catch (e) {
 	logger.error(e, "Error booting the server");
+	process.exit();
 }

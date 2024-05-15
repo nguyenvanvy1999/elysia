@@ -278,6 +278,19 @@ export const translates = [
 		key: RES_KEY.ABILITY_FORBIDDEN.message,
 		value: "Khong co quyen truy cap",
 	},
+	{
+		lang: LANGUAGE.EN,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.DISABLE_REGISTER.message,
+		value:
+			"We was disable register feature. Please contact admin to more detail",
+	},
+	{
+		lang: LANGUAGE.VI,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.DISABLE_REGISTER.message,
+		value: "Tinh nang dang ky da tat. Lien he Admin de co them thong tin",
+	},
 
 	// response
 	{

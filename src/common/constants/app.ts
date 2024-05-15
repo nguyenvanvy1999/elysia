@@ -149,9 +149,15 @@ export const RES_KEY = {
 		message: "ERROR.SETTING_VALUE_NOT_ALLOWED_ERROR",
 		code: "BAD_REQUEST_3",
 	},
+
+	// service unavailable error
 	MAINTENANCE: {
 		message: "ERROR.MAINTENANCE",
-		code: "SERVICE_UNAVAILABLE",
+		code: "SERVICE_UNAVAILABLE_1",
+	},
+	DISABLE_REGISTER: {
+		message: "ERROR.DISABLE_REGISTER",
+		code: "SERVICE_UNAVAILABLE_2",
 	},
 
 	// response

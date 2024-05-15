@@ -1,22 +1,15 @@
+import { inArray } from "drizzle-orm";
 import { SETTING_KEY } from "src/common";
 import { db } from "src/config/db";
-import type { Setting } from "src/db";
+import { redisClient } from "src/config/redis";
+import { settings } from "src/db";
 import { getValue } from "src/service";
-
-const configs: Setting[] = await db.query.settings.findMany();
-
-export const getSetting = <T>(key: string | SETTING_KEY): T => {
-	const config: Setting | undefined = configs.find(
-		(x: Setting) => x.key === key,
-	);
-	if (!config) {
-		throw new Error(`Setting with key ${key} does not exist`);
-	}
-	return getValue<T>(config);
-};
 
 export const ensureSettings = async (): Promise<void> => {
 	const ensureKeys: string[] = Object.values(SETTING_KEY);
+	const configs = await db.query.settings.findMany({
+		where: inArray(settings.key, ensureKeys),
+	});
 	const missingSettings: string[] = ensureKeys.filter(
 		(a) => !configs.some((x) => x.key === a),
 	);
@@ -27,4 +20,12 @@ export const ensureSettings = async (): Promise<void> => {
 			)} from DB. please run seed to add it`,
 		);
 	}
+
+	// cache settings
+	await redisClient.mSet(
+		configs.reduce(
+			(prev, cur) => Object.assign(prev, { [cur.key]: `${getValue(cur)}` }),
+			{},
+		),
+	);
 };
