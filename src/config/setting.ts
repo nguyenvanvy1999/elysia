@@ -24,7 +24,7 @@ export const ensureSettings = async (): Promise<void> => {
 	// cache settings
 	await redisClient.mSet(
 		configs.reduce(
-			(prev, cur) => Object.assign(prev, { [cur.key]: `${getValue(cur)}` }),
+			(prev, cur) => Object.assign(prev, { [cur.key]: getValue(cur, true) }),
 			{},
 		),
 	);

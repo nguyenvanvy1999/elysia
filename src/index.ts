@@ -9,10 +9,10 @@ import {
 	httpError,
 	httpResponse,
 	logger,
+	maintenance,
 	requestHeader,
 	swaggerConfig,
 } from "src/config";
-import { maintenance } from "src/config/maintenace";
 import { ensureSettings } from "src/config/setting";
 import { authRoutes, settingRoutes, userRoutes } from "src/router";
 import { bootLogger, gracefulShutdown } from "src/util";
@@ -24,7 +24,7 @@ try {
 
 	const allowOrigin: string =
 		config.appEnv === APP_ENV.PRODUCTION ? config.cors.allowOrigin : "*";
-	const app = new Elysia({ prefix: config.apiPrefix })
+	const app = new Elysia()
 		.use(logger.into({ autoLogging: true }))
 		.use(
 			cors({
@@ -34,7 +34,7 @@ try {
 				preflight: false,
 			}),
 		)
-		.use(maintenance)
+		.onRequest(maintenance)
 		.use(
 			requestHeader({
 				ip: true,

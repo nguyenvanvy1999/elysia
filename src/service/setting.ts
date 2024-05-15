@@ -22,10 +22,13 @@ export const checkValue = (value: string, type: SETTING_DATA_TYPE): boolean => {
 	return type === SETTING_DATA_TYPE.STRING;
 };
 
-export const getValue = <T>(setting: Setting): T => {
+export const getValue = <T>(setting: Setting, raw = false): T => {
 	let value: string = setting.value;
 	if (setting.isEncrypt) {
 		value = decryptSetting(value);
+	}
+	if (raw) {
+		return value as T;
 	}
 	if (
 		setting.type === SETTING_DATA_TYPE.BOOLEAN &&

@@ -228,9 +228,9 @@ export const SW_ROUTE_DETAIL = {
 };
 
 export enum ROUTES {
-	AUTH_V1 = "/v1/auth",
-	USER_V1 = "/v1/user",
-	SETTING_V1 = "/v1/setting",
+	AUTH_V1 = "/api/v1/auth",
+	USER_V1 = "/api/v1/user",
+	SETTING_V1 = "/api/v1/setting",
 }
 
 export enum AUTH_ROUTES {
@@ -266,7 +266,6 @@ export const DEFAULT = {
 	PORT: 3001,
 	APP_ENV: APP_ENV.DEVELOPMENT,
 	JWT_ACCESS_TOKEN_SECRET_KEY: "123456aA@",
-	API_PREFIX: "/api",
 	JWT_ACCESS_TOKEN_EXPIRED: "1H", // 1 hour
 	NOT_BEFORE_EXPIRATION_TIME: "0", // immediately
 	JWT_REFRESH_TOKEN_SECRET_KEY: "123456aA@",
