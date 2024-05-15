@@ -1,7 +1,8 @@
-import { eq } from "drizzle-orm";
+import { asc, eq } from "drizzle-orm";
 import { Elysia } from "elysia";
 import {
 	DB_ID_PREFIX,
+	DEFAULT,
 	POLICY_ACCESS,
 	POLICY_ACTION,
 	POLICY_ENTITY,
@@ -13,6 +14,7 @@ import {
 	errorRes,
 	errorsDefault,
 	getSettingParam,
+	listSettingQuery,
 	settingRes,
 	swaggerOptions,
 } from "src/common";
@@ -20,7 +22,14 @@ import { HttpError, db } from "src/config";
 import { settings } from "src/db";
 import { hasPermissions, isAuthenticated } from "src/middleware";
 import { checkValue, getValue } from "src/service";
-import { dbIdGenerator, encryptSetting, resBuild } from "src/util";
+import {
+	customCount,
+	dbIdGenerator,
+	encryptSetting,
+	getCount,
+	resBuild,
+	resPagingBuild,
+} from "src/util";
 
 export const settingRoutes = new Elysia({
 	prefix: ROUTES.SETTING_V1,
@@ -69,11 +78,56 @@ export const settingRoutes = new Elysia({
 			);
 		},
 		{
+			beforeHandle: hasPermissions([
+				{
+					entity: POLICY_ENTITY.SETTING,
+					access: POLICY_ACCESS.ANY,
+					action: POLICY_ACTION.CREATE,
+				},
+			]),
 			body: createSettingBody,
 			detail: SW_ROUTE_DETAIL.CREATE_SETTING,
 			response: {
 				200: settingRes,
 				409: errorRes,
+				...errorsDefault,
+			},
+		},
+	)
+	.get(
+		SETTING_ROUTES.LIST,
+		async ({ query: { limit, offset } }): Promise<any> => {
+			const [data, count] = await Promise.all([
+				db.query.settings.findMany({
+					orderBy: asc(settings.id),
+					limit,
+					offset,
+				}),
+				db.select({ count: customCount() }).from(settings),
+			]);
+
+			return resPagingBuild(
+				data.map((x) => ({ ...x, value: getValue(x) })),
+				RES_KEY.LIST_SETTING,
+				{
+					count: getCount(count),
+					offset: offset ?? DEFAULT.PAGING_OFFSET,
+					limit: limit ?? DEFAULT.PAGING_LIMIT,
+				},
+			);
+		},
+		{
+			beforeHandle: hasPermissions([
+				{
+					entity: POLICY_ENTITY.SETTING,
+					access: POLICY_ACCESS.ANY,
+					action: POLICY_ACTION.READ,
+				},
+			]),
+			detail: SW_ROUTE_DETAIL.LIST_SETTING,
+			query: listSettingQuery,
+			response: {
+				200: settingRes,
 				...errorsDefault,
 			},
 		},

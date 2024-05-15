@@ -175,6 +175,10 @@ export const RES_KEY = {
 		message: "RES.GET_SETTING_SUCCESS",
 		code: "SUC_05",
 	},
+	LIST_SETTING: {
+		message: "RES.LIST_SETTING_SUCCESS",
+		code: "SUC_05",
+	},
 };
 
 export const SW_ROUTE_DETAIL = {
@@ -207,6 +211,10 @@ export const SW_ROUTE_DETAIL = {
 		description: "Get setting detail",
 		summary: "Get setting",
 	},
+	LIST_SETTING: {
+		description: "Get list settings",
+		summary: "Get list settings",
+	},
 };
 
 export enum ROUTES {
@@ -228,6 +236,7 @@ export enum USER_ROUTES {
 export enum SETTING_ROUTES {
 	CREATE = "/",
 	GET = "/:id",
+	LIST = "/list",
 }
 
 export enum APP_ENV {
@@ -263,6 +272,8 @@ export const DEFAULT = {
 	SWAGGER_UI_PATH: "/swagger",
 	ACTIVE_ACCOUNT_TOKEN_EXPIRED: "5m",
 	LOG_LEVEL: "trace",
+	PAGING_LIMIT: 10,
+	PAGING_OFFSET: 0,
 };
 
 export enum HTTP_METHOD {

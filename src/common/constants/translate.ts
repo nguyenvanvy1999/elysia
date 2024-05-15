@@ -340,4 +340,16 @@ export const translates = [
 		key: RES_KEY.GET_SETTING.message,
 		value: "Lay cai dat thanh cong",
 	},
+	{
+		lang: LANGUAGE.EN,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.LIST_SETTING.message,
+		value: "Get list settings success",
+	},
+	{
+		lang: LANGUAGE.VI,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.LIST_SETTING.message,
+		value: "Lay danh sach cai dat thanh cong",
+	},
 ];

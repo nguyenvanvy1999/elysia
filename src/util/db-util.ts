@@ -46,3 +46,14 @@ export function createUser() {
 export const increment = (column: AnyColumn, value = 1) => {
 	return sql`${column} + ${value}`;
 };
+
+export const customCount = (column?: AnyColumn) => {
+	if (column) {
+		return sql<number>`cast(count(${column}) as integer)`;
+	}
+	return sql<number>`cast(count(*) as integer)`;
+};
+
+export const getCount = (data: { count: number }[]) => {
+	return data[0]?.count ?? 0;
+};

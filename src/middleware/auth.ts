@@ -11,12 +11,13 @@ import {
 } from "src/common";
 import { HttpError, sessionRepository } from "src/config";
 import type { UserWithRoles } from "src/db";
-import { checkUserStatus, getUserDetail } from "src/service";
 import {
+	checkUserStatus,
 	defineAbilityFromRole,
 	execPolicyHandler,
+	getUserDetail,
 	handlerRules,
-} from "src/service/role";
+} from "src/service";
 import { verifyAccessToken } from "src/util";
 
 export const isAuthenticated = (

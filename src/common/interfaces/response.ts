@@ -22,3 +22,12 @@ export interface IResponseData {
 	code: string;
 	message: string;
 }
+
+export interface IResponsePagingData extends IResponseData {
+	pagination: {
+		totalItems: number;
+		currentPageCount: number;
+		totalPages: number;
+		currentPage: number;
+	};
+}

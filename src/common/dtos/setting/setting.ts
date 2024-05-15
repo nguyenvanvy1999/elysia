@@ -13,5 +13,6 @@ export const settingDto = t.Object({
 		t.Date(),
 		t.Number(),
 		t.Record(t.String(), t.Any()),
+		t.Array(t.Record(t.String(), t.Any())),
 	]),
 });

@@ -3,8 +3,8 @@ import {
 	AVAILABLE_LANGUAGES,
 	type IRequestDerive,
 	type IResponse,
-	type IResponseData,
 	type IResponseMetadata,
+	type IResponsePagingData,
 } from "src/common";
 import { config } from "src/config/config";
 import { translate } from "src/util/translate";
@@ -45,7 +45,8 @@ export const httpResponse =
 				const isJson: boolean = typeof response === "object";
 				set.headers["Content-Encoding"] = "gzip";
 				if (isJson) {
-					const newResponse: IResponseData = response as IResponseData;
+					const newResponse: IResponsePagingData =
+						response as IResponsePagingData;
 					const metadata = {
 						languages: AVAILABLE_LANGUAGES,
 						language: customLanguage,
@@ -62,8 +63,9 @@ export const httpResponse =
 						metadata,
 						message: await translate(newResponse.message, customLanguage),
 						code: newResponse.code,
+						pagination: newResponse?.pagination,
 						data: newResponse.data,
-					} satisfies IResponse;
+					} satisfies IResponse | IResponsePagingData;
 					return new Response(
 						Bun.gzipSync(encoder.encode(JSON.stringify(dataRes))),
 						{
