@@ -6,15 +6,13 @@ import {
 	RES_KEY,
 	SETTING_KEY,
 } from "src/common";
-import { redisClient } from "src/config/redis";
+import { getSetting } from "src/config/setting";
 import { translate } from "src/util";
 
 export const maintenance = async (app: Elysia) =>
 	app.onRequest(async ({ set, request }): Promise<IResponse | undefined> => {
-		const maintenance: string | null = await redisClient.get(
-			`settings_${SETTING_KEY.MAINTENANCE}`,
-		);
-		if (maintenance === "true") {
+		const maintenance: boolean = getSetting(SETTING_KEY.MAINTENANCE);
+		if (maintenance) {
 			set.status = 503;
 			const metadata = {
 				languages: AVAILABLE_LANGUAGES,
