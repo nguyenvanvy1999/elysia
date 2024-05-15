@@ -1,6 +1,6 @@
 import { type TSchema, t } from "elysia";
 
-export const responseRes = <T extends TSchema>(T: T) =>
+export const resDoc = <T extends TSchema>(T: T) =>
 	t.Object({
 		code: t.Number(),
 		message: t.String(),
@@ -19,7 +19,20 @@ export const responseRes = <T extends TSchema>(T: T) =>
 		data: t.Optional(T),
 	});
 
-export const errorRes = responseRes(t.Null());
+export const resPagingDoc = <T extends TSchema>(T: T) =>
+	t.Intersect([
+		resDoc(T),
+		t.Optional(
+			t.Object({
+				currentPageCount: t.Integer(),
+				totalItems: t.Integer(),
+				totalPages: t.Integer(),
+				currentPage: t.Integer(),
+			}),
+		),
+	]);
+
+export const errorRes = resDoc(t.Null());
 
 export const errorsDefault = {
 	400: errorRes,

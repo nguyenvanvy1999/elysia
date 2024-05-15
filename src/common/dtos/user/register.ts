@@ -1,5 +1,5 @@
 import { t } from "elysia";
-import { responseRes } from "src/common/dtos/response";
+import { resDoc } from "src/common/dtos/response";
 import { userDto } from "src/common/dtos/user/user";
 
 export const registerBody = t.Pick(userDto, [
@@ -9,4 +9,4 @@ export const registerBody = t.Pick(userDto, [
 	"username",
 ]);
 
-export const registerRes = responseRes(t.Omit(userDto, ["password"]));
+export const registerRes = resDoc(t.Omit(userDto, ["password"]));

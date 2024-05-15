@@ -13,8 +13,9 @@ import {
 	createSettingBody,
 	errorRes,
 	errorsDefault,
-	getSettingParam,
 	listSettingQuery,
+	listSettingRes,
+	settingParam,
 	settingRes,
 	swaggerOptions,
 } from "src/common";
@@ -127,7 +128,7 @@ export const settingRoutes = new Elysia({
 			detail: SW_ROUTE_DETAIL.LIST_SETTING,
 			query: listSettingQuery,
 			response: {
-				200: settingRes,
+				200: listSettingRes,
 				...errorsDefault,
 			},
 		},
@@ -154,8 +155,39 @@ export const settingRoutes = new Elysia({
 					action: POLICY_ACTION.READ,
 				},
 			]),
-			params: getSettingParam,
+			params: settingParam,
 			detail: SW_ROUTE_DETAIL.GET_SETTING,
+			response: {
+				200: settingRes,
+				404: errorRes,
+				...errorsDefault,
+			},
+		},
+	)
+	.delete(
+		SETTING_ROUTES.DELETE,
+		async ({ params: { id } }): Promise<any> => {
+			const setting = await db.query.settings.findFirst({
+				where: eq(settings.id, id),
+			});
+			if (!setting) {
+				throw HttpError.NotFound(...Object.values(RES_KEY.SETTING_NOT_FOUND));
+			}
+			return resBuild(
+				{ ...setting, value: getValue(setting) },
+				RES_KEY.GET_SETTING,
+			);
+		},
+		{
+			beforeHandle: hasPermissions([
+				{
+					entity: POLICY_ENTITY.SETTING,
+					access: POLICY_ACCESS.ANY,
+					action: POLICY_ACTION.DELETE,
+				},
+			]),
+			params: settingParam,
+			detail: SW_ROUTE_DETAIL.DELETE_SETTING,
 			response: {
 				200: settingRes,
 				404: errorRes,

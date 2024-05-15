@@ -221,6 +221,10 @@ export const SW_ROUTE_DETAIL = {
 		description: "Get list settings",
 		summary: "Get list settings",
 	},
+	DELETE_SETTING: {
+		description: "Delete setting with id",
+		summary: "Delete setting",
+	},
 };
 
 export enum ROUTES {
@@ -243,6 +247,8 @@ export enum SETTING_ROUTES {
 	CREATE = "/",
 	GET = "/:id",
 	LIST = "/list",
+	DELETE = "/:id",
+	UPDATE = "/:id",
 }
 
 export enum APP_ENV {
