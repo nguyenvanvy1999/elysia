@@ -1,4 +1,4 @@
-import { asc, eq } from "drizzle-orm";
+import { asc, eq, ilike } from "drizzle-orm";
 import { Elysia } from "elysia";
 import {
 	DB_ID_PREFIX,
@@ -29,6 +29,8 @@ import {
 	dbIdGenerator,
 	encryptSetting,
 	getCount,
+	getLimit,
+	getOffset,
 	resBuild,
 	resPagingBuild,
 } from "src/util";
@@ -98,14 +100,23 @@ export const settingRoutes = new Elysia({
 	)
 	.get(
 		SETTING_ROUTES.LIST,
-		async ({ query: { limit, offset } }): Promise<any> => {
+		async ({ query: { limit, offset, search } }): Promise<any> => {
 			const [data, count] = await Promise.all([
-				db.query.settings.findMany({
-					orderBy: asc(settings.id),
-					limit,
-					offset,
-				}),
-				db.select({ count: customCount() }).from(settings),
+				db
+					.select()
+					.from(settings)
+					.where(
+						search?.length ? ilike(settings.key, `%${search}%`) : undefined,
+					)
+					.orderBy(asc(settings.id))
+					.limit(getLimit(limit))
+					.offset(getOffset(offset)),
+				db
+					.select({ count: customCount() })
+					.from(settings)
+					.where(
+						search?.length ? ilike(settings.key, `%${search}%`) : undefined,
+					),
 			]);
 
 			return resPagingBuild(

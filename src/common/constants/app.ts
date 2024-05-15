@@ -310,3 +310,5 @@ export enum APP_SERVICE {
 	KAFKA = "kafka",
 	POSTGRES = "postgres",
 }
+
+export const PAGING_MAX_LIMIT: number = 200;
