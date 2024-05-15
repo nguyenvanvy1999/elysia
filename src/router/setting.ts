@@ -251,7 +251,7 @@ export const settingRoutes = new Elysia({
 			}
 			return resBuild(
 				{ ...updatedSetting[0], value: getValue(updatedSetting[0]) },
-				RES_KEY.DELETE_SETTING,
+				RES_KEY.UPDATE_SETTING,
 			);
 		},
 		{

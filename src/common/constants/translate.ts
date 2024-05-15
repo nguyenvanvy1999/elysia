@@ -401,4 +401,16 @@ export const translates = [
 		key: RES_KEY.DELETE_SETTING.message,
 		value: "Xoa cai dat thanh cong",
 	},
+	{
+		lang: LANGUAGE.EN,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.UPDATE_SETTING.message,
+		value: "Update settings success",
+	},
+	{
+		lang: LANGUAGE.VI,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.UPDATE_SETTING.message,
+		value: "Sua cai dat thanh cong",
+	},
 ];

@@ -197,6 +197,10 @@ export const RES_KEY = {
 		message: "RES.DELETE_SETTING_SUCCESS",
 		code: "SUC_07",
 	},
+	UPDATE_SETTING: {
+		message: "RES.UPDATE_SETTING_SUCCESS",
+		code: "SUC_08",
+	},
 };
 
 export const SW_ROUTE_DETAIL = {
