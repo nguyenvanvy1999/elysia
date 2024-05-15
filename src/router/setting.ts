@@ -8,6 +8,7 @@ import {
 	POLICY_ENTITY,
 	RES_KEY,
 	ROUTES,
+	SETTING_KEY,
 	SETTING_ROUTES,
 	SW_ROUTE_DETAIL,
 	createSettingBody,
@@ -169,14 +170,18 @@ export const settingRoutes = new Elysia({
 		async ({ params: { id } }): Promise<any> => {
 			const setting = await db.query.settings.findFirst({
 				where: eq(settings.id, id),
+				columns: { key: true, id: true },
 			});
 			if (!setting) {
 				throw HttpError.NotFound(...Object.values(RES_KEY.SETTING_NOT_FOUND));
 			}
-			return resBuild(
-				{ ...setting, value: getValue(setting) },
-				RES_KEY.GET_SETTING,
-			);
+			if (Object.values<string>(SETTING_KEY).includes(setting.key)) {
+				throw HttpError.BadRequest(
+					...Object.values(RES_KEY.CAN_NOT_DELETE_THIS_SETTING),
+				);
+			}
+			await db.delete(settings).where(eq(settings.id, id));
+			return resBuild({ id: setting.id }, RES_KEY.DELETE_SETTING);
 		},
 		{
 			beforeHandle: hasPermissions([

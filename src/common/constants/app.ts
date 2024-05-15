@@ -149,6 +149,10 @@ export const RES_KEY = {
 		message: "ERROR.SETTING_VALUE_NOT_ALLOWED_ERROR",
 		code: "BAD_REQUEST_3",
 	},
+	CAN_NOT_DELETE_THIS_SETTING: {
+		message: "ERROR.CAN_NOT_DELETE_THIS_SETTING",
+		code: "BAD_REQUEST_4",
+	},
 
 	// service unavailable error
 	MAINTENANCE: {
@@ -183,7 +187,11 @@ export const RES_KEY = {
 	},
 	LIST_SETTING: {
 		message: "RES.LIST_SETTING_SUCCESS",
-		code: "SUC_05",
+		code: "SUC_06",
+	},
+	DELETE_SETTING: {
+		message: "RES.DELETE_SETTING_SUCCESS",
+		code: "SUC_07",
 	},
 };
 

@@ -291,6 +291,18 @@ export const translates = [
 		key: RES_KEY.DISABLE_REGISTER.message,
 		value: "Tinh nang dang ky da tat. Lien he Admin de co them thong tin",
 	},
+	{
+		lang: LANGUAGE.EN,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.CAN_NOT_DELETE_THIS_SETTING.message,
+		value: "Can not delete this setting",
+	},
+	{
+		lang: LANGUAGE.VI,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.CAN_NOT_DELETE_THIS_SETTING.message,
+		value: "Khong the xoa cai dat nay",
+	},
 
 	// response
 	{
@@ -364,5 +376,17 @@ export const translates = [
 		ns: TRANSLATION_NS.BACKEND,
 		key: RES_KEY.LIST_SETTING.message,
 		value: "Lay danh sach cai dat thanh cong",
+	},
+	{
+		lang: LANGUAGE.EN,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.DELETE_SETTING.message,
+		value: "Delete settings success",
+	},
+	{
+		lang: LANGUAGE.VI,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.DELETE_SETTING.message,
+		value: "Xoa cai dat thanh cong",
 	},
 ];
