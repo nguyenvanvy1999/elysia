@@ -53,9 +53,9 @@ LEFT JOIN LATERAL
   (SELECT coalesce(json_agg("utr"."data"), '[]'::JSON) AS "data"
    FROM "user_to_role" "ur"
    LEFT JOIN LATERAL
-     (SELECT json_build_object('roleId', "r"."id", 'permissions', "ptr"."data") AS "data"
+     (SELECT json_build_object('id', "r"."id", 'name', r."name", 'permissions', "ptr"."data") AS "data"
       FROM
-        (SELECT *
+        (SELECT r."id", r."name"
          FROM "role" "r"
          WHERE "r"."id" = "ur"."role_id"
          LIMIT 1) "r"
@@ -63,11 +63,9 @@ LEFT JOIN LATERAL
         (SELECT coalesce(json_agg("p"."data"), '[]'::JSON) AS "data"
          FROM "permission_to_role" "ptr"
          LEFT JOIN LATERAL
-           (SELECT json_build_object('action', p.action, 'entity', p.entity, 'access', p.access) AS "data"
+           (SELECT json_build_object('action', p."action", 'entity', p."entity", 'access', p."access") AS "data"
             FROM
-              (SELECT p.action,
-                      p.entity,
-                      p.access
+              (SELECT p."action", p."entity", p."access"
                FROM "permission" "p"
                WHERE "p"."id" = "ptr"."permission_id"
                LIMIT 1) "p") "p" ON TRUE

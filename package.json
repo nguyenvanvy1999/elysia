@@ -21,6 +21,7 @@
   "dependencies": {
     "@bogeychan/elysia-logger": "^0.0.21",
     "@bogeychan/elysia-oauth2": "^0.0.20",
+    "@casl/ability": "^6.7.1",
     "@elysiajs/cors": "^1.0.2",
     "@elysiajs/cron": "^1.0.3",
     "@elysiajs/eden": "^1.0.13",
@@ -64,7 +65,7 @@
     "@types/pg": "^8.11.6",
     "@types/ua-parser-js": "^0.7.39",
     "bun-types": "latest",
-    "drizzle-kit": "^0.21.1"
+    "drizzle-kit": "^0.21.2"
   },
   "module": "src/index.js"
 }

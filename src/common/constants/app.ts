@@ -131,6 +131,10 @@ export const RES_KEY = {
 		message: "ERROR.USER_BLOCKED",
 		code: "FORBIDDEN_RESOURCE_5",
 	},
+	ABILITY_FORBIDDEN: {
+		message: "ERROR.ABILITY_FORBIDDEN",
+		code: "FORBIDDEN_RESOURCE_6",
+	},
 
 	// bad request error
 	USER_PASSWORD_NOT_MATCH: {

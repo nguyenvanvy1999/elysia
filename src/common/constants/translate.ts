@@ -266,6 +266,18 @@ export const translates = [
 		key: RES_KEY.SETTING_NOT_FOUND.message,
 		value: "Khong tim thay cai dat",
 	},
+	{
+		lang: LANGUAGE.EN,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.ABILITY_FORBIDDEN.message,
+		value: "Ability forbidden resource",
+	},
+	{
+		lang: LANGUAGE.VI,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.ABILITY_FORBIDDEN.message,
+		value: "Khong co quyen truy cap",
+	},
 
 	// response
 	{

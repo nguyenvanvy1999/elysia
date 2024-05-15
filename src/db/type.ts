@@ -5,7 +5,8 @@ export type Setting = InferSelectModel<typeof settings>;
 
 export type UserWithRoles = InferSelectModel<typeof users> & {
 	roles: {
-		roleId: string;
+		id: string;
+		name: string;
 		permissions: InferSelectModel<typeof permissions>[];
 	}[];
 };

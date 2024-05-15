@@ -2,12 +2,21 @@ import type { Elysia } from "elysia";
 import {
 	HEADER_KEY,
 	type IJwtPayload,
+	type IPolicyAbility,
+	type IPolicyRule,
 	type ISession,
+	type PolicyHandler,
 	RES_KEY,
+	type ROLE_NAME,
 } from "src/common";
 import { HttpError, sessionRepository } from "src/config";
 import type { UserWithRoles } from "src/db";
 import { checkUserStatus, getUserDetail } from "src/service";
+import {
+	defineAbilityFromRole,
+	execPolicyHandler,
+	handlerRules,
+} from "src/service/role";
 import { verifyAccessToken } from "src/util";
 
 export const isAuthenticated = (
@@ -58,7 +67,26 @@ export const isAuthenticated = (
 	});
 
 export const hasPermissions = (
-	pers: string[],
-): (({ user }: { user: UserWithRoles }) => Promise<void>) => {
-	return async ({ user }): Promise<void> => {};
+	policyRule: IPolicyRule[],
+): (({ user }: { user: UserWithRoles }) => void) => {
+	return ({ user }) => {
+		let check = false;
+		for (const role of user.roles) {
+			const ability: IPolicyAbility = defineAbilityFromRole({
+				name: role.name as ROLE_NAME,
+				permissions: role.permissions as IPolicyRule[],
+			});
+			const policyHandler: PolicyHandler[] = handlerRules(policyRule);
+			if (
+				policyHandler.every((handler: PolicyHandler) => {
+					return execPolicyHandler(handler, ability);
+				})
+			) {
+				check = true;
+			}
+		}
+		if (!check) {
+			throw HttpError.Forbidden(...Object.values(RES_KEY.ABILITY_FORBIDDEN));
+		}
+	};
 };

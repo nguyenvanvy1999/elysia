@@ -2,6 +2,9 @@ import { eq } from "drizzle-orm";
 import { Elysia } from "elysia";
 import {
 	DB_ID_PREFIX,
+	POLICY_ACCESS,
+	POLICY_ACTION,
+	POLICY_ENTITY,
 	RES_KEY,
 	ROUTES,
 	SETTING_ROUTES,
@@ -90,7 +93,13 @@ export const settingRoutes = new Elysia({
 			);
 		},
 		{
-			beforeHandle: hasPermissions(["test:owner"]),
+			beforeHandle: hasPermissions([
+				{
+					entity: POLICY_ENTITY.SETTING,
+					access: POLICY_ACCESS.ANY,
+					action: POLICY_ACTION.READ,
+				},
+			]),
 			params: getSettingParam,
 			detail: SW_ROUTE_DETAIL.GET_SETTING,
 			response: {
