@@ -19,7 +19,7 @@ Another technology is:
 
 - Auth: Signup, sign in, JWT, RBAC, encrypt token, session control for deleted/inactive/block user.
 - User: Get user profile, Admin CRUD users.
-- Setting: Admin CRUD settings, cache some useful setting.
+- Setting: Admin CRUD settings, cache some useful setting, reload server after change setting.
 - Translation: Admin CRUD translations, i18n for response message.
 - Other: logger, swagger UI, graceful shutdown, env validate and parser, seed data, maintenance status.
 
