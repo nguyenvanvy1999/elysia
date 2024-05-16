@@ -40,6 +40,12 @@ You can change these env configs with your configs
 cp .env.example .env
 ```
 
+Start the docker compose file
+```bash
+sudo docker compose -f docker/local/docker-compose.yml up -d
+```
+
+
 And now, let run migrate and seed data command
 ```bash
 bun run db:migrate && bun run db:seed
