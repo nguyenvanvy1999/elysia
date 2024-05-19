@@ -74,13 +74,13 @@ describe("Util: Token testing", (): void => {
 		it("Should encrypt and decrypt object data", (): void => {
 			const tst: Record<string, any> = { for: "bar", bar: 1 };
 			const encrypted: string = aes256Encrypt(tst, key, iv);
-			expect(typeof encrypted).toBe("string");
+			expect(encrypted).toBeString();
 			const decrypt: Record<string, any> = aes256Decrypt<Record<string, any>>(
 				encrypted,
 				key,
 				iv,
 			);
-			expect(typeof decrypt).toBe("object");
+			expect(decrypt).toBeString();
 			expect(decrypt).toEqual(tst);
 		});
 	});

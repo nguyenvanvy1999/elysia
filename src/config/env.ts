@@ -1,4 +1,5 @@
 import camelcaseKeys from "camelcase-keys";
+import dotenv from "dotenv";
 import {
 	DEFAULT,
 	HTTP_METHOD,
@@ -8,6 +9,8 @@ import {
 	TIME_REGEX,
 } from "src/common";
 import { z } from "zod";
+
+dotenv.config({ path: `.env.${process.env.APP_ENV}` });
 
 /**
  * Toggle environment variables

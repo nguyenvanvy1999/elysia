@@ -1,11 +1,11 @@
 DO $$ BEGIN
- CREATE TYPE "user_status_enum" AS ENUM('active', 'inactive', 'inactive_permanent', 'block');
+ CREATE TYPE "public"."setting_type_enum" AS ENUM('string', 'number', 'boolean', 'json', 'date');
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- CREATE TYPE "setting_type_enum" AS ENUM('string', 'number', 'boolean', 'json', 'date');
+ CREATE TYPE "public"."user_status_enum" AS ENUM('active', 'inactive', 'inactive_permanent', 'block');
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
@@ -43,6 +43,23 @@ CREATE TABLE IF NOT EXISTS "role" (
 	CONSTRAINT "role_name_unique" UNIQUE("name")
 );
 --> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "setting" (
+	"id" varchar(32) PRIMARY KEY NOT NULL,
+	"key" text NOT NULL,
+	"is_encrypted" boolean DEFAULT false,
+	"description" text,
+	"type" "setting_type_enum" NOT NULL,
+	"value" varchar(2048) NOT NULL,
+	CONSTRAINT "setting_key_unique" UNIQUE("key")
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "translation" (
+	"lang" text NOT NULL,
+	"ns" text NOT NULL,
+	"key" text NOT NULL,
+	"value" text NOT NULL
+);
+--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "user" (
 	"id" varchar(32) PRIMARY KEY NOT NULL,
 	"name" text,
@@ -69,47 +86,32 @@ CREATE TABLE IF NOT EXISTS "user_to_role" (
 	CONSTRAINT "user_to_role_role_id_user_id_pk" PRIMARY KEY("role_id","user_id")
 );
 --> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "setting" (
-	"id" varchar(32) PRIMARY KEY NOT NULL,
-	"key" text NOT NULL,
-	"description" text,
-	"type" "setting_type_enum" NOT NULL,
-	"value" varchar(2048) NOT NULL,
-	CONSTRAINT "setting_key_unique" UNIQUE("key")
-);
---> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "translation" (
-	"lang" text NOT NULL,
-	"ns" text NOT NULL,
-	"key" text NOT NULL,
-	"value" text NOT NULL
-);
---> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "user_idx" ON "refresh_token" ("user_id");--> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "token_idx" ON "refresh_token" ("token");--> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "lang_idx" ON "translation" ("lang");--> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "ns_idx" ON "translation" ("ns");--> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "key_idx" ON "translation" ("key");--> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "permission_to_role" ADD CONSTRAINT "permission_to_role_role_id_role_id_fk" FOREIGN KEY ("role_id") REFERENCES "role"("id") ON DELETE cascade ON UPDATE no action;
+ ALTER TABLE "permission_to_role" ADD CONSTRAINT "permission_to_role_role_id_role_id_fk" FOREIGN KEY ("role_id") REFERENCES "public"."role"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "permission_to_role" ADD CONSTRAINT "permission_to_role_permission_id_permission_id_fk" FOREIGN KEY ("permission_id") REFERENCES "permission"("id") ON DELETE cascade ON UPDATE no action;
+ ALTER TABLE "permission_to_role" ADD CONSTRAINT "permission_to_role_permission_id_permission_id_fk" FOREIGN KEY ("permission_id") REFERENCES "public"."permission"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "user_to_role" ADD CONSTRAINT "user_to_role_role_id_role_id_fk" FOREIGN KEY ("role_id") REFERENCES "role"("id") ON DELETE cascade ON UPDATE no action;
+ ALTER TABLE "user_to_role" ADD CONSTRAINT "user_to_role_role_id_role_id_fk" FOREIGN KEY ("role_id") REFERENCES "public"."role"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "user_to_role" ADD CONSTRAINT "user_to_role_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE cascade ON UPDATE no action;
+ ALTER TABLE "user_to_role" ADD CONSTRAINT "user_to_role_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
+--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "refresh_token_user_idx" ON "refresh_token" ("user_id");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "refresh_token_token_idx" ON "refresh_token" ("token");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "translation_lang_idx" ON "translation" ("lang");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "translation_ns_idx" ON "translation" ("ns");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "translation_key_idx" ON "translation" ("key");

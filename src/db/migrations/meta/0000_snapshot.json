@@ -1,4 +1,6 @@
 {
+  "id": "9f4ae1a0-6ce9-41a3-a20c-679fd414ef26",
+  "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "6",
   "dialect": "postgresql",
   "tables": {
@@ -58,12 +60,12 @@
       "uniqueConstraints": {
         "permission_action_entity_access_unique": {
           "name": "permission_action_entity_access_unique",
+          "nullsNotDistinct": false,
           "columns": [
             "action",
             "entity",
             "access"
-          ],
-          "nullsNotDistinct": false
+          ]
         }
       }
     },
@@ -89,28 +91,28 @@
         "permission_to_role_role_id_role_id_fk": {
           "name": "permission_to_role_role_id_role_id_fk",
           "tableFrom": "permission_to_role",
+          "tableTo": "role",
           "columnsFrom": [
             "role_id"
           ],
-          "tableTo": "role",
           "columnsTo": [
             "id"
           ],
-          "onUpdate": "no action",
-          "onDelete": "cascade"
+          "onDelete": "cascade",
+          "onUpdate": "no action"
         },
         "permission_to_role_permission_id_permission_id_fk": {
           "name": "permission_to_role_permission_id_permission_id_fk",
           "tableFrom": "permission_to_role",
+          "tableTo": "permission",
           "columnsFrom": [
             "permission_id"
           ],
-          "tableTo": "permission",
           "columnsTo": [
             "id"
           ],
-          "onUpdate": "no action",
-          "onDelete": "cascade"
+          "onDelete": "cascade",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {
@@ -154,15 +156,15 @@
         }
       },
       "indexes": {
-        "user_idx": {
-          "name": "user_idx",
+        "refresh_token_user_idx": {
+          "name": "refresh_token_user_idx",
           "columns": [
             "user_id"
           ],
           "isUnique": false
         },
-        "token_idx": {
-          "name": "token_idx",
+        "refresh_token_token_idx": {
+          "name": "refresh_token_token_idx",
           "columns": [
             "token"
           ],
@@ -217,12 +219,124 @@
       "uniqueConstraints": {
         "role_name_unique": {
           "name": "role_name_unique",
+          "nullsNotDistinct": false,
           "columns": [
             "name"
-          ],
-          "nullsNotDistinct": false
+          ]
         }
       }
+    },
+    "public.setting": {
+      "name": "setting",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(32)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "key": {
+          "name": "key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "is_encrypted": {
+          "name": "is_encrypted",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "type": {
+          "name": "type",
+          "type": "setting_type_enum",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "value": {
+          "name": "value",
+          "type": "varchar(2048)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "setting_key_unique": {
+          "name": "setting_key_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "key"
+          ]
+        }
+      }
+    },
+    "public.translation": {
+      "name": "translation",
+      "schema": "",
+      "columns": {
+        "lang": {
+          "name": "lang",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ns": {
+          "name": "ns",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "key": {
+          "name": "key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "value": {
+          "name": "value",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "translation_lang_idx": {
+          "name": "translation_lang_idx",
+          "columns": [
+            "lang"
+          ],
+          "isUnique": false
+        },
+        "translation_ns_idx": {
+          "name": "translation_ns_idx",
+          "columns": [
+            "ns"
+          ],
+          "isUnique": false
+        },
+        "translation_key_idx": {
+          "name": "translation_key_idx",
+          "columns": [
+            "key"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
     },
     "public.user": {
       "name": "user",
@@ -297,6 +411,7 @@
         "status": {
           "name": "status",
           "type": "user_status_enum",
+          "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
           "default": "'active'"
@@ -328,17 +443,17 @@
       "uniqueConstraints": {
         "user_username_unique": {
           "name": "user_username_unique",
+          "nullsNotDistinct": false,
           "columns": [
             "username"
-          ],
-          "nullsNotDistinct": false
+          ]
         },
         "user_email_unique": {
           "name": "user_email_unique",
+          "nullsNotDistinct": false,
           "columns": [
             "email"
-          ],
-          "nullsNotDistinct": false
+          ]
         }
       }
     },
@@ -364,28 +479,28 @@
         "user_to_role_role_id_role_id_fk": {
           "name": "user_to_role_role_id_role_id_fk",
           "tableFrom": "user_to_role",
+          "tableTo": "role",
           "columnsFrom": [
             "role_id"
           ],
-          "tableTo": "role",
           "columnsTo": [
             "id"
           ],
-          "onUpdate": "no action",
-          "onDelete": "cascade"
+          "onDelete": "cascade",
+          "onUpdate": "no action"
         },
         "user_to_role_user_id_user_id_fk": {
           "name": "user_to_role_user_id_user_id_fk",
           "tableFrom": "user_to_role",
+          "tableTo": "user",
           "columnsFrom": [
             "user_id"
           ],
-          "tableTo": "user",
           "columnsTo": [
             "id"
           ],
-          "onUpdate": "no action",
-          "onDelete": "cascade"
+          "onDelete": "cascade",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {
@@ -398,123 +513,9 @@
         }
       },
       "uniqueConstraints": {}
-    },
-    "public.setting": {
-      "name": "setting",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "varchar(32)",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "key": {
-          "name": "key",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "description": {
-          "name": "description",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "type": {
-          "name": "type",
-          "type": "setting_type_enum",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "value": {
-          "name": "value",
-          "type": "varchar(2048)",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "setting_key_unique": {
-          "name": "setting_key_unique",
-          "columns": [
-            "key"
-          ],
-          "nullsNotDistinct": false
-        }
-      }
-    },
-    "public.translation": {
-      "name": "translation",
-      "schema": "",
-      "columns": {
-        "lang": {
-          "name": "lang",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "ns": {
-          "name": "ns",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "key": {
-          "name": "key",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "value": {
-          "name": "value",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {
-        "lang_idx": {
-          "name": "lang_idx",
-          "columns": [
-            "lang"
-          ],
-          "isUnique": false
-        },
-        "ns_idx": {
-          "name": "ns_idx",
-          "columns": [
-            "ns"
-          ],
-          "isUnique": false
-        },
-        "key_idx": {
-          "name": "key_idx",
-          "columns": [
-            "key"
-          ],
-          "isUnique": false
-        }
-      },
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
     }
   },
   "enums": {
-    "public.user_status_enum": {
-      "name": "user_status_enum",
-      "schema": "public",
-      "values": [
-        "active",
-        "inactive",
-        "inactive_permanent",
-        "block"
-      ]
-    },
     "public.setting_type_enum": {
       "name": "setting_type_enum",
       "schema": "public",
@@ -525,14 +526,22 @@
         "json",
         "date"
       ]
+    },
+    "public.user_status_enum": {
+      "name": "user_status_enum",
+      "schema": "public",
+      "values": [
+        "active",
+        "inactive",
+        "inactive_permanent",
+        "block"
+      ]
     }
   },
   "schemas": {},
   "_meta": {
+    "columns": {},
     "schemas": {},
-    "tables": {},
-    "columns": {}
-  },
-  "id": "e08f8803-aba3-4e57-92e7-25bd755d5732",
-  "prevId": "00000000-0000-0000-0000-000000000000"
+    "tables": {}
+  }
 }

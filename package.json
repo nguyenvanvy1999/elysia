@@ -21,7 +21,7 @@
     "----TEST": "",
     "test": "bun test:unit",
     "test:unit": "bun test test/unit",
-    "test:e2e": "bun test test/e2e"
+    "test:e2e": "bun test test/e2e --preload test/e2e/setup.ts"
   },
   "dependencies": {
     "@bogeychan/elysia-logger": "^0.0.21",
@@ -40,6 +40,7 @@
     "chalk": "^5.3.0",
     "crypto": "^1.0.1",
     "dayjs": "^1.11.11",
+    "dotenv": "^16.4.5",
     "drizzle-orm": "^0.30.10",
     "drizzle-typebox": "^0.1.1",
     "elysia": "latest",

@@ -2,7 +2,7 @@ import { type TSchema, t } from "elysia";
 
 export const resDoc = <T extends TSchema>(T: T) =>
 	t.Object({
-		code: t.Number(),
+		code: t.String(),
 		message: t.String(),
 		metadata: t.Optional(
 			t.Object({

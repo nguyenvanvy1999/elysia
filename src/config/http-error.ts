@@ -358,6 +358,7 @@ export const httpError =
 							};
 						}
 						case "UNKNOWN": {
+							console.log(error);
 							set.status = 500;
 							return {
 								metadata,

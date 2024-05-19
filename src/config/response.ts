@@ -9,8 +9,6 @@ import {
 import { config } from "src/config/env";
 import { translate } from "src/util";
 
-const encoder = new TextEncoder();
-
 export const httpResponse =
 	() =>
 	(
@@ -43,7 +41,6 @@ export const httpResponse =
 					return;
 				}
 				const isJson: boolean = typeof response === "object";
-				set.headers["Content-Encoding"] = "gzip";
 				if (isJson) {
 					const newResponse: IResponsePagingData =
 						response as IResponsePagingData;
@@ -66,14 +63,16 @@ export const httpResponse =
 						pagination: newResponse?.pagination,
 						data: newResponse.data,
 					} satisfies IResponse | IResponsePagingData;
-					return new Response(
-						Bun.gzipSync(encoder.encode(JSON.stringify(dataRes))),
-						{
-							headers: {
-								"Content-Type": "application/json; charset=utf-8",
-							},
+					return new Response(JSON.stringify(dataRes), {
+						headers: {
+							"Content-Type": "application/json; charset=utf-8",
 						},
-					);
+					});
 				}
+				return new Response(response?.toString() ?? "", {
+					headers: {
+						"Content-Type": `"text/plain"; charset=utf-8`,
+					},
+				});
 			},
 		);

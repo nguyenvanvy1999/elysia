@@ -98,13 +98,11 @@ export const requestHeader =
 				}
 
 				if (version) {
-					set.headers[versionHeader] =
-						headers.get(versionHeader) || versionOptions.version;
+					set.headers[versionHeader] = versionOptions.version;
 				}
 
 				if (repoVersion) {
-					set.headers[repoVersionHeader] =
-						headers.get(repoVersionHeader) || versionOptions.version;
+					set.headers[repoVersionHeader] = versionOptions.repoVersion;
 				}
 
 				if (customLanguage) {
