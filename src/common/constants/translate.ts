@@ -413,4 +413,16 @@ export const translates = [
 		key: RES_KEY.UPDATE_SETTING.message,
 		value: "Sua cai dat thanh cong",
 	},
+	{
+		lang: LANGUAGE.EN,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.LOGOUT.message,
+		value: "Logout success",
+	},
+	{
+		lang: LANGUAGE.VI,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.LOGOUT.message,
+		value: "Dang xuat thanh cong",
+	},
 ];

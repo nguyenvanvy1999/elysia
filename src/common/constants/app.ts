@@ -201,6 +201,10 @@ export const RES_KEY = {
 		message: "RES.UPDATE_SETTING_SUCCESS",
 		code: "SUC_08",
 	},
+	LOGOUT: {
+		message: "RES.LOGOUT_SUCCESS",
+		code: "SUC_09",
+	},
 };
 
 export const SW_ROUTE_DETAIL = {
@@ -212,6 +216,10 @@ export const SW_ROUTE_DETAIL = {
 	REGISTER: {
 		description: "Register new user with role user",
 		summary: "Register",
+	},
+	LOGOUT: {
+		description: "Logout from this device",
+		summary: "Logout",
 	},
 
 	// user APIs
@@ -256,6 +264,8 @@ export enum ROUTES {
 export enum AUTH_ROUTES {
 	LOGIN = "/login",
 	REGISTER = "/register",
+	LOGOUT = "/logout",
+	LOGOUT_ALL = "/logout-all",
 }
 
 export enum USER_ROUTES {

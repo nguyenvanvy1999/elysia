@@ -3,7 +3,6 @@ import { createPinoLogger, pino } from "@bogeychan/elysia-logger";
 import { APP_SERVICE } from "src/common";
 import { config } from "src/config/env";
 
-console.log(config.logLevel);
 export const logger = createPinoLogger({
 	transport: {
 		targets: [

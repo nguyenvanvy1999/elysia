@@ -16,6 +16,25 @@ export const swaggerConfig = () => (app: Elysia) => {
 						},
 					],
 					tags: Object.values(swaggerOptions.tags),
+					components: {
+						securitySchemes: {
+							accessToken: {
+								type: "http",
+								scheme: "bearer",
+								bearerFormat: "JWT",
+							},
+							refreshToken: {
+								type: "http",
+								scheme: "bearer",
+								bearerFormat: "JWT",
+							},
+							apiKey: {
+								type: "apiKey",
+								name: "apiKey",
+								in: "header",
+							},
+						},
+					},
 				},
 				version: versionOptions.version,
 				provider: "scalar",

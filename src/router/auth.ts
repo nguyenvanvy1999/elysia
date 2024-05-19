@@ -26,6 +26,7 @@ import {
 	sessionRepository,
 } from "src/config";
 import { refreshTokens, users } from "src/db";
+import { isAuthenticated } from "src/middleware";
 import { checkUserStatus, increasePasswordAttempt } from "src/service";
 import {
 	aes256Encrypt,
@@ -191,6 +192,25 @@ export const authRoutes = new Elysia({
 		{
 			body: loginBody,
 			detail: SW_ROUTE_DETAIL.LOGIN,
+			response: {
+				200: loginRes,
+				403: errorRes,
+				404: errorRes,
+				...errorsDefault,
+			},
+		},
+	)
+	.use(isAuthenticated)
+	.post(
+		AUTH_ROUTES.LOGOUT,
+		async (): Promise<any> => {
+			return resBuild(null, RES_KEY.LOGOUT);
+		},
+		{
+			detail: {
+				...SW_ROUTE_DETAIL.LOGOUT,
+				security: [{ accessToken: [] }],
+			},
 			response: {
 				200: loginRes,
 				403: errorRes,

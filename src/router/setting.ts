@@ -90,7 +90,10 @@ export const settingRoutes = new Elysia({
 				},
 			]),
 			body: createSettingBody,
-			detail: SW_ROUTE_DETAIL.CREATE_SETTING,
+			detail: {
+				...SW_ROUTE_DETAIL.CREATE_SETTING,
+				security: [{ accessToken: [] }],
+			},
 			response: {
 				200: settingRes,
 				409: errorRes,
@@ -137,7 +140,10 @@ export const settingRoutes = new Elysia({
 					action: POLICY_ACTION.READ,
 				},
 			]),
-			detail: SW_ROUTE_DETAIL.LIST_SETTING,
+			detail: {
+				...SW_ROUTE_DETAIL.LIST_SETTING,
+				security: [{ accessToken: [] }],
+			},
 			query: listSettingQuery,
 			response: {
 				200: listSettingRes,
@@ -168,7 +174,10 @@ export const settingRoutes = new Elysia({
 				},
 			]),
 			params: settingParam,
-			detail: SW_ROUTE_DETAIL.GET_SETTING,
+			detail: {
+				...SW_ROUTE_DETAIL.GET_SETTING,
+				security: [{ accessToken: [] }],
+			},
 			response: {
 				200: settingRes,
 				404: errorRes,
@@ -203,7 +212,10 @@ export const settingRoutes = new Elysia({
 				},
 			]),
 			params: settingParam,
-			detail: SW_ROUTE_DETAIL.DELETE_SETTING,
+			detail: {
+				...SW_ROUTE_DETAIL.DELETE_SETTING,
+				security: [{ accessToken: [] }],
+			},
 			response: {
 				200: settingRes,
 				404: errorRes,
@@ -264,7 +276,10 @@ export const settingRoutes = new Elysia({
 			]),
 			params: settingParam,
 			body: updateSettingBody,
-			detail: SW_ROUTE_DETAIL.UPDATE_SETTING,
+			detail: {
+				...SW_ROUTE_DETAIL.UPDATE_SETTING,
+				security: [{ accessToken: [] }],
+			},
 			response: {
 				200: settingRes,
 				404: errorRes,
