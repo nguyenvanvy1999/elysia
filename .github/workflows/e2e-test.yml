@@ -20,4 +20,4 @@ jobs:
         run: docker compose -f docker/test/docker-compose.yml up -d --wait
 
       - name: "Test server"
-        run: docker exec -it elysia-dev bun test:e2e
+        run: docker exec -T elysia-dev bun test:e2e
