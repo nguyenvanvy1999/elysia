@@ -80,7 +80,7 @@ describe("Util: Token testing", (): void => {
 				key,
 				iv,
 			);
-			expect(decrypt).toBeString();
+			expect(decrypt).toBeObject();
 			expect(decrypt).toEqual(tst);
 		});
 	});
