@@ -1,5 +1,5 @@
 {
-  "id": "e0dcc88c-9407-4625-bd02-819fd6bbc2e0",
+  "id": "93940e1d-064a-4e39-b954-0607992b6904",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "6",
   "dialect": "postgresql",
@@ -49,6 +49,12 @@
           "type": "varchar",
           "primaryKey": false,
           "notNull": false
+        },
+        "ua": {
+          "name": "ua",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
         }
       },
       "indexes": {
@@ -488,7 +494,8 @@
           "name": "created_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
-          "notNull": false
+          "notNull": false,
+          "default": "now()"
         },
         "updated_at": {
           "name": "updated_at",
@@ -500,6 +507,12 @@
         "active_account_token": {
           "name": "active_account_token",
           "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "active_account_at": {
+          "name": "active_account_at",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": false
         }

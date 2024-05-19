@@ -6,6 +6,7 @@ import {
 	AUTH_ROUTES,
 	DB_ID_PREFIX,
 	type IJwtPayload,
+	type IRequestDerive,
 	RES_KEY,
 	ROUTES,
 	SETTING_KEY,
@@ -40,7 +41,16 @@ import {
 	resBuild,
 } from "src/util";
 
-export const authRoutes = new Elysia({
+export const authRoutes = new Elysia<
+	ROUTES.AUTH_V1,
+	false,
+	{
+		derive: IRequestDerive;
+		decorator: Record<string, unknown>;
+		store: Record<string, unknown>;
+		resolve: Record<string, unknown>;
+	}
+>({
 	prefix: ROUTES.AUTH_V1,
 	detail: { tags: [swaggerOptions.tags.auth.name] },
 })
@@ -99,7 +109,9 @@ export const authRoutes = new Elysia({
 	)
 	.post(
 		AUTH_ROUTES.LOGIN,
-		async ({ body }): Promise<any> => {
+		async ({ body, userAgent, ip }): Promise<any> => {
+			console.log(userAgent);
+			console.log(ip);
 			const { email, password } = body;
 			const user = await db.query.users.findFirst({
 				where: eq(users.email, email),

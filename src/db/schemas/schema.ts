@@ -36,7 +36,7 @@ export const users = pgTable(DB_TABLE_NAME.USER, {
 	createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
 	updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
 	activeAccountToken: varchar("active_account_token"),
-	activeAccountAt: timestamp("created_at", { withTimezone: true }),
+	activeAccountAt: timestamp("active_account_at", { withTimezone: true }),
 });
 
 export const userRelations = relations(users, ({ many }) => ({
@@ -202,6 +202,7 @@ export const devices = pgTable(
 		model: varchar("model"),
 		os: varchar("os"),
 		osVersion: varchar("os_version"),
+		ua: varchar("ua").notNull(),
 	},
 	(c) => ({
 		userIdIdx: index("device_user_idx").on(c.userId),

@@ -44,6 +44,7 @@ try {
 				id: true,
 				version: true,
 				repoVersion: true,
+				userAgent: true,
 			}),
 		)
 		.use(httpError())

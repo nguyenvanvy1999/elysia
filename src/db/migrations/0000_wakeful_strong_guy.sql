@@ -17,7 +17,8 @@ CREATE TABLE IF NOT EXISTS "device" (
 	"vendor" varchar,
 	"model" varchar,
 	"os" varchar,
-	"os_version" varchar
+	"os_version" varchar,
+	"ua" varchar NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "permission" (
@@ -83,9 +84,10 @@ CREATE TABLE IF NOT EXISTS "user" (
 	"password_attempt" integer NOT NULL,
 	"password_salt" varchar NOT NULL,
 	"status" "user_status_enum" DEFAULT 'active' NOT NULL,
-	"created_at" timestamp with time zone,
+	"created_at" timestamp with time zone DEFAULT now(),
 	"updated_at" timestamp with time zone DEFAULT now(),
 	"active_account_token" varchar,
+	"active_account_at" timestamp with time zone,
 	CONSTRAINT "user_username_unique" UNIQUE("username"),
 	CONSTRAINT "user_email_unique" UNIQUE("email")
 );
