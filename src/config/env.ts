@@ -44,8 +44,6 @@ const envVariables = z
 			.preprocess(Number, z.number().min(4))
 			.default(DEFAULT.SALT_LENGTH),
 		PASSWORD_PEPPER: z.string().min(8),
-		ENB_PASSWORD_ATTEMPT: toggle.default("true"),
-		ENB_PASSWORD_EXPIRED: toggle.default("true"),
 		PASSWORD_EXPIRED: z
 			.string()
 			.regex(TIME_REGEX)
@@ -125,6 +123,16 @@ const envVariables = z
 
 		// version config
 		APP_VERSION: z.string().default(packageJson.version),
+
+		// sendgrid config
+		SENDGRID_API_KEY: z.string(),
+		SENDGRID_MAIL_FROM: z.string().email(),
+
+		// twilio config
+		TWILIO_ACCOUNT_SID: z.string(),
+		TWILIO_AUTH_TOKEN: z.string(),
+		TWILIO_VERIFY_SID: z.string(),
+		TWILIO_FROM: z.string(),
 	})
 	.transform((input) => ({
 		...camelize(input),

@@ -199,6 +199,10 @@ export const RES_KEY = {
 		message: "RES.LOGOUT_SUCCESS",
 		code: "SUC_09",
 	},
+	LOGIN_NEW_DEVICE: {
+		message: "RES.LOGIN_NEW_DEVICE_SUCCESS",
+		code: "SUC_10",
+	},
 };
 
 export const SW_ROUTE_DETAIL = {

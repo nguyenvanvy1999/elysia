@@ -425,4 +425,16 @@ export const translates = [
 		key: RES_KEY.LOGOUT.message,
 		value: "Dang xuat thanh cong",
 	},
+	{
+		lang: LANGUAGE.EN,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.LOGIN_NEW_DEVICE.message,
+		value: "Login on new device success. Check email to verify it",
+	},
+	{
+		lang: LANGUAGE.VI,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.LOGIN_NEW_DEVICE.message,
+		value: "Dang nhap tren thiet bi moi thanh cong. Kiem tra email de xac thuc",
+	},
 ];

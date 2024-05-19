@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { eq, or } from "drizzle-orm";
+import { and, eq, or } from "drizzle-orm";
 import { Elysia } from "elysia";
 import ms from "ms";
 import {
@@ -27,7 +27,7 @@ import {
 	redisClient,
 	sessionRepository,
 } from "src/config";
-import { refreshTokens, users } from "src/db";
+import { devices, refreshTokens, users } from "src/db";
 import { isAuthenticated } from "src/middleware";
 import { checkUserStatus, increasePasswordAttempt } from "src/service";
 import {
@@ -126,14 +126,22 @@ export const authRoutes = new Elysia<
 			if (!user) {
 				throw HttpError.NotFound(...Object.values(RES_KEY.USER_NOT_FOUND));
 			}
+			const [enbPasswordExpired, enbLoginNewDeviceCheck, enbPasswordAttempt] =
+				await redisClient.mGet([
+					SETTING_KEY.ENB_PASSWORD_EXPIRED,
+					SETTING_KEY.ENB_LOGIN_NEW_DEVICE_CHECK,
+					SETTING_KEY.ENB_PASSWORD_ATTEMPT,
+				]);
+
 			if (
-				config.enbPasswordAttempt &&
+				enbPasswordAttempt === "true" &&
 				user.passwordAttempt >= config.passwordAttempt
 			) {
 				throw HttpError.Forbidden(
 					...Object.values(RES_KEY.USER_PASSWORD_ATTEMPT_MAX),
 				);
 			}
+
 			const passwordMatch: boolean = comparePassword(
 				password,
 				user.password,
@@ -145,15 +153,30 @@ export const authRoutes = new Elysia<
 					...Object.values(RES_KEY.USER_PASSWORD_NOT_MATCH),
 				);
 			}
+
 			checkUserStatus(user.status);
+
 			const passwordExpired: boolean = checkPasswordExpired(
 				user.passwordExpired,
 			);
-			if (config.enbPasswordExpired && passwordExpired) {
+			if (enbPasswordExpired === "true" && passwordExpired) {
 				throw HttpError.Forbidden(
 					...Object.values(RES_KEY.USER_PASSWORD_EXPIRED),
 				);
 			}
+
+			if (enbLoginNewDeviceCheck === "true") {
+				const ua = typeof userAgent === "string" ? userAgent : userAgent.ua;
+				const isNewDevice = await db.query.devices.findFirst({
+					where: and(eq(devices.ua, ua), eq(devices.userId, user.id)),
+					columns: { userId: true, ua: true },
+				});
+				if (isNewDevice) {
+					// send email to user
+					return resBuild(null, RES_KEY.LOGIN_NEW_DEVICE);
+				}
+			}
+
 			const accessSessionId: string = dbIdGenerator(DB_ID_PREFIX.SESSION);
 			const refreshSessionId: string = randomUUID();
 			let accessToken: string = createAccessToken({

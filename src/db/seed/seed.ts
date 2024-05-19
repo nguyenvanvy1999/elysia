@@ -155,6 +155,30 @@ export async function seedSettings(): Promise<void> {
 				type: SETTING_DATA_TYPE.BOOLEAN,
 				description: "Enable register in app",
 			},
+			{
+				id: dbIdGenerator(DB_ID_PREFIX.SETTING),
+				key: SETTING_KEY.ENB_PASSWORD_EXPIRED,
+				value: "true",
+				isEncrypt: false,
+				type: SETTING_DATA_TYPE.BOOLEAN,
+				description: "Enable check password expired",
+			},
+			{
+				id: dbIdGenerator(DB_ID_PREFIX.SETTING),
+				key: SETTING_KEY.ENB_PASSWORD_ATTEMPT,
+				value: "true",
+				isEncrypt: false,
+				type: SETTING_DATA_TYPE.BOOLEAN,
+				description: "Enable check password attempt",
+			},
+			{
+				id: dbIdGenerator(DB_ID_PREFIX.SETTING),
+				key: SETTING_KEY.ENB_LOGIN_NEW_DEVICE_CHECK,
+				value: "true",
+				isEncrypt: false,
+				type: SETTING_DATA_TYPE.BOOLEAN,
+				description: "Enable login new device check",
+			},
 		];
 		await ct.insert(settings).values(settingCreate);
 	});

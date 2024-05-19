@@ -1,4 +1,5 @@
 import cors from "@elysiajs/cors";
+import chalk from "chalk";
 import { Elysia } from "elysia";
 import { compression } from "elysia-compression";
 import { APP_ENV } from "src/common";
@@ -15,7 +16,7 @@ import {
 } from "src/config";
 import { ensureSettings } from "src/config/setting";
 import { authRoutes, settingRoutes, userRoutes } from "src/router";
-import { bootLogger, gracefulShutdown } from "src/util";
+import { gracefulShutdown } from "src/util";
 
 try {
 	await connectRedis();
@@ -59,7 +60,13 @@ try {
 	process.on("SIGTERM", app.stop);
 	app.listen({ port: config.appPort, maxRequestBodySize: 1_000_000_000 });
 
-	bootLogger();
+	if (config.appEnv === APP_ENV.DEVELOPMENT) {
+		logger.info(
+			`🦊 Elysia is running at ${chalk.blueBright(
+				"http://localhost:",
+			)}${chalk.greenBright(config.appPort)}`,
+		);
+	}
 } catch (e) {
 	logger.error(e, "Error booting the server");
 	process.exit();
