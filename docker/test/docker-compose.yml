@@ -69,9 +69,6 @@ services:
       - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@:9093
       - ALLOW_PLAINTEXT_LISTENER=yes
       - KAFKA_HEAP_OPTS=-Xmx512M -Xms512M
-    env_file:
-      - path: ./.env
-        required: true
     ports:
       - '9094:9094'
 
@@ -85,9 +82,6 @@ services:
     networks:
       - elysia-network
     restart: always
-    env_file:
-      - path: ./.env
-        required: true
 
   elysia-postgres:
     container_name: elysia-postgres
@@ -109,9 +103,6 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
-    env_file:
-      - path: ./.env
-        required: true
 
 networks:
   elysia-network:
