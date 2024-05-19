@@ -6,6 +6,7 @@ import {
 	ROLE_NAME,
 	SETTING_DATA_TYPE,
 	SETTING_KEY,
+	USER_STATUS,
 	translates,
 } from "src/common";
 import { config, db, logger } from "src/config";
@@ -96,6 +97,8 @@ export async function seedAuth(): Promise<void> {
 				username: config.adminUsername,
 				emailVerified: new Date(),
 				...createPassword(config.adminPassword),
+				status: USER_STATUS.ACTIVE,
+				activeAccountAt: new Date(),
 			},
 		];
 		const usersToRolesCreates = [
@@ -112,6 +115,8 @@ export async function seedAuth(): Promise<void> {
 				...userData,
 				emailVerified: new Date(),
 				...createPassword(userData.username),
+				status: USER_STATUS.ACTIVE,
+				activeAccountAt: new Date(),
 			});
 			usersToRolesCreates.push({
 				roleId: roleCreates[0].id,

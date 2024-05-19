@@ -64,7 +64,7 @@ export const isAuthenticated = (
 			throw HttpError.NotFound(...Object.values(RES_KEY.USER_NOT_FOUND));
 		}
 		checkUserStatus(user.status);
-		return { user };
+		return { user, sessionId: payload.sessionId };
 	});
 
 export const hasPermissions = (

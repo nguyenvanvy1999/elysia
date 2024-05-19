@@ -36,6 +36,7 @@ export const users = pgTable(DB_TABLE_NAME.USER, {
 	createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
 	updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
 	activeAccountToken: varchar("active_account_token"),
+	activeAccountAt: timestamp("created_at", { withTimezone: true }),
 });
 
 export const userRelations = relations(users, ({ many }) => ({

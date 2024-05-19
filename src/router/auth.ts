@@ -10,6 +10,7 @@ import {
 	ROUTES,
 	SETTING_KEY,
 	SW_ROUTE_DETAIL,
+	USER_STATUS,
 	errorRes,
 	errorsDefault,
 	loginBody,
@@ -72,6 +73,8 @@ export const authRoutes = new Elysia({
 					...body,
 					id: dbIdGenerator(DB_ID_PREFIX.USER),
 					...createPassword(password),
+					status: USER_STATUS.INACTIVE,
+					activeAccountAt: null,
 				})
 				.returning({
 					id: users.id,
