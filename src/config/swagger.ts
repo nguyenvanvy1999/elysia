@@ -1,6 +1,6 @@
 import { swagger } from "@elysiajs/swagger";
 import type { Elysia } from "elysia";
-import { swaggerOptions, versionOptions } from "src/common";
+import { swaggerOptions } from "src/common";
 import { config } from "src/config/env";
 
 export const swaggerConfig = () => (app: Elysia) => {
@@ -8,7 +8,7 @@ export const swaggerConfig = () => (app: Elysia) => {
 		return app.use(
 			swagger({
 				documentation: {
-					info: { ...swaggerOptions.info, version: versionOptions.version },
+					info: { ...swaggerOptions.info, version: config.appVersion },
 					servers: [
 						{
 							url: `http://localhost:${config.appPort}`,
@@ -36,7 +36,7 @@ export const swaggerConfig = () => (app: Elysia) => {
 						},
 					},
 				},
-				version: versionOptions.version,
+				version: config.appVersion,
 				provider: "scalar",
 				scalarConfig: { theme: "solarized" },
 				path: config.swaggerUiPath,

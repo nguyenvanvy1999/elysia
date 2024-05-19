@@ -6,7 +6,6 @@ import {
 	HTTP_METHOD,
 	type IResponseMetadata,
 	LANGUAGE,
-	versionOptions,
 } from "src/common";
 import {
 	config,
@@ -43,8 +42,8 @@ describe("E2E test: Auth - Login test", (): void => {
 		expect(metadata).toBeObject();
 		expect(metadata?.languages).toMatchObject(Object.values(LANGUAGE));
 		expect(metadata?.language).toBe(DEFAULT.LANGUAGE);
-		expect(metadata?.repoVersion).toBe(versionOptions.repoVersion);
-		expect(metadata?.version).toBe(versionOptions.version);
+		expect(metadata?.repoVersion).toBe(config.repoVersion);
+		expect(metadata?.version).toBe(config.appVersion);
 	};
 
 	describe("Case 1: testing with admin login after seed", () => {

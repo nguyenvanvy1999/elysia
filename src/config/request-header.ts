@@ -8,8 +8,8 @@ import {
 	type IRequestDerive,
 	type IRequestOption,
 	LANGUAGE,
-	versionOptions,
 } from "src/common";
+import { config } from "src/config/env";
 import { UAParser, type UAParserInstance } from "ua-parser-js";
 
 export const headersToCheck: IPHeaders[] = [
@@ -98,11 +98,11 @@ export const requestHeader =
 				}
 
 				if (version) {
-					set.headers[versionHeader] = versionOptions.version;
+					set.headers[versionHeader] = config.appVersion;
 				}
 
 				if (repoVersion) {
-					set.headers[repoVersionHeader] = versionOptions.repoVersion;
+					set.headers[repoVersionHeader] = config.repoVersion;
 				}
 
 				if (customLanguage) {

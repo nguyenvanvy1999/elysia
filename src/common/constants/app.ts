@@ -1,10 +1,4 @@
-export const versionOptions = {
-	repoVersion: "1.0.50",
-	version: "1.0.50",
-};
-
 export const swaggerOptions = {
-	path: "/swagger",
 	info: {
 		title: "Elysia Documentation",
 		description: "Development documentation",

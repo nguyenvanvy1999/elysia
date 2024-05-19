@@ -9,6 +9,7 @@ import {
 	TIME_REGEX,
 } from "src/common";
 import { z } from "zod";
+import packageJson from "../../package.json";
 
 dotenv.config({ path: `.env.${process.env.APP_ENV}` });
 
@@ -121,6 +122,9 @@ const envVariables = z
 		// setting config
 		SETTING_ENCRYPT_KEY: z.string(),
 		SETTING_ENCRYPT_IV: z.string(),
+
+		// version config
+		APP_VERSION: z.string().default(packageJson.version),
 	})
 	.transform((input) => ({
 		...camelize(input),
@@ -166,6 +170,7 @@ const envVariables = z
 				"User-Agent",
 			],
 		},
+		repoVersion: packageJson.version,
 	}));
 
 export const config = envVariables.parse(process.env);

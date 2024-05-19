@@ -110,8 +110,6 @@ export const authRoutes = new Elysia<
 	.post(
 		AUTH_ROUTES.LOGIN,
 		async ({ body, userAgent, ip }): Promise<any> => {
-			console.log(userAgent);
-			console.log(ip);
 			const { email, password } = body;
 			const user = await db.query.users.findFirst({
 				where: eq(users.email, email),
