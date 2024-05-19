@@ -1,4 +1,5 @@
 import type { SocketAddress } from "bun";
+import type { IResult } from "ua-parser-js";
 
 export type IPHeaders =
 	| "x-real-ip"
@@ -40,7 +41,7 @@ export interface IRequestDerive extends Record<string, unknown> {
 	id: string;
 	timezone: string;
 	timestamp: number;
-	userAgent: unknown;
+	userAgent: IResult | string;
 	version: string;
 	repoVersion: string;
 	customLanguage: string;

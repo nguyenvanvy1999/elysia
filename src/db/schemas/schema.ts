@@ -42,6 +42,7 @@ export const users = pgTable(DB_TABLE_NAME.USER, {
 export const userRelations = relations(users, ({ many }) => ({
 	roles: many(usersToRoles),
 	refreshTokens: many(refreshTokens),
+	devices: many(devices),
 }));
 
 export const refreshTokens = pgTable(
@@ -176,11 +177,40 @@ export const settingTypeEnum = pgEnum("setting_type_enum", [
 	"date",
 ]);
 
-export const settings = pgTable(DB_TABLE_NAME.SETTING, {
-	id: varchar("id", { length: 32 }).notNull().primaryKey(),
-	key: text("key").unique().notNull(),
-	isEncrypt: boolean("is_encrypted").default(false),
-	description: text("description"),
-	type: settingTypeEnum("type").notNull(),
-	value: varchar("value", { length: 2048 }).notNull(),
-});
+export const settings = pgTable(
+	DB_TABLE_NAME.SETTING,
+	{
+		id: varchar("id", { length: 32 }).notNull().primaryKey(),
+		key: text("key").unique().notNull(),
+		isEncrypt: boolean("is_encrypted").default(false),
+		description: text("description"),
+		type: settingTypeEnum("type").notNull(),
+		value: varchar("value", { length: 2048 }).notNull(),
+	},
+	(c) => ({
+		keyIdx: index("setting_key_idx").on(c.key),
+	}),
+);
+
+export const devices = pgTable(
+	DB_TABLE_NAME.DEVICE,
+	{
+		id: varchar("id", { length: 32 }).notNull().primaryKey(),
+		userId: varchar("user_id", { length: 32 }).notNull(),
+		type: varchar("type"),
+		vendor: varchar("vendor"),
+		model: varchar("model"),
+		os: varchar("os"),
+		osVersion: varchar("os_version"),
+	},
+	(c) => ({
+		userIdIdx: index("device_user_idx").on(c.userId),
+	}),
+);
+
+export const devicesRelations = relations(devices, ({ one }) => ({
+	user: one(users, {
+		fields: [devices.userId],
+		references: [users.id],
+	}),
+}));

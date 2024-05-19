@@ -1,9 +1,69 @@
 {
-  "id": "9f4ae1a0-6ce9-41a3-a20c-679fd414ef26",
+  "id": "e0dcc88c-9407-4625-bd02-819fd6bbc2e0",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "6",
   "dialect": "postgresql",
   "tables": {
+    "public.device": {
+      "name": "device",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(32)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "varchar(32)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "type": {
+          "name": "type",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "vendor": {
+          "name": "vendor",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "model": {
+          "name": "model",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "os": {
+          "name": "os",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "os_version": {
+          "name": "os_version",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "device_user_idx": {
+          "name": "device_user_idx",
+          "columns": [
+            "user_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
     "public.permission": {
       "name": "permission",
       "schema": "",
@@ -269,7 +329,15 @@
           "notNull": true
         }
       },
-      "indexes": {},
+      "indexes": {
+        "setting_key_idx": {
+          "name": "setting_key_idx",
+          "columns": [
+            "key"
+          ],
+          "isUnique": false
+        }
+      },
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
@@ -420,8 +488,7 @@
           "name": "created_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
-          "notNull": false,
-          "default": "now()"
+          "notNull": false
         },
         "updated_at": {
           "name": "updated_at",

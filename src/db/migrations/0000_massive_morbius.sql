@@ -10,6 +10,16 @@ EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "device" (
+	"id" varchar(32) PRIMARY KEY NOT NULL,
+	"user_id" varchar(32) NOT NULL,
+	"type" varchar,
+	"vendor" varchar,
+	"model" varchar,
+	"os" varchar,
+	"os_version" varchar
+);
+--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "permission" (
 	"id" varchar(32) PRIMARY KEY NOT NULL,
 	"action" varchar(256) NOT NULL,
@@ -73,7 +83,7 @@ CREATE TABLE IF NOT EXISTS "user" (
 	"password_attempt" integer NOT NULL,
 	"password_salt" varchar NOT NULL,
 	"status" "user_status_enum" DEFAULT 'active' NOT NULL,
-	"created_at" timestamp with time zone DEFAULT now(),
+	"created_at" timestamp with time zone,
 	"updated_at" timestamp with time zone DEFAULT now(),
 	"active_account_token" varchar,
 	CONSTRAINT "user_username_unique" UNIQUE("username"),
@@ -110,8 +120,10 @@ EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "device_user_idx" ON "device" ("user_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "refresh_token_user_idx" ON "refresh_token" ("user_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "refresh_token_token_idx" ON "refresh_token" ("token");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "setting_key_idx" ON "setting" ("key");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "translation_lang_idx" ON "translation" ("lang");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "translation_ns_idx" ON "translation" ("ns");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "translation_key_idx" ON "translation" ("key");
