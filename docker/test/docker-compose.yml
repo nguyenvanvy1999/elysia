@@ -1,0 +1,126 @@
+services:
+
+  elysia-dev:
+    container_name: elysia-dev
+    build:
+      context: ../../
+      dockerfile: docker/dev/Dockerfile
+    environment:
+      - POSTGRES_URI=postgresql://root:root@elysia-postgres:5432/elysia
+      - DATABASE_DEBUG=true
+
+      - PORT=3001
+
+      - REDIS_URL=redis://elysia-redis:6379
+      - REDIS_PASSWORD=OkNKx03Bz4ri3905
+
+      - ADMIN_EMAIL=nguyenvanvy1999@gmail.com
+      - ADMIN_USERNAME=nguyenvanvy
+      - ADMIN_PASSWORD=12345678aA@
+
+      - PASSWORD_SALT_LENGTH=8
+      - PASSWORD_PEPPER=2B7E1F705B43843E80B62EA66E1F7B5E
+
+      - ENB_TOKEN_PAYLOAD_ENCRYPT=true
+      - JWT_ACCESS_TOKEN_SECRET_KEY=JWT_ACCESS_TOKEN_SECRET_KEY
+      - JWT_PAYLOAD_ACCESS_TOKEN_ENCRYPT_KEY=D0C58095969C55550A8A9EDD5228B04B
+      - JWT_PAYLOAD_ACCESS_TOKEN_ENCRYPT_IV=D5D48A32FAB252FD
+      - JWT_ACCESS_TOKEN_EXPIRED=1h
+      - JWT_ACCESS_TOKEN_NOT_BEFORE_EXPIRATION=0
+
+
+      - JWT_REFRESH_TOKEN_SECRET_KEY=JWT_REFRESH_TOKEN_SECRET_KEY
+      - JWT_PAYLOAD_REFRESH_TOKEN_ENCRYPT_KEY=5B24A0F414F3A3ECE0146E3479D5CD97
+      - JWT_PAYLOAD_REFRESH_TOKEN_ENCRYPT_IV=AA4693F3A5FFE935
+      - JWT_REFRESH_TOKEN_EXPIRED=14d
+      - JWT_REFRESH_TOKEN_NOT_BEFORE_EXPIRATION=0
+
+      - ACTIVE_ACCOUNT_TOKEN_ENCRYPT_KEY=A4EFD80C9E39AFE7C38F08BAD27D66E3
+      - ACTIVE_ACCOUNT_TOKEN_ENCRYPT_IV=77ABD27DAEFB2B15
+
+      - KAFKA_CLIENT_ID=elysia
+      - KAFKA_BROKERS=elysia-kafka:9094
+
+      - SETTING_ENCRYPT_KEY=A842F5089B9F4D80537441DF9DB9981E
+      - SETTING_ENCRYPT_IV=67D75B1776E2CD51
+    volumes:
+      - ../../src/:/app/src/
+      - ../../public/:/app/public/
+    ports:
+      - '3001:3001'
+    networks:
+      - elysia-network
+
+  elysia-kafka:
+    container_name: elysia-kafka
+    image: 'bitnami/kafka:latest'
+    networks:
+      - elysia-network
+    environment:
+      - KAFKA_ENABLE_KRAFT=yes
+      - KAFKA_CFG_BROKER_ID=1
+      - KAFKA_CFG_NODE_ID=1
+      - KAFKA_KRAFT_CLUSTER_ID=1
+      - KAFKA_CFG_PROCESS_ROLES=broker,controller
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093,EXTERNAL://:9094
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092,EXTERNAL://localhost:9094
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@:9093
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_HEAP_OPTS=-Xmx512M -Xms512M
+    env_file:
+      - path: ./.env
+        required: true
+    ports:
+      - '9094:9094'
+
+  elysia-redis:
+    container_name: elysia-redis
+    image: redis/redis-stack-server:latest
+    environment:
+      - "REDIS_ARGS=--requirepass OkNKx03Bz4ri3905"
+    ports:
+      - "6339:6379"
+    networks:
+      - elysia-network
+    restart: always
+    env_file:
+      - path: ./.env
+        required: true
+
+  elysia-postgres:
+    container_name: elysia-postgres
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      PGDATA: /data/postgres
+      POSTGRES_DB: elysia
+    volumes:
+      - postgres:/data/postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - elysia-network
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d postgres" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    env_file:
+      - path: ./.env
+        required: true
+
+networks:
+  elysia-network:
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.enable_icc: "true"
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.23.0.0/16
+volumes:
+  postgres:

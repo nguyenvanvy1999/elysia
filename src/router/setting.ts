@@ -1,8 +1,6 @@
-import { $ } from "bun";
 import { asc, eq, ilike } from "drizzle-orm";
 import { Elysia } from "elysia";
 import {
-	APP_ENV,
 	DB_ID_PREFIX,
 	DEFAULT,
 	POLICY_ACCESS,
@@ -22,7 +20,7 @@ import {
 	swaggerOptions,
 } from "src/common";
 import { updateSettingBody } from "src/common/dtos/setting/update";
-import { HttpError, config, db, redisClient } from "src/config";
+import { HttpError, db, redisClient } from "src/config";
 import { settings } from "src/db";
 import { hasPermissions, isAuthenticated } from "src/middleware";
 import { checkValue, getValue, isProtected, stringifyValue } from "src/service";
@@ -217,7 +215,7 @@ export const settingRoutes = new Elysia({
 		SETTING_ROUTES.UPDATE,
 		async ({
 			params: { id },
-			body: { value, description, isEncrypt, type, isReloadApp, isSetCache },
+			body: { value, description, isEncrypt, type, isSetCache },
 		}): Promise<any> => {
 			const strValue: string = stringifyValue(value);
 			const check: boolean = checkValue(strValue, type);
@@ -250,11 +248,6 @@ export const settingRoutes = new Elysia({
 				.returning();
 			if (isSetCache) {
 				await redisClient.set(setting.key, getValue(updatedSetting[0], true));
-			}
-			if (isReloadApp) {
-				config.appEnv === APP_ENV.DEVELOPMENT
-					? await $`bun dev`
-					: await $`bun start`;
 			}
 			return resBuild(
 				{ ...updatedSetting[0], value: getValue(updatedSetting[0]) },

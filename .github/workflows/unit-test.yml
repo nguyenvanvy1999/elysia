@@ -1,4 +1,4 @@
-name: Test
+name: Unit test
 on:
 
   workflow_dispatch:
@@ -10,7 +10,7 @@ on:
       - main
 
 jobs:
-  tester:
+  unit_test:
     runs-on: ubuntu-latest
     steps:
       - name: Git checkout
@@ -31,4 +31,4 @@ jobs:
           cp .env.example .env
 
       - name: Test
-        run: bun test
+        run: bun test:unit
