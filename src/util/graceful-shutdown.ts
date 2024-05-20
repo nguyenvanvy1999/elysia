@@ -1,10 +1,8 @@
 import chalk from "chalk";
 import {
-	kafkaLogger,
 	logger,
 	pgPool,
 	postgresLogger,
-	producer,
 	redisClient,
 	redisLogger,
 } from "src/config";
@@ -29,12 +27,6 @@ export const gracefulShutdown = (): void => {
 			),
 		);
 
-	producer
-		.disconnect()
-		.then(() => kafkaLogger.warn(chalk.yellow("✅  Shutdown kafka success")))
-		.catch((e) =>
-			kafkaLogger.error(`❌  Shutdown kafka failed: ${JSON.stringify(e)}`),
-		);
 	setTimeout((): void => {
 		logger.warn(chalk.yellowBright("✅  Shutdown success"));
 		process.exit();

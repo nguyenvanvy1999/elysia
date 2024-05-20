@@ -102,9 +102,6 @@ export const decryptActiveAccountToken = (
 };
 
 export const createActiveAccountToken = (userId: string): string => {
-	console.log(
-		forwardInMilliSeconds(ms(config.activeAccountTokenExpired)).toISOString(),
-	);
 	return aes256Encrypt(
 		{
 			userId,

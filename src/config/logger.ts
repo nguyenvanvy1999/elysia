@@ -28,5 +28,4 @@ export const logger = createPinoLogger({
 });
 
 export const redisLogger = logger.child({ service: APP_SERVICE.REDIS });
-export const kafkaLogger = logger.child({ service: APP_SERVICE.KAFKA });
 export const postgresLogger = logger.child({ service: APP_SERVICE.POSTGRES });

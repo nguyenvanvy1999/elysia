@@ -14,29 +14,6 @@ services:
     networks:
       - elysia-network
 
-  elysia-kafka:
-    container_name: elysia-kafka
-    image: 'bitnami/kafka:latest'
-    networks:
-      - elysia-network
-    environment:
-      - KAFKA_ENABLE_KRAFT=yes
-      - KAFKA_CFG_BROKER_ID=1
-      - KAFKA_CFG_NODE_ID=1
-      - KAFKA_KRAFT_CLUSTER_ID=1
-      - KAFKA_CFG_PROCESS_ROLES=broker,controller
-      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
-      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093,EXTERNAL://:9094
-      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT
-      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092,EXTERNAL://localhost:9094
-      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@:9093
-      - ALLOW_PLAINTEXT_LISTENER=yes
-    env_file:
-      - path: ./.env
-        required: true
-    ports:
-      - '9094:9094'
-
   elysia-redis:
     container_name: elysia-redis
     image: redis/redis-stack-server:latest

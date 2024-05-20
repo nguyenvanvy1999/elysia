@@ -26,7 +26,6 @@ export enum LANGUAGE {
 export const AVAILABLE_LANGUAGES: string[] = Object.values(LANGUAGE);
 
 export enum HEADER_KEY {
-	DEVICE_ID = "device-id",
 	AUTHORIZATION = "authorization",
 	X_TIMEZONE = "x-timezone",
 	X_CUSTOM_LANGUAGE = "x-custom-lang",
@@ -35,7 +34,6 @@ export enum HEADER_KEY {
 	X_VERSION = "x-version",
 	X_REPO_VERSION = "x-repo-version",
 	USER_AGENT = "User-Agent",
-	IP = "request-ip",
 }
 
 // cache time in redis on seconds
@@ -335,7 +333,6 @@ export enum HTTP_METHOD {
 
 export enum APP_SERVICE {
 	REDIS = "redis",
-	KAFKA = "kafka",
 	POSTGRES = "postgres",
 }
 

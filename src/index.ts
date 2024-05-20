@@ -5,7 +5,6 @@ import { compression } from "elysia-compression";
 import { APP_ENV } from "src/common";
 import {
 	config,
-	connectKafka,
 	connectRedis,
 	httpError,
 	httpResponse,
@@ -20,7 +19,6 @@ import { gracefulShutdown } from "src/util";
 
 try {
 	await connectRedis();
-	await connectKafka();
 	await ensureSettings();
 
 	const allowOrigin: string =

@@ -21,10 +21,8 @@ export const sendEmailNewDeviceLogin = async (url: string): Promise<void> => {
 			subject: "Verify your account",
 			html,
 		};
-		const response = await sendgridClient.send(messageInfo);
-		console.log(response);
+		await sendgridClient.send(messageInfo);
 	} catch (e) {
-		console.log(e);
-		logger.error(e);
+		logger.error("Error sendEmailNewDeviceLogin", e);
 	}
 };

@@ -5,7 +5,6 @@ export * from "./db";
 export * from "./redis";
 export * from "./response";
 export * from "./request-header";
-export * from "./kafka";
 export * from "./logger";
 export * from "./setting";
 export * from "./maintenance";

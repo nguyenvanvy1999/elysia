@@ -78,7 +78,7 @@ export const userRoutes = new Elysia({
 						activeAccountToken: users.activeAccountToken,
 					});
 				// todo: send email
-				return resBuild(null, RES_KEY.USER_INFO);
+				return resBuild(null, RES_KEY.SEND_EMAIL_VERIFY_ACCOUNT);
 			}
 		},
 		{

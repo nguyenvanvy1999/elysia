@@ -172,7 +172,6 @@ export const authRoutes = new Elysia<
 					columns: { userId: true, ua: true },
 				});
 				if (isNewDevice) {
-					// send email to user
 					return resBuild(null, RES_KEY.LOGIN_NEW_DEVICE);
 				}
 			}

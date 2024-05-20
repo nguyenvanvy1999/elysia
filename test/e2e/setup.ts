@@ -1,6 +1,6 @@
 import { beforeAll } from "bun:test";
 import { migrate } from "drizzle-orm/node-postgres/migrator";
-import { connectKafka, connectRedis, db } from "src/config";
+import { connectRedis, db } from "src/config";
 import { seedAuth, seedSettings, seedTranslations } from "src/db/seed/seed";
 
 beforeAll(async (): Promise<void> => {
@@ -13,5 +13,4 @@ beforeAll(async (): Promise<void> => {
 		await seedTranslations();
 	}
 	await connectRedis();
-	await connectKafka();
 });

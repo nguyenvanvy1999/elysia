@@ -3,8 +3,7 @@ import { seedAuth } from "src/db/seed/seed";
 
 seedAuth()
 	.catch((e): void => {
-		console.log(e);
-		logger.error(`Seeding error ${JSON.stringify(e)}`);
+		logger.error(`Seeding error ${JSON.stringify(e)}`, e);
 		process.exit(1);
 	})
 	.finally((): void => {
