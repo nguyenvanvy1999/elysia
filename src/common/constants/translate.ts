@@ -315,6 +315,18 @@ export const translates = [
 		key: RES_KEY.CAN_NOT_CHANGE_TYPE_OF_THIS_SETTING.message,
 		value: "Khong the thay doi type cua cai dat duoc bao ve",
 	},
+	{
+		lang: LANGUAGE.EN,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.USER_HAS_BEEN_ACTIVATED.message,
+		value: "User has been activated",
+	},
+	{
+		lang: LANGUAGE.VI,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.USER_HAS_BEEN_ACTIVATED.message,
+		value: "Tai khoan da duoc kich hoat",
+	},
 
 	// response
 	{

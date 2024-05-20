@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import ms from "ms";
 import type { IJwtPayload, IJwtVerifyOptions } from "src/common";
 import { config } from "src/config";
-import { forwardInSeconds } from "src/util/date";
+import { forwardInMilliSeconds } from "src/util/date";
 
 export const aes256Encrypt = (
 	data: string | Record<string, any> | Record<string, any>[],
@@ -105,7 +105,7 @@ export const createActiveAccountToken = (userId: string): string => {
 	return aes256Encrypt(
 		{
 			userId,
-			expiredIn: forwardInSeconds(
+			expiredIn: forwardInMilliSeconds(
 				ms(config.activeAccountTokenExpired),
 			).getTime(),
 		},
