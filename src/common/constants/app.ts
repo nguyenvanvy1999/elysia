@@ -207,6 +207,10 @@ export const RES_KEY = {
 		message: "RES.LOGIN_NEW_DEVICE_SUCCESS",
 		code: "SUC_10",
 	},
+	SEND_EMAIL_VERIFY_ACCOUNT: {
+		message: "RES.SEND_EMAIL_VERIFY_ACCOUNT",
+		code: "SUC_11",
+	},
 };
 
 export const SW_ROUTE_DETAIL = {

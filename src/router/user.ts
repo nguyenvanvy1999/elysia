@@ -5,6 +5,7 @@ import {
 	ROUTES,
 	SW_ROUTE_DETAIL,
 	USER_ROUTES,
+	USER_STATUS,
 	errorRes,
 	errorsDefault,
 	sendEmailVerifyBody,
@@ -41,36 +42,32 @@ export const userRoutes = new Elysia({
 				throw HttpError.NotFound(...Object.values(RES_KEY.USER_NOT_FOUND));
 			}
 
-			// switch (user.status) {
-			// 	case USER_STATUS.ACTIVE:
-			// 		throw HttpError.Forbidden(
-			// 			...Object.values(RES_KEY.USER_HAS_BEEN_ACTIVATED),
-			// 		);
-			// 	case USER_STATUS.INACTIVE_PERMANENT:
-			// 		throw HttpError.Forbidden(
-			// 			...Object.values(RES_KEY.USER_INACTIVE_PERMANENT),
-			// 		);
-			// 	case USER_STATUS.BLOCK:
-			// 		throw HttpError.Forbidden(...Object.values(RES_KEY.USER_BLOCKED));
-			// 	default:
-			// 		break;
-			// }
+			switch (user.status) {
+				case USER_STATUS.ACTIVE:
+					throw HttpError.Forbidden(
+						...Object.values(RES_KEY.USER_HAS_BEEN_ACTIVATED),
+					);
+				case USER_STATUS.INACTIVE_PERMANENT:
+					throw HttpError.Forbidden(
+						...Object.values(RES_KEY.USER_INACTIVE_PERMANENT),
+					);
+				case USER_STATUS.BLOCK:
+					throw HttpError.Forbidden(...Object.values(RES_KEY.USER_BLOCKED));
+				default:
+					break;
+			}
 
 			if (user.activeAccountToken) {
 				const { expiredIn } = decryptActiveAccountToken(
 					user.activeAccountToken,
 				);
-				console.log(expiredIn);
-				// if (Date.now() < expiredIn) {
-				// 	throw HttpError.BadRequest(
-				// 		...Object.values(RES_KEY.ACTIVE_ACCOUNT_EMAIL_RATE_LIMIT),
-				// 	);
-				// }
+				if (Date.now() < expiredIn) {
+					throw HttpError.BadRequest(
+						...Object.values(RES_KEY.ACTIVE_ACCOUNT_EMAIL_RATE_LIMIT),
+					);
+				}
 			} else {
 				const newToken: string = createActiveAccountToken(user.id);
-				console.log(newToken);
-				const { expiredIn } = decryptActiveAccountToken(newToken);
-				console.log(expiredIn);
 				const updatedUsers = await db
 					.update(users)
 					.set({ activeAccountToken: newToken })
@@ -80,8 +77,8 @@ export const userRoutes = new Elysia({
 						email: users.email,
 						activeAccountToken: users.activeAccountToken,
 					});
-				// const eventData: IUserCreatedEvent = { user: updatedUser };
-				// this.eventEmitter.emit(ENUM_EVENT.USER_SEND_EMAIL_ACTIVE, eventData);
+				// todo: send email
+				return resBuild(null, RES_KEY.USER_INFO);
 			}
 		},
 		{

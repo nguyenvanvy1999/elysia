@@ -2,7 +2,7 @@
 
 [![Linter](https://github.com/nguyenvanvy1999/elysia/actions/workflows/linter.yml/badge.svg)](https://github.com/nguyenvanvy1999/elysia/actions/workflows/linter.yml)
 
-[![Test](https://github.com/nguyenvanvy1999/elysia/actions/workflows/test.yml/badge.svg)](https://github.com/nguyenvanvy1999/elysia/actions/workflows/test.yml)
+[![Unit test](https://github.com/nguyenvanvy1999/elysia/actions/workflows/unit-test.yml/badge.svg)](https://github.com/nguyenvanvy1999/elysia/actions/workflows/unit-test.yml)
 
 ## Description
 
