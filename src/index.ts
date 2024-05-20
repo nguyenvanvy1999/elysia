@@ -6,18 +6,18 @@ import { type Context, Elysia } from "elysia";
 import { compression } from "elysia-compression";
 import { APP_ENV } from "src/common";
 import {
+	ElysiaAdapter,
 	config,
 	connectRedis,
+	ensureSettings,
 	httpError,
 	httpResponse,
 	logger,
 	maintenance,
 	requestHeader,
+	sendEmailQueue,
 	swaggerConfig,
 } from "src/config";
-import { ElysiaAdapter } from "src/config/bull-board";
-import { sendEmailQueue } from "src/config/queue";
-import { ensureSettings } from "src/config/setting";
 import { authRoutes, settingRoutes, userRoutes } from "src/router";
 import { gracefulShutdown } from "src/util";
 

@@ -3,8 +3,10 @@ import {
 	logger,
 	pgPool,
 	postgresLogger,
+	queueLogger,
 	redisClient,
 	redisLogger,
+	sendEmailQueue,
 } from "src/config";
 
 export const gracefulShutdown = (): void => {
@@ -25,6 +27,13 @@ export const gracefulShutdown = (): void => {
 			postgresLogger.error(
 				`❌  Shutdown postgres failed: ${JSON.stringify(e)}`,
 			),
+		);
+
+	sendEmailQueue
+		.close()
+		.then(() => queueLogger.warn(chalk.yellow("✅  Shutdown queue success")))
+		.catch((e) =>
+			queueLogger.error(`❌  Shutdown queue failed: ${JSON.stringify(e)}`),
 		);
 
 	setTimeout((): void => {

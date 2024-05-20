@@ -29,3 +29,4 @@ export const logger = createPinoLogger({
 
 export const redisLogger = logger.child({ service: APP_SERVICE.REDIS });
 export const postgresLogger = logger.child({ service: APP_SERVICE.POSTGRES });
+export const queueLogger = logger.child({ service: APP_SERVICE.QUEUE });

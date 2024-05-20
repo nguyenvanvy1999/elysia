@@ -335,6 +335,7 @@ export enum HTTP_METHOD {
 export enum APP_SERVICE {
 	REDIS = "redis",
 	POSTGRES = "postgres",
+	QUEUE = "queue",
 }
 
 export const PAGING_MAX_LIMIT: number = 200;
