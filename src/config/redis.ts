@@ -7,7 +7,7 @@ import { sessionSchema, settingSchema } from "src/db/redis-schemas";
 
 export const redisClient: RedisClientType = createClient({
 	password: config.redisPassword,
-	url: config.redisUrl,
+	url: `redis://${config.redisHost}:${config.redisPort}`,
 });
 
 redisClient.on("error", (error) => {
@@ -16,12 +16,12 @@ redisClient.on("error", (error) => {
 
 export const settingRepository: Repository = new Repository(
 	settingSchema,
-	redisClient,
+	redisClient as any,
 );
 
 export const sessionRepository: Repository = new Repository(
 	sessionSchema,
-	redisClient,
+	redisClient as any,
 );
 
 export const connectRedis = async (): Promise<void> => {

@@ -26,7 +26,6 @@ export const httpResponse =
 		app.onAfterHandle(
 			async ({
 				response,
-				set,
 				request,
 				id,
 				timezone,
@@ -36,7 +35,10 @@ export const httpResponse =
 				customLanguage,
 				path,
 			}): Promise<Response | undefined> => {
-				const ignorePaths: string[] = [config.swaggerUiPath];
+				const ignorePaths: string[] = [
+					config.swaggerUiPath,
+					config.bullBoardPath,
+				];
 				if (ignorePaths.some((a) => path.includes(a.replaceAll("/", "")))) {
 					return;
 				}

@@ -5,7 +5,6 @@ import {
 	HTTP_METHOD,
 	PASSWORD_REGEX,
 	POSTGRES_URI_REGEX,
-	REDIS_URI_REGEX,
 	TIME_REGEX,
 } from "src/common";
 import { z } from "zod";
@@ -58,6 +57,10 @@ const envVariables = z
 		ENB_SWAGGER_UI: toggle.default("true"),
 		SWAGGER_UI_PATH: z.string().default(DEFAULT.SWAGGER_UI_PATH),
 
+		// bull board
+		ENB_BULL_BOARD: toggle.default("true"),
+		BULL_BOARD_PATH: z.string().default(DEFAULT.BULL_BOARD_PATH),
+
 		// jwt config
 		ENB_TOKEN_ENCRYPT: toggle.default("true"),
 		JWT_AUDIENCE: z.string().default(DEFAULT.JWT_AUDIENCE),
@@ -102,8 +105,9 @@ const envVariables = z
 			.default(DEFAULT.ACTIVE_ACCOUNT_TOKEN_EXPIRED),
 
 		// redis config
-		REDIS_URL: z.string().min(1).regex(REDIS_URI_REGEX),
+		REDIS_HOST: z.string(),
 		REDIS_PASSWORD: z.string().default(""),
+		REDIS_PORT: z.coerce.number(),
 
 		// admin config
 		ADMIN_EMAIL: z.string().email(),

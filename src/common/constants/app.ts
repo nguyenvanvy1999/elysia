@@ -315,6 +315,7 @@ export const DEFAULT = {
 	LANGUAGE: LANGUAGE.EN,
 	TRANSLATION_NS: TRANSLATION_NS.BACKEND,
 	SWAGGER_UI_PATH: "/swagger",
+	BULL_BOARD_PATH: "/queues",
 	ACTIVE_ACCOUNT_TOKEN_EXPIRED: "5m",
 	LOG_LEVEL: "trace",
 	PAGING_LIMIT: 10,
@@ -337,3 +338,7 @@ export enum APP_SERVICE {
 }
 
 export const PAGING_MAX_LIMIT: number = 200;
+
+export enum BULL_QUEUE {
+	SEND_MAIL = "send_mail",
+}

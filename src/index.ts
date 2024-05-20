@@ -1,6 +1,8 @@
+import { createBullBoard } from "@bull-board/api";
+import { BullMQAdapter } from "@bull-board/api/bullMQAdapter";
 import cors from "@elysiajs/cors";
 import chalk from "chalk";
-import { Elysia } from "elysia";
+import { type Context, Elysia } from "elysia";
 import { compression } from "elysia-compression";
 import { APP_ENV } from "src/common";
 import {
@@ -13,6 +15,8 @@ import {
 	requestHeader,
 	swaggerConfig,
 } from "src/config";
+import { ElysiaAdapter } from "src/config/bull-board";
+import { sendEmailQueue } from "src/config/queue";
 import { ensureSettings } from "src/config/setting";
 import { authRoutes, settingRoutes, userRoutes } from "src/router";
 import { gracefulShutdown } from "src/util";
@@ -21,10 +25,35 @@ try {
 	await connectRedis();
 	await ensureSettings();
 
+	const app = new Elysia();
+
+	if (config.enbBullBoard) {
+		const serverAdapter = new ElysiaAdapter(app);
+		serverAdapter.setBasePath(config.bullBoardPath);
+		createBullBoard({
+			queues: [new BullMQAdapter(sendEmailQueue)],
+			serverAdapter,
+		});
+	}
+
 	const allowOrigin: string =
 		config.appEnv === APP_ENV.PRODUCTION ? config.cors.allowOrigin : "*";
-	const app = new Elysia()
-		.use(logger.into({ autoLogging: true }))
+	app
+		.use(
+			logger.into({
+				autoLogging: {
+					ignore: ({ path }: Context) => {
+						const loggerIgnores: string[] = [
+							config.swaggerUiPath,
+							config.bullBoardPath,
+						];
+						return loggerIgnores.some((a) =>
+							path.includes(a.replaceAll("/", "")),
+						);
+					},
+				},
+			}),
+		)
 		.use(
 			cors({
 				origin: allowOrigin,
