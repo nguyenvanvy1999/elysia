@@ -1,4 +1,4 @@
-export * from "./db-id-generator";
+export * from "./id-generator";
 export * from "./graceful-shutdown";
 export * from "./password";
 export * from "./db-util";

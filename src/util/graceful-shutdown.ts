@@ -7,6 +7,7 @@ import {
 	redisClient,
 	redisLogger,
 	sendEmailQueue,
+	sendEmailWorker,
 } from "src/config";
 
 export const gracefulShutdown = (): void => {
@@ -31,9 +32,24 @@ export const gracefulShutdown = (): void => {
 
 	sendEmailQueue
 		.close()
-		.then(() => queueLogger.warn(chalk.yellow("✅  Shutdown queue success")))
+		.then(() =>
+			queueLogger.warn(chalk.yellow("✅  Shutdown send email queue success")),
+		)
 		.catch((e) =>
-			queueLogger.error(`❌  Shutdown queue failed: ${JSON.stringify(e)}`),
+			queueLogger.error(
+				`❌  Shutdown send email queue failed: ${JSON.stringify(e)}`,
+			),
+		);
+
+	sendEmailWorker
+		.close()
+		.then(() =>
+			queueLogger.warn(chalk.yellow("✅  Shutdown send email worker success")),
+		)
+		.catch((e) =>
+			queueLogger.error(
+				`❌  Shutdown send email worker failed: ${JSON.stringify(e)}`,
+			),
 		);
 
 	setTimeout((): void => {

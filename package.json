@@ -28,6 +28,7 @@
     "@bogeychan/elysia-oauth2": "^0.0.20",
     "@bull-board/api": "^5.17.1",
     "@casl/ability": "^6.7.1",
+    "@eelkevdbos/elysia-basic-auth": "^1.4.1",
     "@elysiajs/cors": "^1.0.2",
     "@elysiajs/cron": "^1.0.3",
     "@elysiajs/eden": "^1.0.13",

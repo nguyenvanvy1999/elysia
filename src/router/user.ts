@@ -1,6 +1,8 @@
 import { eq } from "drizzle-orm";
 import { Elysia } from "elysia";
 import {
+	BULL_JOB_ID_LENGTH,
+	BULL_QUEUE,
 	RES_KEY,
 	ROUTES,
 	SW_ROUTE_DETAIL,
@@ -13,12 +15,13 @@ import {
 	swaggerOptions,
 	userInfoRes,
 } from "src/common";
-import { HttpError, db } from "src/config";
+import { HttpError, config, db, sendEmailQueue } from "src/config";
 import { users } from "src/db";
 import { isAuthenticated } from "src/middleware";
 import {
 	createActiveAccountToken,
 	decryptActiveAccountToken,
+	idGenerator,
 	resBuild,
 } from "src/util";
 
@@ -68,16 +71,22 @@ export const userRoutes = new Elysia({
 				}
 			} else {
 				const newToken: string = createActiveAccountToken(user.id);
-				const updatedUsers = await db
+				await db
 					.update(users)
 					.set({ activeAccountToken: newToken })
-					.where(eq(users.id, user.id))
-					.returning({
-						id: users.id,
-						email: users.email,
-						activeAccountToken: users.activeAccountToken,
-					});
-				// todo: send email
+					.where(eq(users.id, user.id));
+
+				const jobId = idGenerator(BULL_QUEUE.SEND_MAIL, BULL_JOB_ID_LENGTH);
+				await sendEmailQueue.add(
+					jobId,
+					{
+						email,
+						url: encodeURI(
+							`${config.appEndpoint}${ROUTES.USER_V1}${USER_ROUTES.ACTIVE_ACCOUNT}?token=${newToken}`,
+						),
+					},
+					{ jobId },
+				);
 				return resBuild(null, RES_KEY.SEND_EMAIL_VERIFY_ACCOUNT);
 			}
 		},

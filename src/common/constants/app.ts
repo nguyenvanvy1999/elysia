@@ -275,6 +275,7 @@ export enum AUTH_ROUTES {
 export enum USER_ROUTES {
 	INFO = "/info",
 	SEND_EMAIL_VERIFY = "/send-email-active-account",
+	ACTIVE_ACCOUNT = "/active-account",
 }
 
 export enum SETTING_ROUTES {
@@ -343,3 +344,12 @@ export const PAGING_MAX_LIMIT: number = 200;
 export enum BULL_QUEUE {
 	SEND_MAIL = "send_mail",
 }
+
+export const BULL_QUEUE_JOB_REMOVAL = {
+	SEND_MAIL: {
+		MAX_COMPLETED: 1000,
+		MAX_FAILED: 5000,
+	},
+};
+
+export const BULL_JOB_ID_LENGTH = 6;

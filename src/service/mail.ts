@@ -12,17 +12,20 @@ const renderEmail = async (
 	return template(data);
 };
 
-export const sendEmailNewDeviceLogin = async (url: string): Promise<void> => {
+export const sendEmailActiveAccount = async (
+	url: string,
+	email: string,
+): Promise<void> => {
 	try {
-		const html = await renderEmail("login-new-device.hbs", { url });
+		const html = await renderEmail("active-account.hbs", { url });
 		const messageInfo = {
-			to: "nguyenvanvy1999@gmail.com",
+			to: email,
 			from: config.sendgridMailFrom,
 			subject: "Verify your account",
 			html,
 		};
 		await sendgridClient.send(messageInfo);
 	} catch (e) {
-		logger.error("Error sendEmailNewDeviceLogin", e);
+		logger.error("Error sendEmailActiveAccount", e);
 	}
 };

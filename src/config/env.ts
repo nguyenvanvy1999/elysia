@@ -6,6 +6,7 @@ import {
 	PASSWORD_REGEX,
 	POSTGRES_URI_REGEX,
 	TIME_REGEX,
+	URL_REGEX,
 } from "src/common";
 import { z } from "zod";
 import packageJson from "../../package.json";
@@ -33,6 +34,7 @@ const envVariables = z
 		APP_PORT: z.coerce.number().default(DEFAULT.PORT),
 		RUNTIME: z.enum(["bun", "edge"]).default("bun"),
 		ENABLE_SSL: toggle.default("false"),
+		APP_ENDPOINT: z.string().regex(URL_REGEX),
 
 		// database config
 		POSTGRES_URI: z.string().min(1).regex(POSTGRES_URI_REGEX),

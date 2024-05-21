@@ -26,11 +26,11 @@ import { hasPermissions, isAuthenticated } from "src/middleware";
 import { checkValue, getValue, isProtected, stringifyValue } from "src/service";
 import {
 	customCount,
-	dbIdGenerator,
 	encryptSetting,
 	getCount,
 	getLimit,
 	getOffset,
+	idGenerator,
 	resBuild,
 	resPagingBuild,
 } from "src/util";
@@ -67,7 +67,7 @@ export const settingRoutes = new Elysia({
 			const setting = await db
 				.insert(settings)
 				.values({
-					id: dbIdGenerator(DB_ID_PREFIX.SETTING),
+					id: idGenerator(DB_ID_PREFIX.SETTING),
 					key: key.toLowerCase(),
 					value: isEncrypt ? encryptSetting(strValue) : strValue,
 					type,

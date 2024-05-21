@@ -1,7 +1,7 @@
 import { customAlphabet } from "nanoid";
 import { NANO_ID_ALPHABET, NANO_ID_LENGTH } from "src/common";
 
-export const dbIdGenerator = (
+export const idGenerator = (
 	prefix = "",
 	idLength: number = NANO_ID_LENGTH,
 ): string => {

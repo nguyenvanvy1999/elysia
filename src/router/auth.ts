@@ -37,7 +37,7 @@ import {
 	createAccessToken,
 	createPassword,
 	createRefreshToken,
-	dbIdGenerator,
+	idGenerator,
 	resBuild,
 } from "src/util";
 
@@ -81,7 +81,7 @@ export const authRoutes = new Elysia<
 				.insert(users)
 				.values({
 					...body,
-					id: dbIdGenerator(DB_ID_PREFIX.USER),
+					id: idGenerator(DB_ID_PREFIX.USER),
 					...createPassword(password),
 					status: USER_STATUS.INACTIVE,
 					activeAccountAt: null,
@@ -176,7 +176,7 @@ export const authRoutes = new Elysia<
 				}
 			}
 
-			const accessSessionId: string = dbIdGenerator(DB_ID_PREFIX.SESSION);
+			const accessSessionId: string = idGenerator(DB_ID_PREFIX.SESSION);
 			const refreshSessionId: string = randomUUID();
 			let accessToken: string = createAccessToken({
 				loginDate: new Date(),
@@ -201,7 +201,7 @@ export const authRoutes = new Elysia<
 
 			await Promise.all([
 				db.insert(refreshTokens).values({
-					id: dbIdGenerator(DB_ID_PREFIX.REFRESH_TOKEN),
+					id: idGenerator(DB_ID_PREFIX.REFRESH_TOKEN),
 					userId: user.id,
 					token: refreshSessionId,
 					expires: new Date(Date.now() + ms(config.jwtRefreshTokenExpired)),
