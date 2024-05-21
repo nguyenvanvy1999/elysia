@@ -13,8 +13,8 @@ const renderEmail = async (
 };
 
 export const sendEmailActiveAccount = async (
-	url: string,
 	email: string,
+	url: string,
 ): Promise<void> => {
 	try {
 		const html = await renderEmail("active-account.hbs", { url });
@@ -27,5 +27,23 @@ export const sendEmailActiveAccount = async (
 		await sendgridClient.send(messageInfo);
 	} catch (e) {
 		logger.error("Error sendEmailActiveAccount", e);
+	}
+};
+
+export const sendEmailWelcome = async (
+	email: string,
+	name: string,
+): Promise<void> => {
+	try {
+		const html = await renderEmail("welcome.hbs", { name });
+		const messageInfo = {
+			to: email,
+			from: config.sendgridMailFrom,
+			subject: "Welcome email",
+			html,
+		};
+		await sendgridClient.send(messageInfo);
+	} catch (e) {
+		logger.error("Error sendEmailWelcome", e);
 	}
 };

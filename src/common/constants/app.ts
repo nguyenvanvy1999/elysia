@@ -153,6 +153,10 @@ export const RES_KEY = {
 		message: "ERROR.CAN_NOT_CHANGE_TYPE_OF_THIS_SETTING",
 		code: "BAD_REQUEST_5",
 	},
+	ACTIVE_ACCOUNT_TOKEN_WRONG: {
+		message: "ERROR.ACTIVE_ACCOUNT_TOKEN_WRONG",
+		code: "BAD_REQUEST_6",
+	},
 
 	// service unavailable error
 	MAINTENANCE: {
@@ -234,6 +238,10 @@ export const SW_ROUTE_DETAIL = {
 	SEND_EMAIL_VERIFY: {
 		description: "Send email verify account",
 		summary: "Send email verify",
+	},
+	VERIFY_ACCOUNT: {
+		description: "Verify account",
+		summary: "Verify account",
 	},
 
 	// setting APIs
@@ -353,3 +361,8 @@ export const BULL_QUEUE_JOB_REMOVAL = {
 };
 
 export const BULL_JOB_ID_LENGTH = 6;
+
+export enum EMAIL_TYPE {
+	VERIFY_ACCOUNT = "verify-account",
+	WELCOME = "welcome",
+}

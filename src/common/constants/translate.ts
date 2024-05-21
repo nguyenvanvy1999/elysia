@@ -327,6 +327,18 @@ export const translates = [
 		key: RES_KEY.USER_HAS_BEEN_ACTIVATED.message,
 		value: "Tai khoan da duoc kich hoat",
 	},
+	{
+		lang: LANGUAGE.EN,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.ACTIVE_ACCOUNT_TOKEN_WRONG.message,
+		value: "Active account token wrong",
+	},
+	{
+		lang: LANGUAGE.VI,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.ACTIVE_ACCOUNT_TOKEN_WRONG.message,
+		value: "Token kich hoat tai khoan sai",
+	},
 
 	// response
 	{

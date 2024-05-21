@@ -2,11 +2,13 @@ import { type Job, MetricsTime, Queue, Worker } from "bullmq";
 import {
 	BULL_QUEUE,
 	BULL_QUEUE_JOB_REMOVAL,
-	type ISendActiveAccountEmailJob,
+	EMAIL_TYPE,
+	type IEmailActiveAccount,
+	type IEmailWelcome,
 } from "src/common";
 import { config } from "src/config/env";
 import { queueLogger } from "src/config/logger";
-import { sendEmailActiveAccount } from "src/service";
+import { sendEmailActiveAccount, sendEmailWelcome } from "src/service";
 
 export const sendEmailQueue = new Queue(BULL_QUEUE.SEND_MAIL, {
 	connection: {
@@ -18,13 +20,22 @@ export const sendEmailQueue = new Queue(BULL_QUEUE.SEND_MAIL, {
 
 export const sendEmailWorker = new Worker(
 	BULL_QUEUE.SEND_MAIL,
-	async (job: Job<ISendActiveAccountEmailJob>) => {
+	async (job: Job<IEmailActiveAccount | IEmailWelcome>) => {
 		queueLogger.info(
 			`Send email job with jobId: ${job.id}, job data ${JSON.stringify(
 				job.data,
 			)}`,
 		);
-		await sendEmailActiveAccount(job.data.url, job.data.email);
+		const { email, emailType, data } = job.data;
+		switch (emailType) {
+			case EMAIL_TYPE.VERIFY_ACCOUNT:
+				await sendEmailActiveAccount(email, data.url);
+				break;
+
+			case EMAIL_TYPE.WELCOME:
+				await sendEmailWelcome(email, data.name);
+				break;
+		}
 	},
 	{
 		connection: {
