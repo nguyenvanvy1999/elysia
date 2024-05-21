@@ -143,6 +143,7 @@ export const userRoutes = new Elysia({
 				data: { name: user.name ?? "" },
 			} satisfies IEmailWelcome;
 			await sendEmailQueue.add(jobId, queueData, { jobId });
+			return resBuild(null, RES_KEY.SEND_EMAIL_VERIFY_ACCOUNT);
 		},
 		{
 			query: verifyAccountQuery,

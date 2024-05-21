@@ -17,3 +17,18 @@ export interface IEmailWelcome extends ISendEmailJob {
 		name: string;
 	};
 }
+
+export interface IEmailLoginNewDevice extends ISendEmailJob {
+	emailType: EMAIL_TYPE.LOGIN_NEW_DEVICE;
+	data: {
+		url: string;
+		ipAddress?: string;
+		deviceType?: string;
+		deviceVendor?: string;
+		deviceModel?: string;
+		os?: string;
+		osVersion?: string;
+		browserName?: string;
+		browserVersion?: string;
+	};
+}

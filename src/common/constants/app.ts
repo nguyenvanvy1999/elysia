@@ -210,8 +210,12 @@ export const RES_KEY = {
 		code: "SUC_10",
 	},
 	SEND_EMAIL_VERIFY_ACCOUNT: {
-		message: "RES.SEND_EMAIL_VERIFY_ACCOUNT",
+		message: "RES.SEND_EMAIL_VERIFY_ACCOUNT_SUCCESS",
 		code: "SUC_11",
+	},
+	VERIFY_ACCOUNT: {
+		message: "RES.VERIFY_ACCOUNT_SUCCESS",
+		code: "SUC_12",
 	},
 };
 
@@ -276,6 +280,7 @@ export enum ROUTES {
 export enum AUTH_ROUTES {
 	LOGIN = "/login",
 	REGISTER = "/register",
+	CONFIRM_NEW_DEVICE = "confirm-new-device",
 	LOGOUT = "/logout",
 	LOGOUT_ALL = "/logout-all",
 }
@@ -365,4 +370,5 @@ export const BULL_JOB_ID_LENGTH = 6;
 export enum EMAIL_TYPE {
 	VERIFY_ACCOUNT = "verify-account",
 	WELCOME = "welcome",
+	LOGIN_NEW_DEVICE = "login-new-device",
 }

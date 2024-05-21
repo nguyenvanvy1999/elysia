@@ -474,4 +474,16 @@ export const translates = [
 		value:
 			"Gui email xac thuc tai khoan thanh cong. Kiem tra email de xac thuc",
 	},
+	{
+		lang: LANGUAGE.EN,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.VERIFY_ACCOUNT.message,
+		value: "Verify account success",
+	},
+	{
+		lang: LANGUAGE.VI,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.VERIFY_ACCOUNT.message,
+		value: "Xac thuc tai khoan thanh cong",
+	},
 ];

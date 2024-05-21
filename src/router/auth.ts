@@ -4,7 +4,11 @@ import { Elysia } from "elysia";
 import ms from "ms";
 import {
 	AUTH_ROUTES,
+	BULL_JOB_ID_LENGTH,
+	BULL_QUEUE,
 	DB_ID_PREFIX,
+	EMAIL_TYPE,
+	type IEmailLoginNewDevice,
 	type IJwtPayload,
 	type IRequestDerive,
 	RES_KEY,
@@ -25,6 +29,7 @@ import {
 	config,
 	db,
 	redisClient,
+	sendEmailQueue,
 	sessionRepository,
 } from "src/config";
 import { devices, refreshTokens, users } from "src/db";
@@ -167,11 +172,25 @@ export const authRoutes = new Elysia<
 
 			if (enbLoginNewDeviceCheck === "true") {
 				const ua = typeof userAgent === "string" ? userAgent : userAgent.ua;
-				const isNewDevice = await db.query.devices.findFirst({
+				const existDevice = await db.query.devices.findFirst({
 					where: and(eq(devices.ua, ua), eq(devices.userId, user.id)),
 					columns: { userId: true, ua: true },
 				});
-				if (isNewDevice) {
+				if (!existDevice) {
+					// todo: implement new device login here
+					const jobId = idGenerator(BULL_QUEUE.SEND_MAIL, BULL_JOB_ID_LENGTH);
+					const newToken = "";
+					const queueData = {
+						email,
+						emailType: EMAIL_TYPE.LOGIN_NEW_DEVICE,
+						data: {
+							url: encodeURI(
+								`${config.appEndpoint}${ROUTES.AUTH_V1}${AUTH_ROUTES.CONFIRM_NEW_DEVICE}?token=${newToken}`,
+							),
+						},
+					} satisfies IEmailLoginNewDevice;
+					await sendEmailQueue.add(jobId, queueData, { jobId });
+
 					return resBuild(null, RES_KEY.LOGIN_NEW_DEVICE);
 				}
 			}
