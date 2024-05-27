@@ -8,7 +8,7 @@ import {
 } from "src/common";
 import { config } from "src/config/env";
 import { queueLogger } from "src/config/logger";
-import { sendEmailActiveAccount, sendEmailWelcome } from "src/service";
+import { sendEmail } from "src/service";
 
 export const sendEmailQueue = new Queue(BULL_QUEUE.SEND_MAIL, {
 	connection: {
@@ -26,14 +26,14 @@ export const sendEmailWorker = new Worker(
 				job.data,
 			)}`,
 		);
-		const { email, emailType, data } = job.data;
+		const { emailType } = job.data;
 		switch (emailType) {
 			case EMAIL_TYPE.VERIFY_ACCOUNT:
-				await sendEmailActiveAccount(email, data.url);
+				await sendEmail(job.data, "Verify your account");
 				break;
 
 			case EMAIL_TYPE.WELCOME:
-				await sendEmailWelcome(email, data.name);
+				await sendEmail(job.data, "Welcome");
 				break;
 		}
 	},

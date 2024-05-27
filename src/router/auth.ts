@@ -9,6 +9,7 @@ import {
 	DB_ID_PREFIX,
 	EMAIL_TYPE,
 	type IEmailLoginNewDevice,
+	type IEmailWarningPasswordAttempt,
 	type IJwtPayload,
 	type IRequestDerive,
 	RES_KEY,
@@ -34,7 +35,11 @@ import {
 } from "src/config";
 import { devices, refreshTokens, users } from "src/db";
 import { isAuthenticated } from "src/middleware";
-import { checkUserStatus, increasePasswordAttempt } from "src/service";
+import {
+	checkUserStatus,
+	increasePasswordAttempt,
+	resetPasswordAttempt,
+} from "src/service";
 import {
 	aes256Encrypt,
 	checkPasswordExpired,
@@ -142,7 +147,13 @@ export const authRoutes = new Elysia<
 				enbPasswordAttempt === "true" &&
 				user.passwordAttempt >= config.passwordAttempt
 			) {
-				// todo: send email to user
+				const jobId = idGenerator(BULL_QUEUE.SEND_MAIL, BULL_JOB_ID_LENGTH);
+				const queueData = {
+					email,
+					emailType: EMAIL_TYPE.WARNING_PASSWORD_ATTEMPT,
+				} satisfies IEmailWarningPasswordAttempt;
+				await sendEmailQueue.add(jobId, queueData, { jobId });
+
 				throw HttpError.Forbidden(
 					...Object.values(RES_KEY.USER_PASSWORD_ATTEMPT_MAX),
 				);
@@ -159,6 +170,8 @@ export const authRoutes = new Elysia<
 					...Object.values(RES_KEY.USER_PASSWORD_NOT_MATCH),
 				);
 			}
+
+			await resetPasswordAttempt(user.id);
 
 			checkUserStatus(user.status);
 

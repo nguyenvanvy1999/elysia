@@ -371,4 +371,5 @@ export enum EMAIL_TYPE {
 	VERIFY_ACCOUNT = "verify-account",
 	WELCOME = "welcome",
 	LOGIN_NEW_DEVICE = "login-new-device",
+	WARNING_PASSWORD_ATTEMPT = "warning-password-attempt",
 }

@@ -1,4 +1,5 @@
 import handlebars from "handlebars";
+import type { ISendEmail } from "src/common";
 import { config, logger, sendgridClient } from "src/config";
 
 const renderEmail = async (
@@ -12,38 +13,20 @@ const renderEmail = async (
 	return template(data);
 };
 
-export const sendEmailActiveAccount = async (
-	email: string,
-	url: string,
+export const sendEmail = async <T extends ISendEmail>(
+	{ email, data, emailType }: T,
+	subject: string,
 ): Promise<void> => {
 	try {
-		const html = await renderEmail("active-account.hbs", { url });
+		const html = await renderEmail(`${emailType}.hbs`, data);
 		const messageInfo = {
 			to: email,
 			from: config.sendgridMailFrom,
-			subject: "Verify your account",
+			subject,
 			html,
 		};
 		await sendgridClient.send(messageInfo);
 	} catch (e) {
-		logger.error("Error sendEmailActiveAccount", e);
-	}
-};
-
-export const sendEmailWelcome = async (
-	email: string,
-	name: string,
-): Promise<void> => {
-	try {
-		const html = await renderEmail("welcome.hbs", { name });
-		const messageInfo = {
-			to: email,
-			from: config.sendgridMailFrom,
-			subject: "Welcome email",
-			html,
-		};
-		await sendgridClient.send(messageInfo);
-	} catch (e) {
-		logger.error("Error sendEmailWelcome", e);
+		logger.error("Error sendEmail", e);
 	}
 };
