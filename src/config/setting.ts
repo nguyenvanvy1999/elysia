@@ -3,7 +3,7 @@ import { SETTING_KEY } from "src/common";
 import { db } from "src/config/db";
 import { redisClient } from "src/config/redis";
 import { settings } from "src/db";
-import { getValue } from "src/service";
+import { settingService } from "src/service";
 
 export const ensureSettings = async (): Promise<void> => {
 	const ensureKeys: string[] = Object.values(SETTING_KEY);
@@ -24,7 +24,8 @@ export const ensureSettings = async (): Promise<void> => {
 	// cache settings
 	await redisClient.mSet(
 		configs.reduce(
-			(prev, cur) => Object.assign(prev, { [cur.key]: getValue(cur, true) }),
+			(prev, cur) =>
+				Object.assign(prev, { [cur.key]: settingService.getValue(cur, true) }),
 			{},
 		),
 	);

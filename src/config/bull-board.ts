@@ -72,6 +72,7 @@ export class ElysiaAdapter implements IServerAdapter {
 							queues: this.bullBoardQueues as BullBoardQueues,
 							query: ctx.query,
 							params: ctx.params,
+							body: ctx.body as any,
 						});
 						ctx.set.status = response.status || 200;
 						return response.body;

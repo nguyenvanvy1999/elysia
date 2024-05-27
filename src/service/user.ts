@@ -4,42 +4,46 @@ import { HttpError, db } from "src/config";
 import { type UserWithRoles, users } from "src/db";
 import { increment } from "src/util";
 
-export const increasePasswordAttempt = async (
-	userId: string,
-): Promise<void> => {
-	await db
-		.update(users)
-		.set({ passwordAttempt: increment(users.passwordAttempt, 1) })
-		.where(eq(users.id, userId));
-};
+interface IUserService {
+	increasePasswordAttempt: (userId: string) => Promise<void>;
+	resetPasswordAttempt: (userId: string) => Promise<void>;
+	checkUserStatus: (status: USER_STATUS | string) => void;
+	getUserDetail: (userId: string) => Promise<UserWithRoles | undefined>;
+}
 
-export const resetPasswordAttempt = async (userId: string): Promise<void> => {
-	await db
-		.update(users)
-		.set({ passwordAttempt: 0 })
-		.where(eq(users.id, userId));
-};
+export const userService: IUserService = {
+	increasePasswordAttempt: async (userId: string): Promise<void> => {
+		await db
+			.update(users)
+			.set({ passwordAttempt: increment(users.passwordAttempt, 1) })
+			.where(eq(users.id, userId));
+	},
 
-export const checkUserStatus = (status: USER_STATUS | string): void => {
-	switch (status) {
-		case USER_STATUS.INACTIVE:
-			throw HttpError.Forbidden(...Object.values(RES_KEY.USER_INACTIVE));
-		case USER_STATUS.INACTIVE_PERMANENT:
-			throw HttpError.Forbidden(
-				...Object.values(RES_KEY.USER_INACTIVE_PERMANENT),
-			);
-		case USER_STATUS.BLOCK:
-			throw HttpError.Forbidden(...Object.values(RES_KEY.USER_BLOCKED));
-		default:
-			break;
-	}
-};
+	resetPasswordAttempt: async (userId: string): Promise<void> => {
+		await db
+			.update(users)
+			.set({ passwordAttempt: 0 })
+			.where(eq(users.id, userId));
+	},
 
-export const getUserDetail = async (
-	userId: string,
-): Promise<UserWithRoles | undefined> => {
-	return (await db
-		.execute(sql`SELECT "u"."id",
+	checkUserStatus: (status: USER_STATUS | string): void => {
+		switch (status) {
+			case USER_STATUS.INACTIVE:
+				throw HttpError.Forbidden(...Object.values(RES_KEY.USER_INACTIVE));
+			case USER_STATUS.INACTIVE_PERMANENT:
+				throw HttpError.Forbidden(
+					...Object.values(RES_KEY.USER_INACTIVE_PERMANENT),
+				);
+			case USER_STATUS.BLOCK:
+				throw HttpError.Forbidden(...Object.values(RES_KEY.USER_BLOCKED));
+			default:
+				break;
+		}
+	},
+
+	getUserDetail: async (userId: string): Promise<UserWithRoles | undefined> => {
+		return (await db
+			.execute(sql`SELECT "u"."id",
        "u"."name",
        "u"."username",
        "u"."email",
@@ -80,5 +84,6 @@ LEFT JOIN LATERAL
    WHERE "ur"."user_id" = "u"."id") "ur" ON TRUE
 WHERE "u"."id" = ${userId}
 LIMIT 1;`)
-		.then((res) => res.rows[0])) as UserWithRoles | undefined;
+			.then((res) => res.rows[0])) as UserWithRoles | undefined;
+	},
 };

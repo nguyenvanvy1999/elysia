@@ -255,9 +255,9 @@ export const httpError =
 			false,
 			{
 				derive: IRequestDerive;
-				decorator: Record<string, unknown>;
-				store: Record<string, unknown>;
-				resolve: Record<string, unknown>;
+				decorator: IRequestDerive;
+				store: IRequestDerive;
+				resolve: IRequestDerive;
 			}
 		>,
 	) =>

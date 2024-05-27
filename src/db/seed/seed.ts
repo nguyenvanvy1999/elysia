@@ -177,8 +177,8 @@ export async function seedSettings(): Promise<void> {
 			},
 			{
 				id: idGenerator(DB_ID_PREFIX.SETTING),
-				key: SETTING_KEY.ENB_LOGIN_NEW_DEVICE,
-				value: "true",
+				key: SETTING_KEY.ENB_LOGIN_NEW_DEVICE_VERIFY,
+				value: "false",
 				isEncrypt: false,
 				type: SETTING_DATA_TYPE.BOOLEAN,
 				description: "Enable login new device check",

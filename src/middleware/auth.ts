@@ -11,13 +11,7 @@ import {
 } from "src/common";
 import { HttpError, sessionRepository } from "src/config";
 import type { UserWithRoles } from "src/db";
-import {
-	checkUserStatus,
-	defineAbilityFromRole,
-	execPolicyHandler,
-	getUserDetail,
-	handlerRules,
-} from "src/service";
+import { policyService, userService } from "src/service";
 import { verifyAccessToken } from "src/util";
 
 export const isAuthenticated = (
@@ -59,11 +53,13 @@ export const isAuthenticated = (
 		if (!session.userId) {
 			throw HttpError.Unauthorized(...Object.values(RES_KEY.TOKEN_EXPIRED));
 		}
-		const user: UserWithRoles | undefined = await getUserDetail(session.userId);
+		const user: UserWithRoles | undefined = await userService.getUserDetail(
+			session.userId,
+		);
 		if (!user) {
 			throw HttpError.NotFound(...Object.values(RES_KEY.USER_NOT_FOUND));
 		}
-		checkUserStatus(user.status);
+		userService.checkUserStatus(user.status);
 		return {
 			user,
 			sessionId: payload.sessionId,
@@ -77,14 +73,15 @@ export const hasPermissions = (
 	return ({ user }) => {
 		let check = false;
 		for (const role of user.roles) {
-			const ability: IPolicyAbility = defineAbilityFromRole({
+			const ability: IPolicyAbility = policyService.defineAbilityFromRole({
 				name: role.name as ROLE_NAME,
 				permissions: role.permissions as IPolicyRule[],
 			});
-			const policyHandler: PolicyHandler[] = handlerRules(policyRule);
+			const policyHandler: PolicyHandler[] =
+				policyService.handlerRules(policyRule);
 			if (
 				policyHandler.every((handler: PolicyHandler) => {
-					return execPolicyHandler(handler, ability);
+					return policyService.execPolicyHandler(handler, ability);
 				})
 			) {
 				check = true;

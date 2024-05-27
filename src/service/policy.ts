@@ -8,35 +8,53 @@ import {
 	ROLE_NAME,
 } from "src/common";
 
-export const defineAbilityFromRole = ({
-	name,
-	permissions,
-}: IPolicyRequest) => {
-	const { can, build } = new AbilityBuilder<IPolicyAbility>(createMongoAbility);
+interface IPolicyService {
+	defineAbilityFromRole: ({
+		name,
+		permissions,
+	}: IPolicyRequest) => IPolicyAbility;
 
-	if (name === ROLE_NAME.ADMIN) {
-		can(POLICY_ACTION.MANAGE, "all");
-	} else {
-		for (const permission of permissions) {
-			can(permission.action, permission.entity);
+	handlerRules: (rules: IPolicyRule[]) => PolicyHandler[];
+
+	execPolicyHandler: (
+		handler: PolicyHandler,
+		ability: IPolicyAbility,
+	) => boolean;
+}
+
+export const policyService: IPolicyService = {
+	defineAbilityFromRole: ({
+		name,
+		permissions,
+	}: IPolicyRequest): IPolicyAbility => {
+		const { can, build } = new AbilityBuilder<IPolicyAbility>(
+			createMongoAbility,
+		);
+
+		if (name === ROLE_NAME.ADMIN) {
+			can(POLICY_ACTION.MANAGE, "all");
+		} else {
+			for (const permission of permissions) {
+				can(permission.action, permission.entity);
+			}
 		}
-	}
 
-	return build();
-};
+		return build();
+	},
 
-export const handlerRules = (rules: IPolicyRule[]): PolicyHandler[] => {
-	return rules.flatMap(({ entity, action }) => {
-		return (ability: IPolicyAbility) => ability.can(action, entity);
-	});
-};
+	handlerRules: (rules: IPolicyRule[]): PolicyHandler[] => {
+		return rules.flatMap(({ entity, action }) => {
+			return (ability: IPolicyAbility) => ability.can(action, entity);
+		});
+	},
 
-export const execPolicyHandler = (
-	handler: PolicyHandler,
-	ability: IPolicyAbility,
-) => {
-	if (typeof handler === "function") {
-		return handler(ability);
-	}
-	return handler.handle(ability);
+	execPolicyHandler: (
+		handler: PolicyHandler,
+		ability: IPolicyAbility,
+	): boolean => {
+		if (typeof handler === "function") {
+			return handler(ability);
+		}
+		return handler.handle(ability);
+	},
 };
