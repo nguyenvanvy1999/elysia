@@ -158,6 +158,10 @@ export const RES_KEY = {
 		message: "ERROR.ACTIVE_ACCOUNT_TOKEN_WRONG",
 		code: "BAD_REQUEST_6",
 	},
+	DEVICE_TOKEN_WRONG: {
+		message: "ERROR.DEVICE_TOKEN_WRONG",
+		code: "BAD_REQUEST_7",
+	},
 
 	// service unavailable error
 	MAINTENANCE: {
@@ -222,6 +226,10 @@ export const RES_KEY = {
 		message: "RES.LOGIN_NEW_DEVICE_SUCCESS",
 		code: "SUC_13",
 	},
+	CONFIRM_DEVICE: {
+		message: "RES.CONFIRM_DEVICE_SUCCESS",
+		code: "SUC_14",
+	},
 };
 
 export const SW_ROUTE_DETAIL = {
@@ -241,6 +249,10 @@ export const SW_ROUTE_DETAIL = {
 	LOGOUT_ALL: {
 		description: "Logout from all devices",
 		summary: "Logout all",
+	},
+	CONFIRM_DEVICE: {
+		description: "Confirm new device",
+		summary: "Confirm device",
 	},
 
 	// user APIs

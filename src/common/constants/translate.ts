@@ -339,6 +339,18 @@ export const translates = [
 		key: RES_KEY.ACTIVE_ACCOUNT_TOKEN_WRONG.message,
 		value: "Token kich hoat tai khoan sai",
 	},
+	{
+		lang: LANGUAGE.EN,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.DEVICE_TOKEN_WRONG.message,
+		value: "Device token wrong",
+	},
+	{
+		lang: LANGUAGE.VI,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.DEVICE_TOKEN_WRONG.message,
+		value: "Token kich hoat thiet bi sai",
+	},
 
 	// response
 	{
@@ -497,5 +509,17 @@ export const translates = [
 		ns: TRANSLATION_NS.BACKEND,
 		key: RES_KEY.LOGIN_NEW_DEVICE.message,
 		value: "Dang nhap tren thiet bi moi. Vui long xac nhan tu email",
+	},
+	{
+		lang: LANGUAGE.EN,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.CONFIRM_DEVICE.message,
+		value: "Confirm device success",
+	},
+	{
+		lang: LANGUAGE.VI,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.CONFIRM_DEVICE.message,
+		value: "Xac thuc thiet bi thanh cong. Vui long dang nhap lai",
 	},
 ];

@@ -40,6 +40,8 @@ export const settingRoutes = new Elysia({
 		response: {
 			200: settingRes,
 			409: errorRes,
+			401: errorRes,
+			403: errorRes,
 			...errorsDefault,
 		},
 	})
@@ -58,6 +60,8 @@ export const settingRoutes = new Elysia({
 		query: listSettingQuery,
 		response: {
 			200: listSettingRes,
+			401: errorRes,
+			403: errorRes,
 			...errorsDefault,
 		},
 	})
@@ -77,6 +81,8 @@ export const settingRoutes = new Elysia({
 		response: {
 			200: settingRes,
 			404: errorRes,
+			401: errorRes,
+			403: errorRes,
 			...errorsDefault,
 		},
 	})
@@ -96,6 +102,8 @@ export const settingRoutes = new Elysia({
 		response: {
 			200: settingRes,
 			404: errorRes,
+			401: errorRes,
+			403: errorRes,
 			...errorsDefault,
 		},
 	})
@@ -116,6 +124,8 @@ export const settingRoutes = new Elysia({
 		response: {
 			200: settingRes,
 			404: errorRes,
+			401: errorRes,
+			403: errorRes,
 			...errorsDefault,
 		},
 	});

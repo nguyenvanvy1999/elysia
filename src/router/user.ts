@@ -1,5 +1,8 @@
 import { Elysia } from "elysia";
 import {
+	POLICY_ACCESS,
+	POLICY_ACTION,
+	POLICY_ENTITY,
 	ROUTES,
 	SW_ROUTE_DETAIL,
 	USER_ROUTES,
@@ -13,7 +16,7 @@ import {
 	verifyAccountRes,
 } from "src/common";
 import { userController } from "src/controller";
-import { isAuthenticated } from "src/middleware";
+import { hasPermissions, isAuthenticated } from "src/middleware";
 
 export const userRoutes = new Elysia({
 	prefix: ROUTES.USER_V1,
@@ -43,9 +46,17 @@ export const userRoutes = new Elysia({
 			...SW_ROUTE_DETAIL.USER_INFO,
 			security: [{ accessToken: [] }],
 		},
+		beforeHandle: hasPermissions([
+			{
+				entity: POLICY_ENTITY.USER,
+				access: POLICY_ACCESS.OWNER,
+				action: POLICY_ACTION.READ,
+			},
+		]),
 		response: {
 			200: userInfoRes,
 			401: errorRes,
+			403: errorRes,
 			...errorsDefault,
 		},
 	});

@@ -4,6 +4,8 @@ import {
 	type IRequestDerive,
 	ROUTES,
 	SW_ROUTE_DETAIL,
+	confirmDeviceQuery,
+	confirmDeviceRes,
 	errorRes,
 	errorsDefault,
 	loginBody,
@@ -49,6 +51,14 @@ export const authRoutes = new Elysia<
 			...errorsDefault,
 		},
 	})
+	.get(AUTH_ROUTES.CONFIRM_DEVICE, authController.confirmDevice, {
+		query: confirmDeviceQuery,
+		detail: SW_ROUTE_DETAIL.CONFIRM_DEVICE,
+		response: {
+			200: confirmDeviceRes,
+			...errorsDefault,
+		},
+	})
 	.use(isAuthenticated)
 	.get(AUTH_ROUTES.LOGOUT, authController.logout, {
 		detail: {
@@ -57,6 +67,8 @@ export const authRoutes = new Elysia<
 		},
 		response: {
 			200: logoutRes,
+			401: errorRes,
+			403: errorRes,
 			...errorsDefault,
 		},
 	})
@@ -67,6 +79,8 @@ export const authRoutes = new Elysia<
 		},
 		response: {
 			200: logoutAllRes,
+			401: errorRes,
+			403: errorRes,
 			...errorsDefault,
 		},
 	});

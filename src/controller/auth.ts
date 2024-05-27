@@ -18,6 +18,7 @@ import {
 	ROUTES,
 	SETTING_KEY,
 	USER_STATUS,
+	type confirmDeviceQuery,
 	type loginBody,
 	type registerBody,
 } from "src/common";
@@ -46,6 +47,7 @@ import {
 	createDeviceToken,
 	createPassword,
 	createRefreshToken,
+	decryptDeviceToken,
 	idGenerator,
 	resBuild,
 } from "src/util";
@@ -74,6 +76,10 @@ interface IAuthController {
 	}: {
 		user: UserWithRoles;
 	}) => Promise<any>;
+
+	confirmDevice: ({
+		query,
+	}: { query: Static<typeof confirmDeviceQuery> }) => Promise<any>;
 }
 
 export const authController: IAuthController = {
@@ -354,5 +360,23 @@ export const authController: IAuthController = {
 				.where(eq(devices.userId, user.id)),
 		]);
 		return resBuild(null, RES_KEY.LOGOUT_ALL);
+	},
+
+	confirmDevice: async ({ query }): Promise<any> => {
+		const { token } = query;
+		if (!token) {
+			throw HttpError.BadRequest(...Object.values(RES_KEY.DEVICE_TOKEN_WRONG));
+		}
+		const { expiredIn, userId, deviceId } = decryptDeviceToken(token);
+		if (Date.now() > expiredIn) {
+			throw HttpError.BadRequest(...Object.values(RES_KEY.DEVICE_TOKEN_WRONG));
+		}
+		await db
+			.update(devices)
+			.set({
+				userId,
+			})
+			.where(eq(devices.id, deviceId));
+		return resBuild(null, RES_KEY.VERIFY_ACCOUNT);
 	},
 };

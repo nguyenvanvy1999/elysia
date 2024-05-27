@@ -5,3 +5,4 @@ export * from "./user";
 export * from "./send-email-verify";
 export * from "./verify-account";
 export * from "./logout";
+export * from "./confirm-device";
