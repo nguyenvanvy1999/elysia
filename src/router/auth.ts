@@ -22,6 +22,8 @@ import {
 	errorsDefault,
 	loginBody,
 	loginRes,
+	logoutAllRes,
+	logoutRes,
 	registerBody,
 	registerRes,
 	swaggerOptions,
@@ -40,6 +42,7 @@ import {
 	checkUserStatus,
 	increasePasswordAttempt,
 	removeSessionById,
+	removeSessionByUserId,
 	resetPasswordAttempt,
 } from "src/service";
 import {
@@ -326,9 +329,31 @@ export const authRoutes = new Elysia<
 				security: [{ accessToken: [] }],
 			},
 			response: {
-				200: loginRes,
-				403: errorRes,
-				404: errorRes,
+				200: logoutRes,
+				...errorsDefault,
+			},
+		},
+	)
+	.get(
+		AUTH_ROUTES.LOGOUT_ALL,
+		async ({ user }): Promise<any> => {
+			await Promise.allSettled([
+				removeSessionByUserId(user.id),
+				db.delete(refreshTokens).where(eq(refreshTokens.userId, user.id)),
+				db
+					.update(devices)
+					.set({ sessionId: null })
+					.where(eq(devices.userId, user.id)),
+			]);
+			return resBuild(null, RES_KEY.LOGOUT_ALL);
+		},
+		{
+			detail: {
+				...SW_ROUTE_DETAIL.LOGOUT_ALL,
+				security: [{ accessToken: [] }],
+			},
+			response: {
+				200: logoutAllRes,
 				...errorsDefault,
 			},
 		},

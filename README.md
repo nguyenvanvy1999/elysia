@@ -17,13 +17,17 @@ Another technology is:
 
 ## Feature of project:
 
-- Auth: Signup, sign in, JWT, RBAC, encrypt token, session control for deleted/inactive/block user.
+- Auth: Signup, sign in, JWT, RBAC, encrypt token, session control for deleted/inactive/block user, multiple device sessions management.
 - User: Get user profile, Admin CRUD users.
 - Setting: Admin CRUD settings, cache some useful setting, reload server after change setting.
-- Translation: Admin CRUD translations, i18n for response message.
+- Translation: Admin CRUD translations, i18n for response message, i18n load for Frontend.
 - Other: logger, swagger UI, graceful shutdown, env validate and parser, seed data, maintenance status.
 
 ## Todo:
+
+- gRPC implements
+- GraphQL implements
+- DB debugger (write debug logs on DB)
 
 ## Getting Started
 

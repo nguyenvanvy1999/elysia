@@ -234,6 +234,10 @@ export const SW_ROUTE_DETAIL = {
 		description: "Logout from this device",
 		summary: "Logout",
 	},
+	LOGOUT_ALL: {
+		description: "Logout from all devices",
+		summary: "Logout all",
+	},
 
 	// user APIs
 	USER_INFO: {
@@ -282,7 +286,6 @@ export enum ROUTES {
 export enum AUTH_ROUTES {
 	LOGIN = "/login",
 	REGISTER = "/register",
-	CONFIRM_NEW_DEVICE = "confirm-new-device",
 	LOGOUT = "/logout",
 	LOGOUT_ALL = "/logout-all",
 }
