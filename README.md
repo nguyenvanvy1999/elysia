@@ -28,6 +28,7 @@ Another technology is:
 - gRPC implements
 - GraphQL implements
 - DB debugger (write debug logs on DB)
+- Add more detail about device: Last active, Last location, IP address, Login method, Login time
 
 ## Getting Started
 
