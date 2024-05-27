@@ -206,6 +206,10 @@ export const RES_KEY = {
 		message: "RES.LOGOUT_SUCCESS",
 		code: "SUC_09",
 	},
+	LOGOUT_ALL: {
+		message: "RES.LOGOUT_ALL_SUCCESS",
+		code: "SUC_10",
+	},
 	SEND_EMAIL_VERIFY_ACCOUNT: {
 		message: "RES.SEND_EMAIL_VERIFY_ACCOUNT_SUCCESS",
 		code: "SUC_11",

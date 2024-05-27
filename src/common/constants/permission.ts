@@ -15,6 +15,7 @@ export enum POLICY_ENTITY {
 	USER = "user",
 	CLIENT_LANGUAGE = "client_language",
 	TRANSLATION = "translation",
+	DEVICE = "device",
 }
 
 export enum POLICY_ACCESS {

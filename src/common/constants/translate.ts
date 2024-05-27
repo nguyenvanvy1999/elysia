@@ -474,4 +474,16 @@ export const translates = [
 		key: RES_KEY.VERIFY_ACCOUNT.message,
 		value: "Xac thuc tai khoan thanh cong",
 	},
+	{
+		lang: LANGUAGE.EN,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.LOGOUT.message,
+		value: "Logout all devices success",
+	},
+	{
+		lang: LANGUAGE.VI,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.LOGOUT.message,
+		value: "Dang xuat tat ca thiet bi thanh cong",
+	},
 ];

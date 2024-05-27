@@ -13,6 +13,7 @@ import {
 	type IJwtPayload,
 	type IRequestDerive,
 	RES_KEY,
+	ROLE_NAME,
 	ROUTES,
 	SETTING_KEY,
 	SW_ROUTE_DETAIL,
@@ -33,7 +34,7 @@ import {
 	sendEmailQueue,
 	sessionRepository,
 } from "src/config";
-import { devices, refreshTokens, users } from "src/db";
+import { devices, refreshTokens, roles, users, usersToRoles } from "src/db";
 import { isAuthenticated } from "src/middleware";
 import {
 	checkUserStatus,
@@ -86,25 +87,36 @@ export const authRoutes = new Elysia<
 					...Object.values(RES_KEY.USERNAME_ALREADY_EXIST),
 				);
 			}
+			const userRole = await db.query.roles.findFirst({
+				where: eq(roles.name, ROLE_NAME.USER),
+				columns: { id: true },
+			});
+			if (!userRole) {
+				throw HttpError.BadRequest(...Object.values(RES_KEY.DISABLE_REGISTER));
+			}
 
-			const user = await db
-				.insert(users)
-				.values({
-					...body,
-					id: idGenerator(DB_ID_PREFIX.USER),
-					...createPassword(password),
-					status: USER_STATUS.INACTIVE,
-					activeAccountAt: null,
-				})
-				.returning({
-					id: users.id,
-					email: users.email,
-					name: users.username,
-					username: users.username,
-					avatarUrl: users.avatarUrl,
-					status: users.status,
-				})
-				.then((res) => res[0]);
+			const user = await db.transaction(async (ct) => {
+				const userId = idGenerator(DB_ID_PREFIX.USER);
+				await ct.insert(usersToRoles).values({ userId, roleId: userRole.id });
+				return await ct
+					.insert(users)
+					.values({
+						...body,
+						id: userId,
+						...createPassword(password),
+						status: USER_STATUS.INACTIVE,
+						activeAccountAt: null,
+					})
+					.returning({
+						id: users.id,
+						email: users.email,
+						name: users.username,
+						username: users.username,
+						avatarUrl: users.avatarUrl,
+						status: users.status,
+					})
+					.then((res) => res[0]);
+			});
 			return resBuild(user, RES_KEY.REGISTER);
 		},
 		{
@@ -292,9 +304,9 @@ export const authRoutes = new Elysia<
 		},
 	)
 	.use(isAuthenticated)
-	.post(
+	.get(
 		AUTH_ROUTES.LOGOUT,
-		async (): Promise<any> => {
+		async ({ sessionId, refreshSessionId }): Promise<any> => {
 			return resBuild(null, RES_KEY.LOGOUT);
 		},
 		{

@@ -12,3 +12,4 @@ export * from "./sendgrid";
 export * from "./twilio";
 export * from "./queue";
 export * from "./bull-board";
+export * from "./role";

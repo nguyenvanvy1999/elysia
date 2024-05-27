@@ -17,7 +17,7 @@ export const ensureSettings = async (): Promise<void> => {
 		throw new Error(
 			`Missing these settings ${missingSettings.join(
 				", ",
-			)} from DB. please run seed to add it`,
+			)} from DB. please run db:seed:setting to add it`,
 		);
 	}
 

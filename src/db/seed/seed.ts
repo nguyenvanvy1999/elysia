@@ -56,7 +56,11 @@ export async function seedAuth(): Promise<void> {
 		const permissionUser = permCreates.filter(
 			(x) =>
 				x.access === POLICY_ACCESS.OWNER &&
-				[POLICY_ENTITY.USER, POLICY_ENTITY.API_KEY].includes(x.entity),
+				[
+					POLICY_ENTITY.USER,
+					POLICY_ENTITY.API_KEY,
+					POLICY_ENTITY.DEVICE,
+				].includes(x.entity),
 		);
 		const roleCreates = [
 			{
