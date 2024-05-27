@@ -142,6 +142,7 @@ export const authRoutes = new Elysia<
 				enbPasswordAttempt === "true" &&
 				user.passwordAttempt >= config.passwordAttempt
 			) {
+				// todo: send email to user
 				throw HttpError.Forbidden(
 					...Object.values(RES_KEY.USER_PASSWORD_ATTEMPT_MAX),
 				);
