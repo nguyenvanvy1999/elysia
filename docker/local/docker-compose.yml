@@ -10,9 +10,7 @@ services:
     networks:
       - elysia-network
     restart: always
-    env_file:
-      - path: ./.env
-        required: true
+    env_file: '.env'
 
   elysia-postgres:
     container_name: elysia-postgres
@@ -34,9 +32,53 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
-    env_file:
-      - path: ./.env
-        required: true
+    env_file: '.env'
+
+  elysia-minio:
+    image: minio/minio:latest
+    container_name: elysia-minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio:/minio
+    env_file: '.env'
+    environment:
+      - MINIO_DEFAULT_BUCKET=${MINIO_BUCKET}
+      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
+      - MINIO_ROOT_USER=${MINIO_ROOT_USER}
+      - MINIO_SITE_REGION=${MINIO_SITE_REGION}
+      - MINIO_ACCESS_KEY=${MINIO_ROOT_USER}
+      - MINIO_SECRET_KEY=${MINIO_ROOT_PASSWORD}
+    command: server /minio --console-address ":9001"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:9000/minio/health/live" ]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    networks:
+      - elysia-network
+
+  create-buckets:
+    image: minio/mc:latest
+    depends_on:
+      elysia-minio:
+        condition: service_healthy
+    volumes:
+      - ./policy.json:/policy.json:ro
+    restart: on-failure
+    env_file: '.env'
+    entrypoint: >
+      /bin/sh -c "
+      /usr/bin/mc config host rm minio;
+      /usr/bin/mc config host add --quiet --api s3v4 minio http://elysia-minio:9000 ${MINIO_ROOT_USER} ${MINIO_ROOT_PASSWORD};
+      /usr/bin/mc rb --force minio/${MINIO_BUCKET}/;
+      /usr/bin/mc mb --quiet minio/${MINIO_BUCKET}/;
+      /usr/bin/mc anonymous set-json ./policy.json minio/${MINIO_BUCKET};
+      exit 0;
+      "
+    networks:
+      - elysia-network
 
 networks:
   elysia-network:
@@ -49,3 +91,4 @@ networks:
         - subnet: 172.23.0.0/16
 volumes:
   postgres:
+  minio:
