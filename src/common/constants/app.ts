@@ -15,6 +15,7 @@ export const swaggerOptions = {
 		app: { name: "App", description: "General endpoints" },
 		user: { name: "User", description: "User endpoints" },
 		setting: { name: "Setting", description: "Setting endpoints" },
+		device: { name: "Device", description: "Device management endpoints" },
 	},
 };
 
@@ -205,10 +206,6 @@ export const RES_KEY = {
 		message: "RES.LOGOUT_SUCCESS",
 		code: "SUC_09",
 	},
-	LOGIN_NEW_DEVICE: {
-		message: "RES.LOGIN_NEW_DEVICE_SUCCESS",
-		code: "SUC_10",
-	},
 	SEND_EMAIL_VERIFY_ACCOUNT: {
 		message: "RES.SEND_EMAIL_VERIFY_ACCOUNT_SUCCESS",
 		code: "SUC_11",
@@ -275,6 +272,7 @@ export enum ROUTES {
 	AUTH_V1 = "/api/v1/auth",
 	USER_V1 = "/api/v1/user",
 	SETTING_V1 = "/api/v1/setting",
+	DEVICE_V1 = "/api/v1/device",
 }
 
 export enum AUTH_ROUTES {

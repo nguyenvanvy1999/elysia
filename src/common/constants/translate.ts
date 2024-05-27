@@ -452,18 +452,6 @@ export const translates = [
 	{
 		lang: LANGUAGE.EN,
 		ns: TRANSLATION_NS.BACKEND,
-		key: RES_KEY.LOGIN_NEW_DEVICE.message,
-		value: "Login on new device success. Check email to verify it",
-	},
-	{
-		lang: LANGUAGE.VI,
-		ns: TRANSLATION_NS.BACKEND,
-		key: RES_KEY.LOGIN_NEW_DEVICE.message,
-		value: "Dang nhap tren thiet bi moi thanh cong. Kiem tra email de xac thuc",
-	},
-	{
-		lang: LANGUAGE.EN,
-		ns: TRANSLATION_NS.BACKEND,
 		key: RES_KEY.SEND_EMAIL_VERIFY_ACCOUNT.message,
 		value: "Send email verify account success. Check email to verify it",
 	},

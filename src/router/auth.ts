@@ -139,7 +139,7 @@ export const authRoutes = new Elysia<
 			const [enbPasswordExpired, enbLoginNewDeviceCheck, enbPasswordAttempt] =
 				await redisClient.mGet([
 					SETTING_KEY.ENB_PASSWORD_EXPIRED,
-					SETTING_KEY.ENB_LOGIN_NEW_DEVICE_CHECK,
+					SETTING_KEY.ENB_LOGIN_NEW_DEVICE,
 					SETTING_KEY.ENB_PASSWORD_ATTEMPT,
 				]);
 
@@ -184,31 +184,6 @@ export const authRoutes = new Elysia<
 				);
 			}
 
-			if (enbLoginNewDeviceCheck === "true") {
-				const ua = typeof userAgent === "string" ? userAgent : userAgent.ua;
-				const existDevice = await db.query.devices.findFirst({
-					where: and(eq(devices.ua, ua), eq(devices.userId, user.id)),
-					columns: { userId: true, ua: true },
-				});
-				if (!existDevice) {
-					// todo: implement new device login here
-					const jobId = idGenerator(BULL_QUEUE.SEND_MAIL, BULL_JOB_ID_LENGTH);
-					const newToken = "";
-					const queueData = {
-						email,
-						emailType: EMAIL_TYPE.LOGIN_NEW_DEVICE,
-						data: {
-							url: encodeURI(
-								`${config.appEndpoint}${ROUTES.AUTH_V1}${AUTH_ROUTES.CONFIRM_NEW_DEVICE}?token=${newToken}`,
-							),
-						},
-					} satisfies IEmailLoginNewDevice;
-					await sendEmailQueue.add(jobId, queueData, { jobId });
-
-					return resBuild(null, RES_KEY.LOGIN_NEW_DEVICE);
-				}
-			}
-
 			const accessSessionId: string = idGenerator(DB_ID_PREFIX.SESSION);
 			const refreshSessionId: string = randomUUID();
 			let accessToken: string = createAccessToken({
@@ -242,12 +217,54 @@ export const authRoutes = new Elysia<
 				sessionRepository.save(accessSessionId, {
 					id: accessSessionId,
 					userId: user.id,
+					refreshSessionId,
 				}),
 			]);
 			await sessionRepository.expireAt(
 				accessSessionId,
 				new Date(Date.now() + ms(config.jwtAccessTokenExpired)),
 			);
+
+			if (enbLoginNewDeviceCheck === "true" && userAgent) {
+				const existDevice = await db.query.devices.findFirst({
+					where: and(eq(devices.ua, userAgent.ua), eq(devices.userId, user.id)),
+					columns: { userId: true, ua: true },
+				});
+				if (!existDevice) {
+					const jobId = idGenerator(BULL_QUEUE.SEND_MAIL, BULL_JOB_ID_LENGTH);
+					const queueData = {
+						email,
+						emailType: EMAIL_TYPE.LOGIN_NEW_DEVICE,
+						data: {
+							ipAddress: typeof ip === "string" ? ip : ip?.address,
+							deviceType: userAgent.device.type,
+							deviceVendor: userAgent.device.vendor,
+							deviceModel: userAgent.device.model,
+							os: userAgent.os.name,
+							osVersion: userAgent.os.version,
+							browserName: userAgent.browser.name,
+							browserVersion: userAgent.browser.version,
+						},
+					} satisfies IEmailLoginNewDevice;
+					await Promise.allSettled([
+						sendEmailQueue.add(jobId, queueData, { jobId }),
+						db.insert(devices).values({
+							id: idGenerator(DB_ID_PREFIX.DEVICE),
+							userId: user.id,
+							ua: userAgent.ua,
+							...userAgent.device,
+							os: userAgent.os.name,
+							osVersion: userAgent.os.version,
+							browserName: userAgent.browser.name,
+							browserVersion: userAgent.browser.version,
+							engineName: userAgent.engine.name,
+							engineVersion: userAgent.engine.version,
+							cpuArchitecture: userAgent.cpu.architecture,
+							sessionId: refreshSessionId,
+						}),
+					]);
+				}
+			}
 
 			return resBuild(
 				{

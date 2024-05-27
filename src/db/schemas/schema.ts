@@ -197,12 +197,18 @@ export const devices = pgTable(
 	{
 		id: varchar("id", { length: 32 }).notNull().primaryKey(),
 		userId: varchar("user_id", { length: 32 }).notNull(),
+		sessionId: varchar("session_id"),
 		type: varchar("type"),
 		vendor: varchar("vendor"),
 		model: varchar("model"),
 		os: varchar("os"),
 		osVersion: varchar("os_version"),
 		ua: varchar("ua").notNull(),
+		browserName: varchar("browser_name"),
+		browserVersion: varchar("browser_version"),
+		engineName: varchar("engine_name"),
+		engineVersion: varchar("engine_version"),
+		cpuArchitecture: varchar("cpu_architecture"),
 	},
 	(c) => ({
 		userIdIdx: index("device_user_idx").on(c.userId),

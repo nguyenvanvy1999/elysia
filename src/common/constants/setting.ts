@@ -11,5 +11,5 @@ export enum SETTING_KEY {
 	ENB_REGISTER = "enb_register",
 	ENB_PASSWORD_EXPIRED = "enb_password_expired",
 	ENB_PASSWORD_ATTEMPT = "enb_password_attempt",
-	ENB_LOGIN_NEW_DEVICE_CHECK = "enb_login_new_device_check",
+	ENB_LOGIN_NEW_DEVICE = "enb_login_new_device",
 }

@@ -119,7 +119,6 @@ export const requestHeader =
 					id: set.headers[idHeader],
 					timezone: set.headers[timezoneHeader],
 					timestamp: Number.parseInt(set.headers[timestampHeader], 10),
-					userAgent: set.headers[userAgentHeader],
 					version: set.headers[versionHeader],
 					repoVersion: set.headers[repoVersionHeader],
 					customLanguage: set.headers[customLanguageHeader],

@@ -41,7 +41,7 @@ export interface IRequestDerive extends Record<string, unknown> {
 	id: string;
 	timezone: string;
 	timestamp: number;
-	userAgent: IResult | string;
+	userAgent?: IResult;
 	version: string;
 	repoVersion: string;
 	customLanguage: string;

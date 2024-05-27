@@ -27,7 +27,6 @@ export interface IEmailWelcome extends ISendEmailJob {
 export interface IEmailLoginNewDevice extends ISendEmailJob {
 	emailType: EMAIL_TYPE.LOGIN_NEW_DEVICE;
 	data: {
-		url: string;
 		ipAddress?: string;
 		deviceType?: string;
 		deviceVendor?: string;

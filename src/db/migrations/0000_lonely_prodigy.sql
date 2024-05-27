@@ -13,12 +13,18 @@ END $$;
 CREATE TABLE IF NOT EXISTS "device" (
 	"id" varchar(32) PRIMARY KEY NOT NULL,
 	"user_id" varchar(32) NOT NULL,
+	"session_id" varchar,
 	"type" varchar,
 	"vendor" varchar,
 	"model" varchar,
 	"os" varchar,
 	"os_version" varchar,
-	"ua" varchar NOT NULL
+	"ua" varchar NOT NULL,
+	"browser_name" varchar,
+	"browser_version" varchar,
+	"engine_name" varchar,
+	"engine_version" varchar,
+	"cpu_architecture" varchar
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "permission" (

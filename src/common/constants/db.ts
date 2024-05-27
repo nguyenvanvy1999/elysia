@@ -24,4 +24,5 @@ export enum DB_ID_PREFIX {
 	REFRESH_TOKEN = "rt",
 	SETTING = "stg",
 	SESSION = "ss",
+	DEVICE = "dv",
 }

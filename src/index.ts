@@ -18,7 +18,12 @@ import {
 	sendEmailQueue,
 	swaggerConfig,
 } from "src/config";
-import { authRoutes, settingRoutes, userRoutes } from "src/router";
+import {
+	authRoutes,
+	deviceRoutes,
+	settingRoutes,
+	userRoutes,
+} from "src/router";
 import { gracefulShutdown } from "src/util";
 
 try {
@@ -82,7 +87,8 @@ try {
 		.onStop(gracefulShutdown)
 		.use(authRoutes)
 		.use(userRoutes)
-		.use(settingRoutes);
+		.use(settingRoutes)
+		.use(deviceRoutes);
 	process.on("SIGINT", app.stop);
 	process.on("SIGTERM", app.stop);
 	app.listen({ port: config.appPort, maxRequestBodySize: 1_000_000_000 });
