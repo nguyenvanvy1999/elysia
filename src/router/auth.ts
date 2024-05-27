@@ -189,6 +189,7 @@ export const authRoutes = new Elysia<
 			let accessToken: string = createAccessToken({
 				loginDate: new Date(),
 				sessionId: accessSessionId,
+				refreshSessionId,
 			} satisfies IJwtPayload);
 			let refreshToken: string = createRefreshToken({
 				loginDate: new Date(),
@@ -228,7 +229,7 @@ export const authRoutes = new Elysia<
 			if (enbLoginNewDeviceCheck === "true" && userAgent) {
 				const existDevice = await db.query.devices.findFirst({
 					where: and(eq(devices.ua, userAgent.ua), eq(devices.userId, user.id)),
-					columns: { userId: true, ua: true },
+					columns: { userId: true, ua: true, id: true },
 				});
 				if (!existDevice) {
 					const jobId = idGenerator(BULL_QUEUE.SEND_MAIL, BULL_JOB_ID_LENGTH);
@@ -263,6 +264,11 @@ export const authRoutes = new Elysia<
 							sessionId: refreshSessionId,
 						}),
 					]);
+				} else {
+					await db
+						.update(devices)
+						.set({ sessionId: refreshSessionId })
+						.where(eq(devices.id, existDevice.id));
 				}
 			}
 

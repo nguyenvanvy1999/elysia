@@ -1,6 +1,6 @@
 import { eq, sql } from "drizzle-orm";
 import { RES_KEY, USER_STATUS } from "src/common";
-import { HttpError, config, db } from "src/config";
+import { HttpError, db } from "src/config";
 import { type UserWithRoles, users } from "src/db";
 import { increment } from "src/util";
 
@@ -16,7 +16,7 @@ export const increasePasswordAttempt = async (
 export const resetPasswordAttempt = async (userId: string): Promise<void> => {
 	await db
 		.update(users)
-		.set({ passwordAttempt: config.passwordAttempt })
+		.set({ passwordAttempt: 0 })
 		.where(eq(users.id, userId));
 };
 

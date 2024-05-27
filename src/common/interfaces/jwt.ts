@@ -13,6 +13,7 @@ export interface IJwtVerifyOptions {
 export interface IJwtPayload extends JwtPayload {
 	loginDate: Date;
 	sessionId: string;
+	refreshSessionId?: string;
 }
 
 export type ISession = Entity & {
