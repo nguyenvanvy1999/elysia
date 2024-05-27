@@ -8,8 +8,10 @@ import {
 	aes256Encrypt,
 	createAccessToken,
 	createActiveAccountToken,
+	createDeviceToken,
 	createRefreshToken,
 	decryptActiveAccountToken,
+	decryptDeviceToken,
 	decryptSetting,
 	encryptSetting,
 	jwtEncrypt,
@@ -257,6 +259,37 @@ describe("Util: Token testing", (): void => {
 			const encrypted: string = encryptSetting(data);
 			const res: string = decryptSetting<string>(encrypted);
 			expect(res).toMatchObject(data);
+		});
+	});
+
+	describe("createDeviceToken", (): void => {
+		it("Should return device token", (): void => {
+			const deviceRootId: string = "deviceRootId";
+			const userRootId: string = "userRootId";
+			const encrypted: string = createDeviceToken(userRootId, deviceRootId);
+			expect(encrypted).toBeString();
+			const { userId, expiredIn, deviceId } = decryptDeviceToken(encrypted);
+			expect(userId).toBeString();
+			expect(userId).toBe(userRootId);
+			expect(deviceId).toBeString();
+			expect(deviceId).toBe(deviceRootId);
+			expect(expiredIn).toBeNumber();
+			expect(expiredIn).toBeGreaterThan(Date.now());
+		});
+	});
+
+	describe("decryptDeviceToken", (): void => {
+		it("Should decrypt device token", (): void => {
+			const deviceRootId: string = "deviceRootId";
+			const userRootId: string = "userRootId";
+			const encrypted: string = createDeviceToken(userRootId, deviceRootId);
+			const { userId, expiredIn, deviceId } = decryptDeviceToken(encrypted);
+			expect(userId).toBeString();
+			expect(userId).toBe(userRootId);
+			expect(deviceId).toBeString();
+			expect(deviceId).toBe(deviceRootId);
+			expect(expiredIn).toBeNumber();
+			expect(expiredIn).toBeGreaterThan(Date.now());
 		});
 	});
 });

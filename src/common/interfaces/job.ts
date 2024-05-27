@@ -38,6 +38,22 @@ export interface IEmailLoginNewDevice extends ISendEmailJob {
 	};
 }
 
+export interface IEmailVerifyLoginNewDevice extends ISendEmailJob {
+	emailType: EMAIL_TYPE.VERIFY_LOGIN_NEW_DEVICE;
+	data: {
+		url: string;
+		ipAddress?: string;
+		deviceType?: string;
+		deviceVendor?: string;
+		deviceModel?: string;
+		os?: string;
+		osVersion?: string;
+		browserName?: string;
+		browserVersion?: string;
+	};
+}
+
 export interface IEmailWarningPasswordAttempt extends ISendEmailJob {
 	emailType: EMAIL_TYPE.WARNING_PASSWORD_ATTEMPT;
+	data: Record<string, any>;
 }

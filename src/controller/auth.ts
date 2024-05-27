@@ -4,15 +4,18 @@ import { and, eq, or } from "drizzle-orm";
 import type { Static } from "elysia";
 import ms from "ms";
 import {
+	AUTH_ROUTES,
 	BULL_JOB_ID_LENGTH,
 	BULL_QUEUE,
 	DB_ID_PREFIX,
 	EMAIL_TYPE,
 	type IEmailLoginNewDevice,
+	type IEmailVerifyLoginNewDevice,
 	type IEmailWarningPasswordAttempt,
 	type IJwtPayload,
 	RES_KEY,
 	ROLE_NAME,
+	ROUTES,
 	SETTING_KEY,
 	USER_STATUS,
 	type loginBody,
@@ -40,6 +43,7 @@ import {
 	checkPasswordExpired,
 	comparePassword,
 	createAccessToken,
+	createDeviceToken,
 	createPassword,
 	createRefreshToken,
 	idGenerator,
@@ -98,7 +102,7 @@ export const authController: IAuthController = {
 			columns: { id: true },
 		});
 		if (!userRole) {
-			throw HttpError.BadRequest(...Object.values(RES_KEY.DISABLE_REGISTER));
+			throw HttpError.Internal(...Object.values(RES_KEY.INTERNAL_SERVER_ERROR));
 		}
 
 		const user = await db.transaction(async (ct) => {
@@ -158,6 +162,7 @@ export const authController: IAuthController = {
 			const queueData = {
 				email,
 				emailType: EMAIL_TYPE.WARNING_PASSWORD_ATTEMPT,
+				data: {},
 			} satisfies IEmailWarningPasswordAttempt;
 			await sendEmailQueue.add(jobId, queueData, { jobId });
 
@@ -231,50 +236,89 @@ export const authController: IAuthController = {
 			new Date(Date.now() + ms(config.jwtAccessTokenExpired)),
 		);
 
-		if (enbLoginNewDeviceCheck === "true" && userAgent) {
-			const existDevice = await db.query.devices.findFirst({
-				where: and(eq(devices.ua, userAgent.ua), eq(devices.userId, user.id)),
-				columns: { userId: true, ua: true, id: true },
-			});
-			if (!existDevice) {
-				const jobId = idGenerator(BULL_QUEUE.SEND_MAIL, BULL_JOB_ID_LENGTH);
+		if (!userAgent) {
+			throw HttpError.BadRequest(
+				...Object.values(RES_KEY.INTERNAL_SERVER_ERROR),
+			);
+		}
+
+		const existDevice = await db.query.devices.findFirst({
+			where: and(eq(devices.ua, userAgent.ua), eq(devices.userId, user.id)),
+			columns: { userId: true, ua: true, id: true },
+		});
+		if (!existDevice) {
+			const sendEmailData = {
+				ipAddress: typeof ip === "string" ? ip : ip?.address,
+				deviceType: userAgent.device.type,
+				deviceVendor: userAgent.device.vendor,
+				deviceModel: userAgent.device.model,
+				os: userAgent.os.name,
+				osVersion: userAgent.os.version,
+				browserName: userAgent.browser.name,
+				browserVersion: userAgent.browser.version,
+			};
+			const jobId = idGenerator(BULL_QUEUE.SEND_MAIL, BULL_JOB_ID_LENGTH);
+			const deviceId = idGenerator(DB_ID_PREFIX.DEVICE);
+			const deviceData = {
+				id: deviceId,
+				ua: userAgent.ua,
+				...userAgent.device,
+				os: userAgent.os.name,
+				osVersion: userAgent.os.version,
+				browserName: userAgent.browser.name,
+				browserVersion: userAgent.browser.version,
+				engineName: userAgent.engine.name,
+				engineVersion: userAgent.engine.version,
+				cpuArchitecture: userAgent.cpu.architecture,
+			};
+
+			// new device and enable verify new device login
+			if (enbLoginNewDeviceCheck === "true") {
 				const queueData = {
 					email,
-					emailType: EMAIL_TYPE.LOGIN_NEW_DEVICE,
+					emailType: EMAIL_TYPE.VERIFY_LOGIN_NEW_DEVICE,
 					data: {
-						ipAddress: typeof ip === "string" ? ip : ip?.address,
-						deviceType: userAgent.device.type,
-						deviceVendor: userAgent.device.vendor,
-						deviceModel: userAgent.device.model,
-						os: userAgent.os.name,
-						osVersion: userAgent.os.version,
-						browserName: userAgent.browser.name,
-						browserVersion: userAgent.browser.version,
+						url: encodeURI(
+							`${config.appEndpoint}${ROUTES.AUTH_V1}${
+								AUTH_ROUTES.CONFIRM_DEVICE
+							}?token=${createDeviceToken(user.id, deviceId)}`,
+						),
+						...sendEmailData,
 					},
-				} satisfies IEmailLoginNewDevice;
+				} satisfies IEmailVerifyLoginNewDevice;
 				await Promise.allSettled([
 					sendEmailQueue.add(jobId, queueData, { jobId }),
-					db.insert(devices).values({
-						id: idGenerator(DB_ID_PREFIX.DEVICE),
-						userId: user.id,
-						ua: userAgent.ua,
-						...userAgent.device,
-						os: userAgent.os.name,
-						osVersion: userAgent.os.version,
-						browserName: userAgent.browser.name,
-						browserVersion: userAgent.browser.version,
-						engineName: userAgent.engine.name,
-						engineVersion: userAgent.engine.version,
-						cpuArchitecture: userAgent.cpu.architecture,
-						sessionId: refreshSessionId,
-					}),
+					db.insert(devices).values(deviceData),
 				]);
-			} else {
-				await db
-					.update(devices)
-					.set({ sessionId: refreshSessionId })
-					.where(eq(devices.id, existDevice.id));
+				return resBuild(
+					{
+						accessToken: null,
+						refreshToken: null,
+					},
+					RES_KEY.LOGIN_NEW_DEVICE,
+				);
 			}
+
+			// new device and disable verify new device login
+			const queueData = {
+				email,
+				emailType: EMAIL_TYPE.LOGIN_NEW_DEVICE,
+				data: sendEmailData,
+			} satisfies IEmailLoginNewDevice;
+			await Promise.allSettled([
+				sendEmailQueue.add(jobId, queueData, { jobId }),
+				db.insert(devices).values({
+					userId: user.id,
+					...deviceData,
+					sessionId: refreshSessionId,
+				}),
+			]);
+		} else {
+			// old device
+			await db
+				.update(devices)
+				.set({ sessionId: refreshSessionId })
+				.where(eq(devices.id, existDevice.id));
 		}
 
 		return resBuild(

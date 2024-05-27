@@ -1,5 +1,5 @@
 {
-  "id": "fa4c2e27-ab89-420a-ab15-41afcb4aebca",
+  "id": "0cdfe225-7a6f-473a-9ee5-84ed44423727",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "6",
   "dialect": "postgresql",
@@ -18,7 +18,7 @@
           "name": "user_id",
           "type": "varchar(32)",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "session_id": {
           "name": "session_id",
@@ -91,6 +91,13 @@
           "type": "varchar",
           "primaryKey": false,
           "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
         }
       },
       "indexes": {
@@ -98,6 +105,13 @@
           "name": "device_user_idx",
           "columns": [
             "user_id"
+          ],
+          "isUnique": false
+        },
+        "device_ua_idx": {
+          "name": "device_ua_idx",
+          "columns": [
+            "ua"
           ],
           "isUnique": false
         }

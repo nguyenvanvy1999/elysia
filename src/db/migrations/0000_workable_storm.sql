@@ -12,7 +12,7 @@ END $$;
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "device" (
 	"id" varchar(32) PRIMARY KEY NOT NULL,
-	"user_id" varchar(32) NOT NULL,
+	"user_id" varchar(32),
 	"session_id" varchar,
 	"type" varchar,
 	"vendor" varchar,
@@ -24,7 +24,8 @@ CREATE TABLE IF NOT EXISTS "device" (
 	"browser_version" varchar,
 	"engine_name" varchar,
 	"engine_version" varchar,
-	"cpu_architecture" varchar
+	"cpu_architecture" varchar,
+	"created_at" timestamp with time zone DEFAULT now()
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "permission" (
@@ -129,6 +130,7 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "device_user_idx" ON "device" ("user_id");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "device_ua_idx" ON "device" ("ua");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "refresh_token_user_idx" ON "refresh_token" ("user_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "refresh_token_token_idx" ON "refresh_token" ("token");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "setting_key_idx" ON "setting" ("key");--> statement-breakpoint

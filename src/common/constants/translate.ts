@@ -486,4 +486,16 @@ export const translates = [
 		key: RES_KEY.LOGOUT.message,
 		value: "Dang xuat tat ca thiet bi thanh cong",
 	},
+	{
+		lang: LANGUAGE.EN,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.LOGIN_NEW_DEVICE.message,
+		value: "Login on new device. Please verify on email before login",
+	},
+	{
+		lang: LANGUAGE.VI,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.LOGIN_NEW_DEVICE.message,
+		value: "Dang nhap tren thiet bi moi. Vui long xac nhan tu email",
+	},
 ];

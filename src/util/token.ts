@@ -129,3 +129,34 @@ export const encryptSetting = (setting: any): string => {
 		config.settingEncryptIv,
 	);
 };
+
+export const createDeviceToken = (userId: string, deviceId: string): string => {
+	return aes256Encrypt(
+		{
+			userId,
+			deviceId,
+			expiredIn: forwardInMilliSeconds(ms(config.deviceTokenExpired)).getTime(),
+		},
+		config.deviceTokenEncryptKey,
+		config.deviceTokenEncryptIv,
+	);
+};
+
+export const decryptDeviceToken = (
+	token: string,
+): {
+	userId: string;
+	expiredIn: number;
+	deviceId: string;
+} => {
+	const decrypt: any = aes256Decrypt(
+		token,
+		config.deviceTokenEncryptKey,
+		config.deviceTokenEncryptIv,
+	);
+	return {
+		userId: decrypt?.userId,
+		expiredIn: Number.parseInt(decrypt?.expiredIn),
+		deviceId: decrypt?.deviceId,
+	};
+};

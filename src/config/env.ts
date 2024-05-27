@@ -135,6 +135,14 @@ const envVariables = z
 		TWILIO_AUTH_TOKEN: z.string(),
 		TWILIO_VERIFY_SID: z.string(),
 		TWILIO_FROM: z.string(),
+
+		// device token config
+		DEVICE_TOKEN_ENCRYPT_KEY: z.string(),
+		DEVICE_TOKEN_ENCRYPT_IV: z.string(),
+		DEVICE_TOKEN_EXPIRED: z
+			.string()
+			.regex(TIME_REGEX)
+			.default(DEFAULT.DEVICE_TOKEN_EXPIRED),
 	})
 	.transform((input) => ({
 		...camelize(input),

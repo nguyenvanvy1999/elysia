@@ -218,6 +218,10 @@ export const RES_KEY = {
 		message: "RES.VERIFY_ACCOUNT_SUCCESS",
 		code: "SUC_12",
 	},
+	LOGIN_NEW_DEVICE: {
+		message: "RES.LOGIN_NEW_DEVICE_SUCCESS",
+		code: "SUC_13",
+	},
 };
 
 export const SW_ROUTE_DETAIL = {
@@ -288,6 +292,7 @@ export enum AUTH_ROUTES {
 	REGISTER = "/register",
 	LOGOUT = "/logout",
 	LOGOUT_ALL = "/logout-all",
+	CONFIRM_DEVICE = "/confirm-device",
 }
 
 export enum USER_ROUTES {
@@ -336,6 +341,7 @@ export const DEFAULT = {
 	SWAGGER_UI_PATH: "/swagger",
 	BULL_BOARD_PATH: "/queues",
 	ACTIVE_ACCOUNT_TOKEN_EXPIRED: "5m",
+	DEVICE_TOKEN_EXPIRED: "5m",
 	LOG_LEVEL: "trace",
 	PAGING_LIMIT: 10,
 	PAGING_OFFSET: 0,
@@ -377,4 +383,5 @@ export enum EMAIL_TYPE {
 	WELCOME = "welcome",
 	LOGIN_NEW_DEVICE = "login-new-device",
 	WARNING_PASSWORD_ATTEMPT = "warning-password-attempt",
+	VERIFY_LOGIN_NEW_DEVICE = "verify-login-new-device",
 }

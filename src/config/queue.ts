@@ -4,6 +4,9 @@ import {
 	BULL_QUEUE_JOB_REMOVAL,
 	EMAIL_TYPE,
 	type IEmailActiveAccount,
+	type IEmailLoginNewDevice,
+	type IEmailVerifyLoginNewDevice,
+	type IEmailWarningPasswordAttempt,
 	type IEmailWelcome,
 } from "src/common";
 import { config } from "src/config/env";
@@ -20,7 +23,15 @@ export const sendEmailQueue = new Queue(BULL_QUEUE.SEND_MAIL, {
 
 export const sendEmailWorker = new Worker(
 	BULL_QUEUE.SEND_MAIL,
-	async (job: Job<IEmailActiveAccount | IEmailWelcome>) => {
+	async (
+		job: Job<
+			| IEmailActiveAccount
+			| IEmailWelcome
+			| IEmailLoginNewDevice
+			| IEmailVerifyLoginNewDevice
+			| IEmailWarningPasswordAttempt
+		>,
+	) => {
 		queueLogger.info(
 			`Send email job with jobId: ${job.id}, job data ${JSON.stringify(
 				job.data,
@@ -34,6 +45,18 @@ export const sendEmailWorker = new Worker(
 
 			case EMAIL_TYPE.WELCOME:
 				await emailService.sendEmail(job.data, "Welcome");
+				break;
+
+			case EMAIL_TYPE.LOGIN_NEW_DEVICE:
+				await emailService.sendEmail(job.data, "Have new device login");
+				break;
+
+			case EMAIL_TYPE.WARNING_PASSWORD_ATTEMPT:
+				await emailService.sendEmail(job.data, "Have abnormal login");
+				break;
+
+			case EMAIL_TYPE.VERIFY_LOGIN_NEW_DEVICE:
+				await emailService.sendEmail(job.data, "Have new device login");
 				break;
 		}
 	},

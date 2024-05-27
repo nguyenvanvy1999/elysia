@@ -196,7 +196,7 @@ export const devices = pgTable(
 	DB_TABLE_NAME.DEVICE,
 	{
 		id: varchar("id", { length: 32 }).notNull().primaryKey(),
-		userId: varchar("user_id", { length: 32 }).notNull(),
+		userId: varchar("user_id", { length: 32 }),
 		sessionId: varchar("session_id"),
 		type: varchar("type"),
 		vendor: varchar("vendor"),
@@ -209,6 +209,7 @@ export const devices = pgTable(
 		engineName: varchar("engine_name"),
 		engineVersion: varchar("engine_version"),
 		cpuArchitecture: varchar("cpu_architecture"),
+		createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
 	},
 	(c) => ({
 		userIdIdx: index("device_user_idx").on(c.userId),
