@@ -39,6 +39,7 @@ import { isAuthenticated } from "src/middleware";
 import {
 	checkUserStatus,
 	increasePasswordAttempt,
+	removeSessionById,
 	resetPasswordAttempt,
 } from "src/service";
 import {
@@ -307,6 +308,16 @@ export const authRoutes = new Elysia<
 	.get(
 		AUTH_ROUTES.LOGOUT,
 		async ({ sessionId, refreshSessionId }): Promise<any> => {
+			await Promise.allSettled([
+				removeSessionById(sessionId),
+				db
+					.delete(refreshTokens)
+					.where(eq(refreshTokens.token, refreshSessionId ?? "")),
+				db
+					.update(devices)
+					.set({ sessionId: null })
+					.where(eq(devices.sessionId, refreshSessionId ?? "")),
+			]);
 			return resBuild(null, RES_KEY.LOGOUT);
 		},
 		{

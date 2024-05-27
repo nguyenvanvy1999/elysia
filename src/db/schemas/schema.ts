@@ -212,6 +212,7 @@ export const devices = pgTable(
 	},
 	(c) => ({
 		userIdIdx: index("device_user_idx").on(c.userId),
+		uaIdx: index("device_ua_idx").on(c.ua),
 	}),
 );
 
