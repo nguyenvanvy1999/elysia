@@ -230,6 +230,10 @@ export const RES_KEY = {
 		message: "RES.CONFIRM_DEVICE_SUCCESS",
 		code: "SUC_14",
 	},
+	LIST_DEVICES: {
+		message: "RES.LIST_DEVICES_SUCCESS",
+		code: "SUC_15",
+	},
 };
 
 export const SW_ROUTE_DETAIL = {
@@ -289,6 +293,12 @@ export const SW_ROUTE_DETAIL = {
 	UPDATE_SETTING: {
 		description: "Update setting with id",
 		summary: "Update setting",
+	},
+
+	// device APIs
+	LIST_DEVICES: {
+		description: "Get list devices",
+		summary: "List devices",
 	},
 };
 

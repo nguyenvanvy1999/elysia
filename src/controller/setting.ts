@@ -2,7 +2,6 @@ import { asc, eq, ilike } from "drizzle-orm";
 import type { Static } from "elysia";
 import {
 	DB_ID_PREFIX,
-	DEFAULT,
 	RES_KEY,
 	type createSettingBody,
 	type listSettingQuery,
@@ -89,14 +88,16 @@ export const settingController: ISettingController = {
 	},
 
 	getList: async ({ query: { limit, offset, search } }): Promise<any> => {
+		limit = getLimit(limit);
+		offset = getOffset(offset);
 		const [data, count] = await Promise.all([
 			db
 				.select()
 				.from(settings)
 				.where(search?.length ? ilike(settings.key, `%${search}%`) : undefined)
 				.orderBy(asc(settings.id))
-				.limit(getLimit(limit))
-				.offset(getOffset(offset)),
+				.limit(limit)
+				.offset(offset),
 			db
 				.select({ count: customCount() })
 				.from(settings)
@@ -108,8 +109,8 @@ export const settingController: ISettingController = {
 			RES_KEY.LIST_SETTING,
 			{
 				count: getCount(count),
-				offset: offset ?? DEFAULT.PAGING_OFFSET,
-				limit: limit ?? DEFAULT.PAGING_LIMIT,
+				offset,
+				limit,
 			},
 		);
 	},

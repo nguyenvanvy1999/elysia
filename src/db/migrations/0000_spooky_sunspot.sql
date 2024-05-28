@@ -25,7 +25,12 @@ CREATE TABLE IF NOT EXISTS "device" (
 	"engine_name" varchar,
 	"engine_version" varchar,
 	"cpu_architecture" varchar,
-	"created_at" timestamp with time zone DEFAULT now()
+	"created_at" timestamp with time zone DEFAULT now(),
+	"login_at" timestamp,
+	"logout_at" timestamp,
+	"location" jsonb,
+	"login_method" varchar,
+	"address" varchar
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "permission" (

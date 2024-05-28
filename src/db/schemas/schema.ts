@@ -3,6 +3,7 @@ import {
 	boolean,
 	index,
 	integer,
+	jsonb,
 	pgEnum,
 	pgTable,
 	primaryKey,
@@ -11,7 +12,7 @@ import {
 	unique,
 	varchar,
 } from "drizzle-orm/pg-core";
-import { DB_TABLE_NAME, USER_STATUS } from "src/common";
+import { DB_TABLE_NAME, type Location, USER_STATUS } from "src/common";
 
 export const userStatusEnum = pgEnum("user_status_enum", [
 	"active",
@@ -210,6 +211,11 @@ export const devices = pgTable(
 		engineVersion: varchar("engine_version"),
 		cpuArchitecture: varchar("cpu_architecture"),
 		createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+		loginAt: timestamp("login_at"),
+		logoutAt: timestamp("logout_at"),
+		location: jsonb("location").$type<Location>(),
+		loginMethod: varchar("login_method"),
+		address: varchar("address"),
 	},
 	(c) => ({
 		userIdIdx: index("device_user_idx").on(c.userId),
