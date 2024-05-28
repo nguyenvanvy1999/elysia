@@ -1,5 +1,5 @@
 {
-  "id": "7a1cf5dc-c912-420e-89c6-72f5839cee28",
+  "id": "2eb0fcca-1ae1-47d9-b51f-d339dbac365a",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "6",
   "dialect": "postgresql",
@@ -125,6 +125,12 @@
         },
         "address": {
           "name": "address",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ip_address": {
+          "name": "ip_address",
           "type": "varchar",
           "primaryKey": false,
           "notNull": false

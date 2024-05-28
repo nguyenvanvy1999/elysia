@@ -30,7 +30,8 @@ CREATE TABLE IF NOT EXISTS "device" (
 	"logout_at" timestamp,
 	"location" jsonb,
 	"login_method" varchar,
-	"address" varchar
+	"address" varchar,
+	"ip_address" varchar
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "permission" (

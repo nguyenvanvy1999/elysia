@@ -216,6 +216,7 @@ export const devices = pgTable(
 		location: jsonb("location").$type<Location>(),
 		loginMethod: varchar("login_method"),
 		address: varchar("address"),
+		ipAddress: varchar("ip_address"),
 	},
 	(c) => ({
 		userIdIdx: index("device_user_idx").on(c.userId),

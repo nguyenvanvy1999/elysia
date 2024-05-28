@@ -277,6 +277,7 @@ export const authController: IAuthController = {
 				engineName: userAgent.engine.name,
 				engineVersion: userAgent.engine.version,
 				cpuArchitecture: userAgent.cpu.architecture,
+				ipAddress: typeof ip === "string" ? ip : ip?.address,
 			};
 
 			// new device and enable verify new device login
