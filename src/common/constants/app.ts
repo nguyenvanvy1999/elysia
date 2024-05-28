@@ -331,6 +331,10 @@ export enum SETTING_ROUTES {
 	UPDATE = "/:id",
 }
 
+export enum DEVICE_ROUTES {
+	LIST = "/list",
+}
+
 export enum APP_ENV {
 	DEVELOPMENT = "development",
 	PRODUCTION = "production",
@@ -406,4 +410,8 @@ export enum EMAIL_TYPE {
 	LOGIN_NEW_DEVICE = "login-new-device",
 	WARNING_PASSWORD_ATTEMPT = "warning-password-attempt",
 	VERIFY_LOGIN_NEW_DEVICE = "verify-login-new-device",
+}
+
+export enum LOGIN_METHOD {
+	PASSWORD = "password",
 }

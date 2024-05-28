@@ -522,4 +522,16 @@ export const translates = [
 		key: RES_KEY.CONFIRM_DEVICE.message,
 		value: "Xac thuc thiet bi thanh cong. Vui long dang nhap lai",
 	},
+	{
+		lang: LANGUAGE.EN,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.LIST_DEVICES.message,
+		value: "Get list devices success",
+	},
+	{
+		lang: LANGUAGE.VI,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.LIST_DEVICES.message,
+		value: "Lay danh sach thiet bi thanh cong",
+	},
 ];

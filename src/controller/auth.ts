@@ -13,6 +13,7 @@ import {
 	type IEmailVerifyLoginNewDevice,
 	type IEmailWarningPasswordAttempt,
 	type IJwtPayload,
+	LOGIN_METHOD,
 	RES_KEY,
 	ROLE_NAME,
 	ROUTES,
@@ -317,6 +318,8 @@ export const authController: IAuthController = {
 					userId: user.id,
 					...deviceData,
 					sessionId: refreshSessionId,
+					loginAt: new Date(),
+					loginMethod: LOGIN_METHOD.PASSWORD,
 				}),
 			]);
 		} else {
@@ -344,7 +347,7 @@ export const authController: IAuthController = {
 				.where(eq(refreshTokens.token, refreshSessionId ?? "")),
 			db
 				.update(devices)
-				.set({ sessionId: null })
+				.set({ sessionId: null, logoutAt: new Date() })
 				.where(eq(devices.sessionId, refreshSessionId ?? "")),
 		]);
 		return resBuild(null, RES_KEY.LOGOUT);
@@ -356,7 +359,7 @@ export const authController: IAuthController = {
 			db.delete(refreshTokens).where(eq(refreshTokens.userId, user.id)),
 			db
 				.update(devices)
-				.set({ sessionId: null })
+				.set({ sessionId: null, logoutAt: new Date() })
 				.where(eq(devices.userId, user.id)),
 		]);
 		return resBuild(null, RES_KEY.LOGOUT_ALL);

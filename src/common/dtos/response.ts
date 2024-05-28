@@ -20,7 +20,7 @@ export const resDoc = <T extends TSchema>(T: T) =>
 	});
 
 export const resPagingDoc = <T extends TSchema>(T: T) =>
-	t.Intersect([
+	t.Composite([
 		resDoc(T),
 		t.Optional(
 			t.Object({

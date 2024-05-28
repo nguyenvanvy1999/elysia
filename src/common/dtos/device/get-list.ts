@@ -8,4 +8,6 @@ export const listDeviceQuery = t.Object({
 	offset: t.Optional(t.Numeric({ default: DEFAULT.PAGING_OFFSET, minimum: 0 })),
 });
 
-export const listDeviceRes = resPagingDoc(deviceDto);
+export const listDeviceRes = resPagingDoc(
+	t.Omit(deviceDto, ["createdAt", "sessionId"]),
+);

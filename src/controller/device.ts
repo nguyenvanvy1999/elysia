@@ -28,7 +28,7 @@ export const deviceController: IDeviceController = {
 		const [data, count] = await Promise.all([
 			db.query.devices.findMany({
 				where: eq(devices.userId, user.id),
-				columns: { sessionId: false },
+				columns: { sessionId: false, createdAt: false },
 				orderBy: [desc(devices.logoutAt), asc(devices.loginAt)],
 				limit,
 				offset,
