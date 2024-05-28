@@ -11,6 +11,8 @@ import {
 	loginBody,
 	loginRes,
 	logoutAllRes,
+	logoutDeviceQuery,
+	logoutDeviceRes,
 	logoutRes,
 	registerBody,
 	registerRes,
@@ -79,6 +81,19 @@ export const authRoutes = new Elysia<
 		},
 		response: {
 			200: logoutAllRes,
+			401: errorRes,
+			403: errorRes,
+			...errorsDefault,
+		},
+	})
+	.get(AUTH_ROUTES.LOGOUT_DEVICE, authController.logoutDevice, {
+		query: logoutDeviceQuery,
+		detail: {
+			...SW_ROUTE_DETAIL.LOGOUT_DEVICE,
+			security: [{ accessToken: [] }],
+		},
+		response: {
+			200: logoutDeviceRes,
 			401: errorRes,
 			403: errorRes,
 			...errorsDefault,

@@ -351,6 +351,18 @@ export const translates = [
 		key: RES_KEY.DEVICE_TOKEN_WRONG.message,
 		value: "Token kich hoat thiet bi sai",
 	},
+	{
+		lang: LANGUAGE.EN,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.DEVICE_NOT_FOUND.message,
+		value: "Device not found",
+	},
+	{
+		lang: LANGUAGE.VI,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.DEVICE_NOT_FOUND.message,
+		value: "Khong tim thay thiet bi",
+	},
 
 	// response
 	{
@@ -533,5 +545,17 @@ export const translates = [
 		ns: TRANSLATION_NS.BACKEND,
 		key: RES_KEY.LIST_DEVICES.message,
 		value: "Lay danh sach thiet bi thanh cong",
+	},
+	{
+		lang: LANGUAGE.EN,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.LOGOUT_DEVICE.message,
+		value: "Logout from this device success",
+	},
+	{
+		lang: LANGUAGE.VI,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.LOGOUT_DEVICE.message,
+		value: "Dang xuat thiet bi thanh cong",
 	},
 ];

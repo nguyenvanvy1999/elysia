@@ -102,6 +102,10 @@ export const RES_KEY = {
 		message: "ERROR.SETTING_NOT_FOUND",
 		code: "NOT_FOUND_3",
 	},
+	DEVICE_NOT_FOUND: {
+		message: "ERROR.DEVICE_NOT_FOUND",
+		code: "NOT_FOUND_4",
+	},
 
 	// forbidden resource error
 	USER_PASSWORD_ATTEMPT_MAX: {
@@ -234,6 +238,10 @@ export const RES_KEY = {
 		message: "RES.LIST_DEVICES_SUCCESS",
 		code: "SUC_15",
 	},
+	LOGOUT_DEVICE: {
+		message: "RES.LOGOUT_DEVICE_SUCCESS",
+		code: "SUC_16",
+	},
 };
 
 export const SW_ROUTE_DETAIL = {
@@ -257,6 +265,10 @@ export const SW_ROUTE_DETAIL = {
 	CONFIRM_DEVICE: {
 		description: "Confirm new device",
 		summary: "Confirm device",
+	},
+	LOGOUT_DEVICE: {
+		description: "Logout from a device",
+		summary: "Logout device",
 	},
 
 	// user APIs
@@ -314,6 +326,7 @@ export enum AUTH_ROUTES {
 	REGISTER = "/register",
 	LOGOUT = "/logout",
 	LOGOUT_ALL = "/logout-all",
+	LOGOUT_DEVICE = "/logout-device",
 	CONFIRM_DEVICE = "/confirm-device",
 }
 

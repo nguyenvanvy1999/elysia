@@ -21,6 +21,7 @@ import {
 	USER_STATUS,
 	type confirmDeviceQuery,
 	type loginBody,
+	type logoutDeviceQuery,
 	type registerBody,
 } from "src/common";
 import {
@@ -71,6 +72,13 @@ interface IAuthController {
 	}: {
 		sessionId: string;
 		refreshSessionId?: string;
+	}) => Promise<any>;
+	logoutDevice: ({
+		query,
+		user,
+	}: {
+		query: Static<typeof logoutDeviceQuery>;
+		user: UserWithRoles;
 	}) => Promise<any>;
 	logoutAll: ({
 		user,
@@ -364,6 +372,29 @@ export const authController: IAuthController = {
 				.where(eq(devices.userId, user.id)),
 		]);
 		return resBuild(null, RES_KEY.LOGOUT_ALL);
+	},
+
+	logoutDevice: async ({ user, query: { deviceId } }): Promise<any> => {
+		const device = await db.query.devices.findFirst({
+			where: and(eq(devices.id, deviceId), eq(devices.userId, user.id)),
+			columns: { sessionId: true },
+		});
+		if (!device) {
+			throw HttpError.NotFound(...Object.values(RES_KEY.DEVICE_NOT_FOUND));
+		}
+		if (device.sessionId) {
+			await Promise.allSettled([
+				sessionService.removeSessionByRefreshId(device.sessionId),
+				db
+					.delete(refreshTokens)
+					.where(eq(refreshTokens.token, device.sessionId)),
+				db
+					.update(devices)
+					.set({ sessionId: null, logoutAt: new Date() })
+					.where(eq(devices.id, deviceId)),
+			]);
+		}
+		return resBuild(null, RES_KEY.LOGOUT_DEVICE);
 	},
 
 	confirmDevice: async ({ query }): Promise<any> => {
