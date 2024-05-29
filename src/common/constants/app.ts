@@ -17,6 +17,7 @@ export const swaggerOptions = {
 		setting: { name: "Setting", description: "Setting endpoints" },
 		device: { name: "Device", description: "Device management endpoints" },
 		permission: { name: "Permission", description: "Permission endpoints" },
+		role: { name: "Role", description: "Role endpoints" },
 	},
 };
 
@@ -331,6 +332,7 @@ export enum ROUTES {
 	SETTING_V1 = "/api/v1/setting",
 	DEVICE_V1 = "/api/v1/device",
 	PERMISSION_V1 = "/api/v1/permission",
+	ROLE_V1 = "/api/v1/role",
 }
 
 export enum AUTH_ROUTES {

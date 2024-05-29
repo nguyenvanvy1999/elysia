@@ -1,4 +1,3 @@
-import camelcaseKeys from "camelcase-keys";
 import dotenv from "dotenv";
 import {
 	DEFAULT,
@@ -8,22 +7,11 @@ import {
 	TIME_REGEX,
 	URL_REGEX,
 } from "src/common";
+import { camelize, toggle } from "src/util";
 import { z } from "zod";
 import packageJson from "../../package.json";
 
 dotenv.config({ path: `.env.${process.env.APP_ENV}` });
-
-/**
- * Toggle environment variables
- * 'true' or '1' will evaluate to true
- * 'false' or '0' will evaluate to false
- */
-const toggle = z
-	.enum(["true", "false", "0", "1"])
-	.transform((v) => v === "true" || v === "1");
-
-const camelize = <T extends Record<string, unknown>>(val: T) =>
-	camelcaseKeys(val);
 
 const envVariables = z
 	.object({
