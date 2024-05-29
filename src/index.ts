@@ -22,6 +22,7 @@ import {
 import {
 	authRoutes,
 	deviceRoutes,
+	permissionRoutes,
 	settingRoutes,
 	userRoutes,
 } from "src/router";
@@ -90,7 +91,8 @@ try {
 		.use(authRoutes)
 		.use(userRoutes)
 		.use(settingRoutes)
-		.use(deviceRoutes);
+		.use(deviceRoutes)
+		.use(permissionRoutes);
 	process.on("SIGINT", app.stop);
 	process.on("SIGTERM", app.stop);
 	app.listen({ port: config.appPort, maxRequestBodySize: 1_000_000_000 });

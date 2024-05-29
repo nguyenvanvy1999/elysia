@@ -21,15 +21,13 @@ export const resDoc = <T extends TSchema>(T: T) =>
 
 export const resPagingDoc = <T extends TSchema>(T: T) =>
 	t.Composite([
-		resDoc(T),
-		t.Optional(
-			t.Object({
-				currentPageCount: t.Integer(),
-				totalItems: t.Integer(),
-				totalPages: t.Integer(),
-				currentPage: t.Integer(),
-			}),
-		),
+		resDoc(t.Array(T)),
+		t.Object({
+			currentPageCount: t.Integer(),
+			totalItems: t.Integer(),
+			totalPages: t.Integer(),
+			currentPage: t.Integer(),
+		}),
 	]);
 
 export const errorRes = resDoc(t.Null());

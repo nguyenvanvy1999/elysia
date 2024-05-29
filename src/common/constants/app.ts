@@ -16,6 +16,7 @@ export const swaggerOptions = {
 		user: { name: "User", description: "User endpoints" },
 		setting: { name: "Setting", description: "Setting endpoints" },
 		device: { name: "Device", description: "Device management endpoints" },
+		permission: { name: "Permission", description: "Permission endpoints" },
 	},
 };
 
@@ -242,6 +243,10 @@ export const RES_KEY = {
 		message: "RES.LOGOUT_DEVICE_SUCCESS",
 		code: "SUC_16",
 	},
+	LIST_PERMISSION: {
+		message: "RES.LIST_PERMISSION_SUCCESS",
+		code: "SUC_17",
+	},
 };
 
 export const SW_ROUTE_DETAIL = {
@@ -312,6 +317,12 @@ export const SW_ROUTE_DETAIL = {
 		description: "Get list devices",
 		summary: "List devices",
 	},
+
+	// permission APIs
+	LIST_PERMISSION: {
+		description: "Get list permissions",
+		summary: "List permissions",
+	},
 };
 
 export enum ROUTES {
@@ -319,6 +330,7 @@ export enum ROUTES {
 	USER_V1 = "/api/v1/user",
 	SETTING_V1 = "/api/v1/setting",
 	DEVICE_V1 = "/api/v1/device",
+	PERMISSION_V1 = "/api/v1/permission",
 }
 
 export enum AUTH_ROUTES {
@@ -345,6 +357,10 @@ export enum SETTING_ROUTES {
 }
 
 export enum DEVICE_ROUTES {
+	LIST = "/list",
+}
+
+export enum PERMISSIONS_ROUTES {
 	LIST = "/list",
 }
 

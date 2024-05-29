@@ -558,4 +558,16 @@ export const translates = [
 		key: RES_KEY.LOGOUT_DEVICE.message,
 		value: "Dang xuat thiet bi thanh cong",
 	},
+	{
+		lang: LANGUAGE.EN,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.LIST_PERMISSION.message,
+		value: "Get list permissions success",
+	},
+	{
+		lang: LANGUAGE.VI,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.LIST_PERMISSION.message,
+		value: "Lay danh sach quyen thanh cong",
+	},
 ];
