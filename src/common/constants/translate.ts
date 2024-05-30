@@ -570,4 +570,28 @@ export const translates = [
 		key: RES_KEY.LIST_PERMISSION.message,
 		value: "Lay danh sach quyen thanh cong",
 	},
+	{
+		lang: LANGUAGE.EN,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.LIST_ROLE.message,
+		value: "Get list role success",
+	},
+	{
+		lang: LANGUAGE.VI,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.LIST_ROLE.message,
+		value: "Lay danh sach role thanh cong",
+	},
+	{
+		lang: LANGUAGE.EN,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.GET_ROLE.message,
+		value: "Get role detail success",
+	},
+	{
+		lang: LANGUAGE.VI,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.GET_ROLE.message,
+		value: "Lay chi tiet role thanh cong",
+	},
 ];

@@ -108,6 +108,10 @@ export const RES_KEY = {
 		message: "ERROR.DEVICE_NOT_FOUND",
 		code: "NOT_FOUND_4",
 	},
+	ROLE_NOT_FOUND: {
+		message: "ERROR.ROLE_NOT_FOUND",
+		code: "NOT_FOUND_5",
+	},
 
 	// forbidden resource error
 	USER_PASSWORD_ATTEMPT_MAX: {
@@ -248,6 +252,14 @@ export const RES_KEY = {
 		message: "RES.LIST_PERMISSION_SUCCESS",
 		code: "SUC_17",
 	},
+	LIST_ROLE: {
+		message: "RES.LIST_ROLE_SUCCESS",
+		code: "SUC_18",
+	},
+	GET_ROLE: {
+		message: "RES.GET_ROLE_SUCCESS",
+		code: "SUC_19",
+	},
 };
 
 export const SW_ROUTE_DETAIL = {
@@ -324,6 +336,16 @@ export const SW_ROUTE_DETAIL = {
 		description: "Get list permissions",
 		summary: "List permissions",
 	},
+
+	// role APIs
+	LIST_ROLE: {
+		description: "Get list roles",
+		summary: "List roles",
+	},
+	GET_ROLE: {
+		description: "Get role detail",
+		summary: "Get role",
+	},
 };
 
 export enum ROUTES {
@@ -364,6 +386,14 @@ export enum DEVICE_ROUTES {
 
 export enum PERMISSIONS_ROUTES {
 	LIST = "/list",
+}
+
+export enum ROLE_ROUTES {
+	CREATE = "/",
+	GET = "/:id",
+	LIST = "/list",
+	DELETE = "/:id",
+	UPDATE = "/:id",
 }
 
 export enum APP_ENV {
