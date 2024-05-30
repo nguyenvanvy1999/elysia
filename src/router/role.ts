@@ -84,7 +84,7 @@ export const roleRoutes = new Elysia<
 		]),
 		body: createRoleBody,
 		detail: {
-			...SW_ROUTE_DETAIL.CREATE_SETTING,
+			...SW_ROUTE_DETAIL.CREATE_ROLE,
 			security: [{ accessToken: [] }],
 		},
 		response: {
