@@ -7,6 +7,7 @@ import {
 	ROLE_ROUTES,
 	ROUTES,
 	SW_ROUTE_DETAIL,
+	createRoleBody,
 	errorRes,
 	errorsDefault,
 	listRoleQuery,
@@ -68,6 +69,27 @@ export const roleRoutes = new Elysia<
 		response: {
 			200: roleGetDetailRes,
 			404: errorRes,
+			401: errorRes,
+			403: errorRes,
+			...errorsDefault,
+		},
+	})
+	.post(ROLE_ROUTES.CREATE, roleController.create, {
+		beforeHandle: hasPermissions([
+			{
+				entity: POLICY_ENTITY.ROLE,
+				access: POLICY_ACCESS.ANY,
+				action: POLICY_ACTION.CREATE,
+			},
+		]),
+		body: createRoleBody,
+		detail: {
+			...SW_ROUTE_DETAIL.CREATE_SETTING,
+			security: [{ accessToken: [] }],
+		},
+		response: {
+			200: roleGetDetailRes,
+			409: errorRes,
 			401: errorRes,
 			403: errorRes,
 			...errorsDefault,

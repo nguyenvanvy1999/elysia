@@ -10,3 +10,5 @@ export type UserWithRoles = InferSelectModel<typeof users> & {
 		permissions: InferSelectModel<typeof permissions>[];
 	}[];
 };
+
+export type Permission = InferSelectModel<typeof permissions>;

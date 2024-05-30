@@ -363,6 +363,30 @@ export const translates = [
 		key: RES_KEY.DEVICE_NOT_FOUND.message,
 		value: "Khong tim thay thiet bi",
 	},
+	{
+		lang: LANGUAGE.EN,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.ROLE_ALREADY_EXIST.message,
+		value: "Role already exist",
+	},
+	{
+		lang: LANGUAGE.VI,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.ROLE_ALREADY_EXIST.message,
+		value: "Role da ton tai",
+	},
+	{
+		lang: LANGUAGE.EN,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.PERMISSION_IDS_WRONG.message,
+		value: "List permission ids wrong. Check again",
+	},
+	{
+		lang: LANGUAGE.VI,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.PERMISSION_IDS_WRONG.message,
+		value: "Mang permission ids sai.",
+	},
 
 	// response
 	{
@@ -593,5 +617,17 @@ export const translates = [
 		ns: TRANSLATION_NS.BACKEND,
 		key: RES_KEY.GET_ROLE.message,
 		value: "Lay chi tiet role thanh cong",
+	},
+	{
+		lang: LANGUAGE.EN,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.CREATE_ROLE.message,
+		value: "Create role success",
+	},
+	{
+		lang: LANGUAGE.VI,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.CREATE_ROLE.message,
+		value: "Tao role thanh cong",
 	},
 ];

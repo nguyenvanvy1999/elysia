@@ -1,19 +1,28 @@
-import { asc, eq, ilike, or } from "drizzle-orm";
+import { asc, eq, ilike, inArray, or } from "drizzle-orm";
 import type { Static } from "elysia";
-import { RES_KEY, type listRoleQuery, type roleParam } from "src/common";
+import {
+	DB_ID_PREFIX,
+	RES_KEY,
+	type createRoleBody,
+	type listRoleQuery,
+	type roleParam,
+} from "src/common";
 import { HttpError, db } from "src/config";
 import { permissions, permissionsToRoles, roles, settings } from "src/db";
+import { policyService } from "src/service";
 import {
 	customCount,
 	getCount,
 	getLimit,
 	getOffset,
+	idGenerator,
 	resBuild,
 	resPagingBuild,
+	uniqueArr,
 } from "src/util";
 
 interface IRoleController {
-	create: () => Promise<any>;
+	create: ({ body }: { body: Static<typeof createRoleBody> }) => Promise<any>;
 	update: () => Promise<any>;
 	delete: () => Promise<any>;
 	get: ({ params }: { params: Static<typeof roleParam> }) => Promise<any>;
@@ -21,7 +30,49 @@ interface IRoleController {
 }
 
 export const roleController: IRoleController = {
-	create: async () => Promise<any>,
+	create: async ({ body }): Promise<any> => {
+		const { name, description } = body;
+		const permissionIds = uniqueArr(body.permissionIds);
+
+		const exist = await db.query.roles.findFirst({
+			where: eq(roles.name, name.toLowerCase()),
+			columns: { id: true },
+		});
+		if (exist) {
+			throw HttpError.Conflict(...Object.values(RES_KEY.ROLE_ALREADY_EXIST));
+		}
+		const permissionsCnt = await db
+			.select({ count: customCount() })
+			.from(permissions)
+			.where(inArray(permissions.id, permissionIds));
+		if (getCount(permissionsCnt) !== permissionIds.length) {
+			throw HttpError.Conflict(...Object.values(RES_KEY.PERMISSION_IDS_WRONG));
+		}
+
+		const role = await db.transaction(async (ct) => {
+			const roleRes = await ct
+				.insert(roles)
+				.values({ id: idGenerator(DB_ID_PREFIX.ROLE), name, description })
+				.returning({
+					id: roles.id,
+					name: roles.name,
+					description: roles.description,
+				})
+				.then((res) => res[0]);
+			await ct
+				.insert(permissionsToRoles)
+				.values(
+					permissionIds.map((x) => ({ permissionId: x, roleId: roleRes.id })),
+				);
+			return roleRes;
+		});
+		const permissionsData = await policyService.getPermissionsByRoleId(role.id);
+
+		return resBuild(
+			{ ...role, permissions: permissionsData },
+			RES_KEY.CREATE_ROLE,
+		);
+	},
 
 	update: async () => Promise<any>,
 
@@ -35,26 +86,7 @@ export const roleController: IRoleController = {
 		if (!role) {
 			throw HttpError.NotFound(...Object.values(RES_KEY.ROLE_NOT_FOUND));
 		}
-		const permissionsData = await db
-			.select({
-				id: permissions.id,
-				action: permissions.action,
-				access: permissions.access,
-				entity: permissions.entity,
-				description: permissions.description,
-			})
-			.from(permissionsToRoles)
-			.leftJoin(
-				permissions,
-				eq(permissionsToRoles.permissionId, permissions.id),
-			)
-			.where(eq(permissionsToRoles.roleId, id))
-			.orderBy(
-				asc(permissions.entity),
-				asc(permissions.action),
-				asc(permissions.access),
-			);
-
+		const permissionsData = await policyService.getPermissionsByRoleId(id);
 		return resBuild(
 			{ ...role, permissions: permissionsData },
 			RES_KEY.GET_ROLE,

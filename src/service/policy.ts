@@ -1,4 +1,5 @@
 import { AbilityBuilder, createMongoAbility } from "@casl/ability";
+import { asc, eq } from "drizzle-orm";
 import {
 	type IPolicyAbility,
 	type IPolicyRequest,
@@ -7,6 +8,8 @@ import {
 	type PolicyHandler,
 	ROLE_NAME,
 } from "src/common";
+import { db } from "src/config";
+import { type Permission, permissions, permissionsToRoles } from "src/db";
 
 interface IPolicyService {
 	defineAbilityFromRole: ({
@@ -20,9 +23,37 @@ interface IPolicyService {
 		handler: PolicyHandler,
 		ability: IPolicyAbility,
 	) => boolean;
+
+	getPermissionsByRoleId: (
+		roleId: string,
+	) => Promise<Omit<Permission, "updatedAt" | "createdAt">[]>;
 }
 
 export const policyService: IPolicyService = {
+	getPermissionsByRoleId: (
+		roleId: string,
+	): Promise<Omit<Permission, "updatedAt" | "createdAt">[]> => {
+		return db
+			.select({
+				id: permissions.id,
+				action: permissions.action,
+				access: permissions.access,
+				entity: permissions.entity,
+				description: permissions.description,
+			})
+			.from(permissionsToRoles)
+			.leftJoin(
+				permissions,
+				eq(permissionsToRoles.permissionId, permissions.id),
+			)
+			.where(eq(permissionsToRoles.roleId, roleId))
+			.orderBy(
+				asc(permissions.entity),
+				asc(permissions.action),
+				asc(permissions.access),
+			) as Promise<Omit<Permission, "updatedAt" | "createdAt">[]>;
+	},
+
 	defineAbilityFromRole: ({
 		name,
 		permissions,

@@ -121,13 +121,11 @@ export const authController: IAuthController = {
 		}
 
 		const user = await db.transaction(async (ct) => {
-			const userId = idGenerator(DB_ID_PREFIX.USER);
-			await ct.insert(usersToRoles).values({ userId, roleId: userRole.id });
-			return await ct
+			const userRes = await ct
 				.insert(users)
 				.values({
 					...body,
-					id: userId,
+					id: idGenerator(DB_ID_PREFIX.USER),
 					...createPassword(password),
 					status: USER_STATUS.INACTIVE,
 					activeAccountAt: null,
@@ -141,6 +139,10 @@ export const authController: IAuthController = {
 					status: users.status,
 				})
 				.then((res) => res[0]);
+			await ct
+				.insert(usersToRoles)
+				.values({ userId: userRes.id, roleId: userRole.id });
+			return userRes;
 		});
 		return resBuild(user, RES_KEY.REGISTER);
 	},

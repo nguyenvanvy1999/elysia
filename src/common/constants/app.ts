@@ -90,6 +90,10 @@ export const RES_KEY = {
 		message: "ERROR.SETTING_ALREADY_EXIST",
 		code: "CONFLICT_3",
 	},
+	ROLE_ALREADY_EXIST: {
+		message: "ERROR.ROLE_ALREADY_EXIST",
+		code: "CONFLICT_4",
+	},
 
 	// not found error
 	NOT_FOUND: {
@@ -171,6 +175,10 @@ export const RES_KEY = {
 	DEVICE_TOKEN_WRONG: {
 		message: "ERROR.DEVICE_TOKEN_WRONG",
 		code: "BAD_REQUEST_7",
+	},
+	PERMISSION_IDS_WRONG: {
+		message: "ERROR.PERMISSION_IDS_WRONG",
+		code: "BAD_REQUEST_8",
 	},
 
 	// service unavailable error
@@ -260,6 +268,10 @@ export const RES_KEY = {
 		message: "RES.GET_ROLE_SUCCESS",
 		code: "SUC_19",
 	},
+	CREATE_ROLE: {
+		message: "RES.CREATE_ROLE_SUCCESS",
+		code: "SUC_19",
+	},
 };
 
 export const SW_ROUTE_DETAIL = {
@@ -345,6 +357,10 @@ export const SW_ROUTE_DETAIL = {
 	GET_ROLE: {
 		description: "Get role detail",
 		summary: "Get role",
+	},
+	CREATE_ROLE: {
+		description: "Create role",
+		summary: "Create role",
 	},
 };
 
