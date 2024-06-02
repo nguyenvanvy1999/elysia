@@ -38,7 +38,7 @@ interface IRoleController {
 		body: Static<typeof updateRoleBody>;
 		params: Static<typeof roleParam>;
 	}) => Promise<any>;
-	delete: () => Promise<any>;
+	delete: ({ params }: { params: Static<typeof roleParam> }) => Promise<any>;
 	get: ({ params }: { params: Static<typeof roleParam> }) => Promise<any>;
 	getList: ({ query }: { query: Static<typeof listRoleQuery> }) => Promise<any>;
 }
@@ -162,7 +162,31 @@ export const roleController: IRoleController = {
 		);
 	},
 
-	delete: async () => Promise<any>,
+	delete: async ({ params: { id } }): Promise<any> => {
+		const exist = await db.query.roles.findFirst({
+			where: eq(roles.id, id),
+			columns: { id: true, name: true },
+		});
+		if (!exist) {
+			throw HttpError.NotFound(...Object.values(RES_KEY.ROLE_NOT_FOUND));
+		}
+		if (Object.values<string>(ROLE_NAME).includes(exist.name)) {
+			throw HttpError.BadRequest(
+				...Object.values(RES_KEY.CAN_NOT_MODIFY_DEFAULT_ROLE),
+			);
+		}
+		const result = await db.transaction(async (ct) => {
+			await ct
+				.delete(permissionsToRoles)
+				.where(eq(permissionsToRoles.roleId, id));
+			return await db
+				.delete(roles)
+				.where(eq(roles.id, id))
+				.returning({ id: roles.id })
+				.then((x) => x[0]);
+		});
+		return resBuild({ id: result.id }, RES_KEY.DELETE_ROLE);
+	},
 
 	get: async ({ params: { id } }): Promise<any> => {
 		const role = await db.query.roles.findFirst({

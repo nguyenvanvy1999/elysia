@@ -654,4 +654,16 @@ export const translates = [
 		key: RES_KEY.UPDATE_ROLE.message,
 		value: "Cap nhat role thanh cong",
 	},
+	{
+		lang: LANGUAGE.EN,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.DELETE_ROLE.message,
+		value: "Delete role success",
+	},
+	{
+		lang: LANGUAGE.VI,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.DELETE_ROLE.message,
+		value: "Xoa role thanh cong",
+	},
 ];

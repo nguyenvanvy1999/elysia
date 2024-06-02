@@ -141,8 +141,12 @@ export const settingController: ISettingController = {
 				...Object.values(RES_KEY.CAN_NOT_DELETE_THIS_SETTING),
 			);
 		}
-		await db.delete(settings).where(eq(settings.id, id));
-		return resBuild({ id: setting.id }, RES_KEY.DELETE_SETTING);
+		const result = await db
+			.delete(settings)
+			.where(eq(settings.id, id))
+			.returning({ id: settings.id })
+			.then((x) => x[0]);
+		return resBuild({ id: result.id }, RES_KEY.DELETE_SETTING);
 	},
 
 	update: async ({

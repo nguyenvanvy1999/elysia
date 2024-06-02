@@ -280,6 +280,10 @@ export const RES_KEY = {
 		message: "RES.UPDATE_ROLE_SUCCESS",
 		code: "SUC_20",
 	},
+	DELETE_ROLE: {
+		message: "RES.DELETE_ROLE_SUCCESS",
+		code: "SUC_21",
+	},
 };
 
 export const SW_ROUTE_DETAIL = {
@@ -373,6 +377,10 @@ export const SW_ROUTE_DETAIL = {
 	UPDATE_ROLE: {
 		description: "Update role with id",
 		summary: "Update role",
+	},
+	DELETE_ROLE: {
+		description: "Delete role with id",
+		summary: "Delete role",
 	},
 };
 

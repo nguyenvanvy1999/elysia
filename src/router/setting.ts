@@ -7,6 +7,7 @@ import {
 	SETTING_ROUTES,
 	SW_ROUTE_DETAIL,
 	createSettingBody,
+	deleteSettingRes,
 	errorRes,
 	errorsDefault,
 	listSettingQuery,
@@ -100,7 +101,7 @@ export const settingRoutes = new Elysia({
 			security: [{ accessToken: [] }],
 		},
 		response: {
-			200: settingRes,
+			200: deleteSettingRes,
 			404: errorRes,
 			401: errorRes,
 			403: errorRes,

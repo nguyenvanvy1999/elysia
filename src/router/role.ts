@@ -8,13 +8,13 @@ import {
 	ROUTES,
 	SW_ROUTE_DETAIL,
 	createRoleBody,
+	deleteRoleRes,
 	errorRes,
 	errorsDefault,
 	listRoleQuery,
 	listRoleRes,
 	roleGetDetailRes,
 	roleParam,
-	settingRes,
 	swaggerOptions,
 	updateRoleBody,
 } from "src/common";
@@ -112,7 +112,28 @@ export const roleRoutes = new Elysia<
 			security: [{ accessToken: [] }],
 		},
 		response: {
-			200: settingRes,
+			200: roleGetDetailRes,
+			404: errorRes,
+			401: errorRes,
+			403: errorRes,
+			...errorsDefault,
+		},
+	})
+	.delete(ROLE_ROUTES.DELETE, roleController.delete, {
+		beforeHandle: hasPermissions([
+			{
+				entity: POLICY_ENTITY.ROLE,
+				access: POLICY_ACCESS.ANY,
+				action: POLICY_ACTION.DELETE,
+			},
+		]),
+		params: roleParam,
+		detail: {
+			...SW_ROUTE_DETAIL.DELETE_ROLE,
+			security: [{ accessToken: [] }],
+		},
+		response: {
+			200: deleteRoleRes,
 			404: errorRes,
 			401: errorRes,
 			403: errorRes,
