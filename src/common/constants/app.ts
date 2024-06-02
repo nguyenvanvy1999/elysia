@@ -146,6 +146,10 @@ export const RES_KEY = {
 		message: "ERROR.USER_HAS_BEEN_ACTIVATED",
 		code: "FORBIDDEN_RESOURCE_7",
 	},
+	CAN_NOT_MODIFY_DEFAULT_ROLE: {
+		message: "ERROR.CAN_NOT_MODIFY_DEFAULT_ROLE",
+		code: "FORBIDDEN_RESOURCE_8",
+	},
 
 	// bad request error
 	USER_PASSWORD_NOT_MATCH: {
@@ -272,6 +276,10 @@ export const RES_KEY = {
 		message: "RES.CREATE_ROLE_SUCCESS",
 		code: "SUC_19",
 	},
+	UPDATE_ROLE: {
+		message: "RES.UPDATE_ROLE_SUCCESS",
+		code: "SUC_20",
+	},
 };
 
 export const SW_ROUTE_DETAIL = {
@@ -361,6 +369,10 @@ export const SW_ROUTE_DETAIL = {
 	CREATE_ROLE: {
 		description: "Create role",
 		summary: "Create role",
+	},
+	UPDATE_ROLE: {
+		description: "Update role with id",
+		summary: "Update role",
 	},
 };
 

@@ -387,6 +387,18 @@ export const translates = [
 		key: RES_KEY.PERMISSION_IDS_WRONG.message,
 		value: "Mang permission ids sai.",
 	},
+	{
+		lang: LANGUAGE.EN,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.CAN_NOT_MODIFY_DEFAULT_ROLE.message,
+		value: "Can not modify default role",
+	},
+	{
+		lang: LANGUAGE.VI,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.CAN_NOT_MODIFY_DEFAULT_ROLE.message,
+		value: "Khong the sua role mac dinh",
+	},
 
 	// response
 	{
@@ -629,5 +641,17 @@ export const translates = [
 		ns: TRANSLATION_NS.BACKEND,
 		key: RES_KEY.CREATE_ROLE.message,
 		value: "Tao role thanh cong",
+	},
+	{
+		lang: LANGUAGE.EN,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.UPDATE_ROLE.message,
+		value: "Update role success",
+	},
+	{
+		lang: LANGUAGE.VI,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.UPDATE_ROLE.message,
+		value: "Cap nhat role thanh cong",
 	},
 ];

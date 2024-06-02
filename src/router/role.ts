@@ -14,7 +14,9 @@ import {
 	listRoleRes,
 	roleGetDetailRes,
 	roleParam,
+	settingRes,
 	swaggerOptions,
+	updateRoleBody,
 } from "src/common";
 import { roleController } from "src/controller";
 import { hasPermissions, isAuthenticated } from "src/middleware";
@@ -90,6 +92,28 @@ export const roleRoutes = new Elysia<
 		response: {
 			200: roleGetDetailRes,
 			409: errorRes,
+			401: errorRes,
+			403: errorRes,
+			...errorsDefault,
+		},
+	})
+	.put(ROLE_ROUTES.UPDATE, roleController.update, {
+		beforeHandle: hasPermissions([
+			{
+				entity: POLICY_ENTITY.ROLE,
+				access: POLICY_ACCESS.ANY,
+				action: POLICY_ACTION.UPDATE,
+			},
+		]),
+		params: roleParam,
+		body: updateRoleBody,
+		detail: {
+			...SW_ROUTE_DETAIL.UPDATE_ROLE,
+			security: [{ accessToken: [] }],
+		},
+		response: {
+			200: settingRes,
+			404: errorRes,
 			401: errorRes,
 			403: errorRes,
 			...errorsDefault,
