@@ -57,3 +57,10 @@ export interface IEmailWarningPasswordAttempt extends ISendEmailJob {
 	emailType: EMAIL_TYPE.WARNING_PASSWORD_ATTEMPT;
 	data: Record<string, any>;
 }
+
+export interface IEmailMagicLogin extends ISendEmailJob {
+	emailType: EMAIL_TYPE.MAGIC_LOGIN;
+	data: {
+		url: string;
+	};
+}

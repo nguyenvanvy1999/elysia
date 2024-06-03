@@ -5,6 +5,7 @@ import {
 	EMAIL_TYPE,
 	type IEmailActiveAccount,
 	type IEmailLoginNewDevice,
+	type IEmailMagicLogin,
 	type IEmailVerifyLoginNewDevice,
 	type IEmailWarningPasswordAttempt,
 	type IEmailWelcome,
@@ -30,6 +31,7 @@ export const sendEmailWorker = new Worker(
 			| IEmailLoginNewDevice
 			| IEmailVerifyLoginNewDevice
 			| IEmailWarningPasswordAttempt
+			| IEmailMagicLogin
 		>,
 	) => {
 		queueLogger.info(
@@ -57,6 +59,10 @@ export const sendEmailWorker = new Worker(
 
 			case EMAIL_TYPE.VERIFY_LOGIN_NEW_DEVICE:
 				await emailService.sendEmail(job.data, "Have new device login");
+				break;
+
+			case EMAIL_TYPE.MAGIC_LOGIN:
+				await emailService.sendEmail(job.data, "Magic login");
 				break;
 		}
 	},

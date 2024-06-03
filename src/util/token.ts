@@ -160,3 +160,33 @@ export const decryptDeviceToken = (
 		deviceId: decrypt?.deviceId,
 	};
 };
+
+export const createMagicLoginToken = (userId: string): string => {
+	return aes256Encrypt(
+		{
+			userId,
+			expiredIn: forwardInMilliSeconds(
+				ms(config.magicLoginTokenExpired),
+			).getTime(),
+		},
+		config.magicLoginTokenEncryptKey,
+		config.magicLoginTokenEncryptIv,
+	);
+};
+
+export const decryptMagicLoginToken = (
+	token: string,
+): {
+	userId: string;
+	expiredIn: number;
+} => {
+	const decrypt: any = aes256Decrypt(
+		token,
+		config.magicLoginTokenEncryptKey,
+		config.magicLoginTokenEncryptIv,
+	);
+	return {
+		userId: decrypt?.userId,
+		expiredIn: Number.parseInt(decrypt?.expiredIn),
+	};
+};

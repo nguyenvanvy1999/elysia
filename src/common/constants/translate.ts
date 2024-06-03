@@ -666,4 +666,16 @@ export const translates = [
 		key: RES_KEY.DELETE_ROLE.message,
 		value: "Xoa role thanh cong",
 	},
+	{
+		lang: LANGUAGE.EN,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.SEND_MAGIC_LINK.message,
+		value: "Send magic login link success",
+	},
+	{
+		lang: LANGUAGE.VI,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.SEND_MAGIC_LINK.message,
+		value: "Gui magic link email thanh cong",
+	},
 ];

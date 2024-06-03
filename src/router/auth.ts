@@ -16,6 +16,8 @@ import {
 	logoutRes,
 	registerBody,
 	registerRes,
+	sendMagicLinkBody,
+	sendMagicLinkRes,
 	swaggerOptions,
 } from "src/common";
 import { authController } from "src/controller";
@@ -34,6 +36,15 @@ export const authRoutes = new Elysia<
 	prefix: ROUTES.AUTH_V1,
 	detail: { tags: [swaggerOptions.tags.auth.name] },
 })
+	.post(AUTH_ROUTES.SEND_MAGIC_LOGIN_LINK, authController.sendMagicLink, {
+		body: sendMagicLinkBody,
+		detail: SW_ROUTE_DETAIL.SEND_EMAIL_MAGIC_LOGIN,
+		response: {
+			200: sendMagicLinkRes,
+			404: errorRes,
+			...errorsDefault,
+		},
+	})
 	.post(AUTH_ROUTES.REGISTER, authController.register, {
 		body: registerBody,
 		detail: SW_ROUTE_DETAIL.REGISTER,

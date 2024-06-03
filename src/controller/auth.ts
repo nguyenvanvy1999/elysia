@@ -10,6 +10,7 @@ import {
 	DB_ID_PREFIX,
 	EMAIL_TYPE,
 	type IEmailLoginNewDevice,
+	type IEmailMagicLogin,
 	type IEmailVerifyLoginNewDevice,
 	type IEmailWarningPasswordAttempt,
 	type IJwtPayload,
@@ -23,6 +24,7 @@ import {
 	type loginBody,
 	type logoutDeviceQuery,
 	type registerBody,
+	type sendMagicLinkBody,
 } from "src/common";
 import {
 	HttpError,
@@ -47,6 +49,7 @@ import {
 	comparePassword,
 	createAccessToken,
 	createDeviceToken,
+	createMagicLoginToken,
 	createPassword,
 	createRefreshToken,
 	decryptDeviceToken,
@@ -57,6 +60,7 @@ import type { IResult } from "ua-parser-js";
 
 interface IAuthController {
 	register: ({ body }: { body: Static<typeof registerBody> }) => Promise<any>;
+
 	login: ({
 		body,
 		userAgent,
@@ -66,6 +70,13 @@ interface IAuthController {
 		userAgent?: IResult;
 		ip: SocketAddress | string | null | undefined;
 	}) => Promise<any>;
+
+	sendMagicLink: ({
+		body,
+	}: {
+		body: Static<typeof sendMagicLinkBody>;
+	}) => Promise<any>;
+
 	logout: ({
 		sessionId,
 		refreshSessionId,
@@ -73,6 +84,7 @@ interface IAuthController {
 		sessionId: string;
 		refreshSessionId?: string;
 	}) => Promise<any>;
+
 	logoutDevice: ({
 		query,
 		user,
@@ -80,6 +92,7 @@ interface IAuthController {
 		query: Static<typeof logoutDeviceQuery>;
 		user: UserWithRoles;
 	}) => Promise<any>;
+
 	logoutAll: ({
 		user,
 	}: {
@@ -92,6 +105,37 @@ interface IAuthController {
 }
 
 export const authController: IAuthController = {
+	sendMagicLink: async ({ body: { email } }): Promise<any> => {
+		const user = await db.query.users.findFirst({
+			where: eq(users.email, email),
+			columns: {
+				id: true,
+				email: true,
+				status: true,
+			},
+		});
+		if (!user) {
+			throw HttpError.NotFound(...Object.values(RES_KEY.USER_NOT_FOUND));
+		}
+		userService.checkUserStatus(user.status);
+
+		const loginToken = createMagicLoginToken(user.id);
+		// todo: save token
+		const jobId = idGenerator(BULL_QUEUE.SEND_MAIL, BULL_JOB_ID_LENGTH);
+		const queueData = {
+			email,
+			emailType: EMAIL_TYPE.MAGIC_LOGIN,
+			data: {
+				url: encodeURI(
+					`${config.appEndpoint}${ROUTES.AUTH_V1}${AUTH_ROUTES.MAGIC_LOGIN}?token=${loginToken}`,
+				),
+			},
+		} satisfies IEmailMagicLogin;
+		await sendEmailQueue.add(jobId, queueData, { jobId });
+
+		return resBuild({ id: user.id }, RES_KEY.SEND_MAGIC_LINK);
+	},
+
 	register: async ({ body }): Promise<any> => {
 		const enbRegister: string | null = await redisClient.get(
 			SETTING_KEY.ENB_REGISTER,

@@ -143,6 +143,14 @@ const envVariables = z
 			.string()
 			.regex(TIME_REGEX)
 			.default(DEFAULT.DEVICE_TOKEN_EXPIRED),
+
+		// magic login token
+		MAGIC_LOGIN_TOKEN_ENCRYPT_KEY: z.string(),
+		MAGIC_LOGIN_TOKEN_ENCRYPT_IV: z.string(),
+		MAGIC_LOGIN_TOKEN_EXPIRED: z
+			.string()
+			.regex(TIME_REGEX)
+			.default(DEFAULT.MAGIC_LOGIN_TOKEN_EXPIRED),
 	})
 	.transform((input) => ({
 		...camelize(input),

@@ -41,7 +41,7 @@ export const users = pgTable(DB_TABLE_NAME.USER, {
 });
 
 export const userRelations = relations(users, ({ many }) => ({
-	roles: many(usersToRoles),
+	usersToRoles: many(usersToRoles),
 	refreshTokens: many(refreshTokens),
 	devices: many(devices),
 }));
@@ -76,8 +76,8 @@ export const roles = pgTable(DB_TABLE_NAME.ROLE, {
 });
 
 export const roleRelations = relations(roles, ({ many }) => ({
-	users: many(usersToRoles),
-	permissions: many(permissionsToRoles),
+	usersToRoles: many(usersToRoles),
+	permissionsToRoles: many(permissionsToRoles),
 }));
 
 export const usersToRoles = pgTable(

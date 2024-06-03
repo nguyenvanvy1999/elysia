@@ -6,3 +6,4 @@ export * from "./send-email-verify";
 export * from "./verify-account";
 export * from "./logout";
 export * from "./confirm-device";
+export * from "./magic-login";

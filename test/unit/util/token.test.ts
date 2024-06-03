@@ -9,9 +9,11 @@ import {
 	createAccessToken,
 	createActiveAccountToken,
 	createDeviceToken,
+	createMagicLoginToken,
 	createRefreshToken,
 	decryptActiveAccountToken,
 	decryptDeviceToken,
+	decryptMagicLoginToken,
 	decryptSetting,
 	encryptSetting,
 	jwtEncrypt,
@@ -288,6 +290,31 @@ describe("Util: Token testing", (): void => {
 			expect(userId).toBe(userRootId);
 			expect(deviceId).toBeString();
 			expect(deviceId).toBe(deviceRootId);
+			expect(expiredIn).toBeNumber();
+			expect(expiredIn).toBeGreaterThan(Date.now());
+		});
+	});
+
+	describe("createMagicLoginToken", (): void => {
+		it("Should return magic login token", (): void => {
+			const userRootId: string = "userRootId";
+			const encrypted: string = createMagicLoginToken(userRootId);
+			expect(encrypted).toBeString();
+			const { userId, expiredIn } = decryptMagicLoginToken(encrypted);
+			expect(userId).toBeString();
+			expect(userId).toBe(userRootId);
+			expect(expiredIn).toBeNumber();
+			expect(expiredIn).toBeGreaterThan(Date.now());
+		});
+	});
+
+	describe("decryptMagicLoginToken", (): void => {
+		it("Should decrypt magic login token", (): void => {
+			const userRootId: string = "userRootId";
+			const encrypted: string = createMagicLoginToken(userRootId);
+			const { userId, expiredIn } = decryptMagicLoginToken(encrypted);
+			expect(userId).toBeString();
+			expect(userId).toBe(userRootId);
 			expect(expiredIn).toBeNumber();
 			expect(expiredIn).toBeGreaterThan(Date.now());
 		});

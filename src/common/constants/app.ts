@@ -284,6 +284,10 @@ export const RES_KEY = {
 		message: "RES.DELETE_ROLE_SUCCESS",
 		code: "SUC_21",
 	},
+	SEND_MAGIC_LINK: {
+		message: "RES.SEND_MAGIC_LINK",
+		code: "SUC_22",
+	},
 };
 
 export const SW_ROUTE_DETAIL = {
@@ -311,6 +315,10 @@ export const SW_ROUTE_DETAIL = {
 	LOGOUT_DEVICE: {
 		description: "Logout from a device",
 		summary: "Logout device",
+	},
+	SEND_EMAIL_MAGIC_LOGIN: {
+		description: "Send email magic login",
+		summary: "Send email magic login",
 	},
 
 	// user APIs
@@ -400,6 +408,8 @@ export enum AUTH_ROUTES {
 	LOGOUT_ALL = "/logout-all",
 	LOGOUT_DEVICE = "/logout-device",
 	CONFIRM_DEVICE = "/confirm-device",
+	SEND_MAGIC_LOGIN_LINK = "/email-magic-login",
+	MAGIC_LOGIN = "/magic-login",
 }
 
 export enum USER_ROUTES {
@@ -465,6 +475,7 @@ export const DEFAULT = {
 	BULL_BOARD_PATH: "/queues",
 	ACTIVE_ACCOUNT_TOKEN_EXPIRED: "5m",
 	DEVICE_TOKEN_EXPIRED: "5m",
+	MAGIC_LOGIN_TOKEN_EXPIRED: "5m",
 	LOG_LEVEL: "trace",
 	PAGING_LIMIT: 10,
 	PAGING_OFFSET: 0,
@@ -507,6 +518,7 @@ export enum EMAIL_TYPE {
 	LOGIN_NEW_DEVICE = "login-new-device",
 	WARNING_PASSWORD_ATTEMPT = "warning-password-attempt",
 	VERIFY_LOGIN_NEW_DEVICE = "verify-login-new-device",
+	MAGIC_LOGIN = "magic-login",
 }
 
 export enum LOGIN_METHOD {
