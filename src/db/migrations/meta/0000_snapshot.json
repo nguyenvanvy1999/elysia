@@ -1,7 +1,7 @@
 {
-  "id": "2eb0fcca-1ae1-47d9-b51f-d339dbac365a",
+  "id": "7e0561ad-ada7-4cf3-ac17-cf1afdf9fcca",
   "prevId": "00000000-0000-0000-0000-000000000000",
-  "version": "6",
+  "version": "7",
   "dialect": "postgresql",
   "tables": {
     "public.device": {
@@ -140,16 +140,32 @@
         "device_user_idx": {
           "name": "device_user_idx",
           "columns": [
-            "user_id"
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
           ],
-          "isUnique": false
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         },
         "device_ua_idx": {
           "name": "device_ua_idx",
           "columns": [
-            "ua"
+            {
+              "expression": "ua",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
           ],
-          "isUnique": false
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {},
@@ -311,16 +327,32 @@
         "refresh_token_user_idx": {
           "name": "refresh_token_user_idx",
           "columns": [
-            "user_id"
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
           ],
-          "isUnique": false
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         },
         "refresh_token_token_idx": {
           "name": "refresh_token_token_idx",
           "columns": [
-            "token"
+            {
+              "expression": "token",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
           ],
-          "isUnique": false
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {},
@@ -425,9 +457,17 @@
         "setting_key_idx": {
           "name": "setting_key_idx",
           "columns": [
-            "key"
+            {
+              "expression": "key",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
           ],
-          "isUnique": false
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {},
@@ -475,23 +515,47 @@
         "translation_lang_idx": {
           "name": "translation_lang_idx",
           "columns": [
-            "lang"
+            {
+              "expression": "lang",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
           ],
-          "isUnique": false
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         },
         "translation_ns_idx": {
           "name": "translation_ns_idx",
           "columns": [
-            "ns"
+            {
+              "expression": "ns",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
           ],
-          "isUnique": false
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         },
         "translation_key_idx": {
           "name": "translation_key_idx",
           "columns": [
-            "key"
+            {
+              "expression": "key",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
           ],
-          "isUnique": false
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {},
@@ -599,6 +663,12 @@
         "active_account_at": {
           "name": "active_account_at",
           "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "magic_login_token": {
+          "name": "magic_login_token",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false
         }

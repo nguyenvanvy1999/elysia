@@ -101,6 +101,7 @@ CREATE TABLE IF NOT EXISTS "user" (
 	"updated_at" timestamp with time zone DEFAULT now(),
 	"active_account_token" varchar,
 	"active_account_at" timestamp with time zone,
+	"magic_login_token" varchar,
 	CONSTRAINT "user_username_unique" UNIQUE("username"),
 	CONSTRAINT "user_email_unique" UNIQUE("email")
 );
@@ -135,11 +136,11 @@ EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "device_user_idx" ON "device" ("user_id");--> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "device_ua_idx" ON "device" ("ua");--> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "refresh_token_user_idx" ON "refresh_token" ("user_id");--> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "refresh_token_token_idx" ON "refresh_token" ("token");--> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "setting_key_idx" ON "setting" ("key");--> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "translation_lang_idx" ON "translation" ("lang");--> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "translation_ns_idx" ON "translation" ("ns");--> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "translation_key_idx" ON "translation" ("key");
+CREATE INDEX IF NOT EXISTS "device_user_idx" ON "device" USING btree (user_id);--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "device_ua_idx" ON "device" USING btree (ua);--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "refresh_token_user_idx" ON "refresh_token" USING btree (user_id);--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "refresh_token_token_idx" ON "refresh_token" USING btree (token);--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "setting_key_idx" ON "setting" USING btree (key);--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "translation_lang_idx" ON "translation" USING btree (lang);--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "translation_ns_idx" ON "translation" USING btree (ns);--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "translation_key_idx" ON "translation" USING btree (key);

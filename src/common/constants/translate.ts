@@ -399,6 +399,18 @@ export const translates = [
 		key: RES_KEY.CAN_NOT_MODIFY_DEFAULT_ROLE.message,
 		value: "Khong the sua role mac dinh",
 	},
+	{
+		lang: LANGUAGE.EN,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.MAGIC_LOGIN_EMAIL_RATE_LIMIT.message,
+		value: "Please wait 5 minutes before retry send email again",
+	},
+	{
+		lang: LANGUAGE.VI,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.MAGIC_LOGIN_EMAIL_RATE_LIMIT.message,
+		value: "Vui long kiem tra hop thu truoc khi yeu cau gui email moi",
+	},
 
 	// response
 	{

@@ -52,6 +52,7 @@ import {
 	createMagicLoginToken,
 	createPassword,
 	createRefreshToken,
+	decryptActiveAccountToken,
 	decryptDeviceToken,
 	idGenerator,
 	resBuild,
@@ -112,6 +113,7 @@ export const authController: IAuthController = {
 				id: true,
 				email: true,
 				status: true,
+				magicLoginToken: true,
 			},
 		});
 		if (!user) {
@@ -119,21 +121,34 @@ export const authController: IAuthController = {
 		}
 		userService.checkUserStatus(user.status);
 
-		const loginToken = createMagicLoginToken(user.id);
-		// todo: save token
-		const jobId = idGenerator(BULL_QUEUE.SEND_MAIL, BULL_JOB_ID_LENGTH);
-		const queueData = {
-			email,
-			emailType: EMAIL_TYPE.MAGIC_LOGIN,
-			data: {
-				url: encodeURI(
-					`${config.appEndpoint}${ROUTES.AUTH_V1}${AUTH_ROUTES.MAGIC_LOGIN}?token=${loginToken}`,
-				),
-			},
-		} satisfies IEmailMagicLogin;
-		await sendEmailQueue.add(jobId, queueData, { jobId });
+		if (user.magicLoginToken) {
+			const { expiredIn } = decryptActiveAccountToken(user.magicLoginToken);
+			if (Date.now() < expiredIn) {
+				throw HttpError.BadRequest(
+					...Object.values(RES_KEY.MAGIC_LOGIN_EMAIL_RATE_LIMIT),
+				);
+			}
+		} else {
+			const newToken: string = createMagicLoginToken(user.id);
+			await db
+				.update(users)
+				.set({ magicLoginToken: newToken })
+				.where(eq(users.id, user.id));
 
-		return resBuild({ id: user.id }, RES_KEY.SEND_MAGIC_LINK);
+			const jobId = idGenerator(BULL_QUEUE.SEND_MAIL, BULL_JOB_ID_LENGTH);
+			const queueData = {
+				email,
+				emailType: EMAIL_TYPE.MAGIC_LOGIN,
+				data: {
+					url: encodeURI(
+						`${config.appEndpoint}${ROUTES.AUTH_V1}${AUTH_ROUTES.MAGIC_LOGIN}?token=${newToken}`,
+					),
+				},
+			} satisfies IEmailMagicLogin;
+			await sendEmailQueue.add(jobId, queueData, { jobId });
+
+			return resBuild({ id: user.id }, RES_KEY.SEND_MAGIC_LINK);
+		}
 	},
 
 	register: async ({ body }): Promise<any> => {

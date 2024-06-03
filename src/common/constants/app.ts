@@ -184,6 +184,10 @@ export const RES_KEY = {
 		message: "ERROR.PERMISSION_IDS_WRONG",
 		code: "BAD_REQUEST_8",
 	},
+	MAGIC_LOGIN_EMAIL_RATE_LIMIT: {
+		message: "ERROR.MAGIC_LOGIN_EMAIL_RATE_LIMIT",
+		code: "BAD_REQUEST_9",
+	},
 
 	// service unavailable error
 	MAINTENANCE: {

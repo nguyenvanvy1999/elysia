@@ -1,12 +1,12 @@
 {
-  "version": "6",
+  "version": "7",
   "dialect": "postgresql",
   "entries": [
     {
       "idx": 0,
-      "version": "6",
-      "when": 1716867806578,
-      "tag": "0000_mushy_prima",
+      "version": "7",
+      "when": 1717414942259,
+      "tag": "0000_robust_forge",
       "breakpoints": true
     }
   ]
