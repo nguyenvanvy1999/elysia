@@ -23,6 +23,7 @@ import {
 	type confirmDeviceQuery,
 	type loginBody,
 	type logoutDeviceQuery,
+	type magicLoginQuery,
 	type registerBody,
 	type sendMagicLinkBody,
 } from "src/common";
@@ -103,9 +104,23 @@ interface IAuthController {
 	confirmDevice: ({
 		query,
 	}: { query: Static<typeof confirmDeviceQuery> }) => Promise<any>;
+
+	magicLogin: ({
+		query,
+	}: { query: Static<typeof magicLoginQuery> }) => Promise<any>;
 }
 
 export const authController: IAuthController = {
+	magicLogin: async ({ query: { token } }): Promise<any> => {
+		const user = await db.query.users.findFirst({
+			where: eq(users.magicLoginToken, token),
+			columns: { id: true },
+		});
+		if (!user) {
+			throw HttpError.NotFound(...Object.values(RES_KEY.USER_NOT_FOUND));
+		}
+	},
+
 	sendMagicLink: async ({ body: { email } }): Promise<any> => {
 		const user = await db.query.users.findFirst({
 			where: eq(users.email, email),
