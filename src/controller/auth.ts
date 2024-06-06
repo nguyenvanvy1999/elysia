@@ -1,19 +1,16 @@
-import { randomUUID } from "node:crypto";
 import type { SocketAddress } from "bun";
 import { and, eq, or } from "drizzle-orm";
 import type { Static } from "elysia";
-import ms from "ms";
 import {
 	AUTH_ROUTES,
 	BULL_JOB_ID_LENGTH,
 	BULL_QUEUE,
-	DB_ID_PREFIX,
 	EMAIL_TYPE,
+	ID_PREFIX,
 	type IEmailLoginNewDevice,
 	type IEmailMagicLogin,
 	type IEmailVerifyLoginNewDevice,
 	type IEmailWarningPasswordAttempt,
-	type IJwtPayload,
 	LOGIN_METHOD,
 	RES_KEY,
 	ROLE_NAME,
@@ -27,14 +24,7 @@ import {
 	type registerBody,
 	type sendMagicLinkBody,
 } from "src/common";
-import {
-	HttpError,
-	config,
-	db,
-	redisClient,
-	sendEmailQueue,
-	sessionRepository,
-} from "src/config";
+import { HttpError, config, db, redisClient, sendEmailQueue } from "src/config";
 import {
 	type UserWithRoles,
 	devices,
@@ -45,16 +35,14 @@ import {
 } from "src/db";
 import { sessionService, userService } from "src/service";
 import {
-	aes256Encrypt,
 	checkPasswordExpired,
 	comparePassword,
-	createAccessToken,
 	createDeviceToken,
 	createMagicLoginToken,
 	createPassword,
-	createRefreshToken,
 	decryptActiveAccountToken,
 	decryptDeviceToken,
+	decryptMagicLoginToken,
 	idGenerator,
 	resBuild,
 } from "src/util";
@@ -107,18 +95,101 @@ interface IAuthController {
 
 	magicLogin: ({
 		query,
-	}: { query: Static<typeof magicLoginQuery> }) => Promise<any>;
+		userAgent,
+		ip,
+	}: {
+		query: Static<typeof magicLoginQuery>;
+		userAgent?: IResult;
+		ip: SocketAddress | string | null | undefined;
+	}) => Promise<any>;
 }
 
 export const authController: IAuthController = {
-	magicLogin: async ({ query: { token } }): Promise<any> => {
+	magicLogin: async ({ query: { token }, userAgent, ip }): Promise<any> => {
 		const user = await db.query.users.findFirst({
 			where: eq(users.magicLoginToken, token),
-			columns: { id: true },
+			columns: { id: true, email: true },
 		});
 		if (!user) {
-			throw HttpError.NotFound(...Object.values(RES_KEY.USER_NOT_FOUND));
+			throw HttpError.NotFound(
+				...Object.values(RES_KEY.MAGIC_LOGIN_TOKEN_NOT_FOUND),
+			);
 		}
+		const { expiredIn } = decryptMagicLoginToken(token);
+		if (Date.now() > expiredIn) {
+			throw HttpError.BadRequest(...Object.values(RES_KEY.DEVICE_TOKEN_WRONG));
+		}
+
+		const { accessToken, refreshToken, refreshSessionId } =
+			await userService.generateAndSaveTokens(user.id);
+
+		if (!userAgent) {
+			throw HttpError.BadRequest(
+				...Object.values(RES_KEY.INTERNAL_SERVER_ERROR),
+			);
+		}
+
+		const existDevice = await db.query.devices.findFirst({
+			where: and(eq(devices.ua, userAgent.ua), eq(devices.userId, user.id)),
+			columns: { userId: true, ua: true, id: true },
+		});
+		if (!existDevice) {
+			// new device
+			const jobId = idGenerator(BULL_QUEUE.SEND_MAIL, BULL_JOB_ID_LENGTH);
+			const queueData = {
+				email: user.email,
+				emailType: EMAIL_TYPE.LOGIN_NEW_DEVICE,
+				data: {
+					ipAddress: typeof ip === "string" ? ip : ip?.address,
+					deviceType: userAgent.device.type,
+					deviceVendor: userAgent.device.vendor,
+					deviceModel: userAgent.device.model,
+					os: userAgent.os.name,
+					osVersion: userAgent.os.version,
+					browserName: userAgent.browser.name,
+					browserVersion: userAgent.browser.version,
+				},
+			} satisfies IEmailLoginNewDevice;
+
+			await db.transaction(async (ct) => {
+				await ct.insert(devices).values({
+					userId: user.id,
+					id: idGenerator(ID_PREFIX.DEVICE),
+					ua: userAgent.ua,
+					...userAgent.device,
+					os: userAgent.os.name,
+					osVersion: userAgent.os.version,
+					browserName: userAgent.browser.name,
+					browserVersion: userAgent.browser.version,
+					engineName: userAgent.engine.name,
+					engineVersion: userAgent.engine.version,
+					cpuArchitecture: userAgent.cpu.architecture,
+					ipAddress: typeof ip === "string" ? ip : ip?.address,
+					sessionId: refreshSessionId,
+					loginAt: new Date(),
+					loginMethod: LOGIN_METHOD.PASSWORD,
+				});
+				await ct
+					.update(users)
+					.set({ magicLoginToken: null })
+					.where(eq(users.id, user.id));
+			});
+			await sendEmailQueue.add(jobId, queueData, { jobId });
+		} else {
+			// old device
+			await db.transaction(async (ct) => {
+				await ct
+					.update(devices)
+					.set({ sessionId: refreshSessionId })
+					.where(eq(devices.id, existDevice.id));
+				await ct
+					.update(users)
+					.set({ magicLoginToken: null })
+					.where(eq(users.id, user.id));
+			});
+		}
+
+		return resBuild({ accessToken, refreshToken }, RES_KEY.MAGIC_LOGIN);
 	},
 
 	sendMagicLink: async ({ body: { email } }): Promise<any> => {
@@ -199,7 +270,7 @@ export const authController: IAuthController = {
 				.insert(users)
 				.values({
 					...body,
-					id: idGenerator(DB_ID_PREFIX.USER),
+					id: idGenerator(ID_PREFIX.USER),
 					...createPassword(password),
 					status: USER_STATUS.INACTIVE,
 					activeAccountAt: null,
@@ -285,47 +356,8 @@ export const authController: IAuthController = {
 			);
 		}
 
-		const accessSessionId: string = idGenerator(DB_ID_PREFIX.SESSION);
-		const refreshSessionId: string = randomUUID();
-		let accessToken: string = createAccessToken({
-			loginDate: new Date(),
-			sessionId: accessSessionId,
-			refreshSessionId,
-		} satisfies IJwtPayload);
-		let refreshToken: string = createRefreshToken({
-			loginDate: new Date(),
-			sessionId: refreshSessionId,
-		} satisfies IJwtPayload);
-		if (config.enbTokenEncrypt) {
-			accessToken = aes256Encrypt(
-				accessToken,
-				config.jwtPayloadAccessTokenEncryptKey,
-				config.jwtPayloadAccessTokenEncryptIv,
-			);
-			refreshToken = aes256Encrypt(
-				refreshToken,
-				config.jwtPayloadRefreshTokenEncryptKey,
-				config.jwtPayloadRefreshTokenEncryptIv,
-			);
-		}
-
-		await Promise.all([
-			db.insert(refreshTokens).values({
-				id: idGenerator(DB_ID_PREFIX.REFRESH_TOKEN),
-				userId: user.id,
-				token: refreshSessionId,
-				expires: new Date(Date.now() + ms(config.jwtRefreshTokenExpired)),
-			}),
-			sessionRepository.save(accessSessionId, {
-				id: accessSessionId,
-				userId: user.id,
-				refreshSessionId,
-			}),
-		]);
-		await sessionRepository.expireAt(
-			accessSessionId,
-			new Date(Date.now() + ms(config.jwtAccessTokenExpired)),
-		);
+		const { accessToken, refreshToken, refreshSessionId } =
+			await userService.generateAndSaveTokens(user.id);
 
 		if (!userAgent) {
 			throw HttpError.BadRequest(
@@ -349,7 +381,7 @@ export const authController: IAuthController = {
 				browserVersion: userAgent.browser.version,
 			};
 			const jobId = idGenerator(BULL_QUEUE.SEND_MAIL, BULL_JOB_ID_LENGTH);
-			const deviceId = idGenerator(DB_ID_PREFIX.DEVICE);
+			const deviceId = idGenerator(ID_PREFIX.DEVICE);
 			const deviceData = {
 				id: deviceId,
 				ua: userAgent.ua,
@@ -415,13 +447,7 @@ export const authController: IAuthController = {
 				.where(eq(devices.id, existDevice.id));
 		}
 
-		return resBuild(
-			{
-				accessToken,
-				refreshToken,
-			},
-			RES_KEY.LOGIN,
-		);
+		return resBuild({ accessToken, refreshToken }, RES_KEY.LOGIN);
 	},
 
 	logout: async ({ sessionId, refreshSessionId }): Promise<any> => {

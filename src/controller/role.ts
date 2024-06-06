@@ -1,7 +1,7 @@
 import { and, asc, eq, ilike, inArray, ne, or } from "drizzle-orm";
 import type { Static } from "elysia";
 import {
-	DB_ID_PREFIX,
+	ID_PREFIX,
 	RES_KEY,
 	ROLE_NAME,
 	type createRoleBody,
@@ -66,7 +66,7 @@ export const roleController: IRoleController = {
 		const role = await db.transaction(async (ct) => {
 			const roleRes = await ct
 				.insert(roles)
-				.values({ id: idGenerator(DB_ID_PREFIX.ROLE), name, description })
+				.values({ id: idGenerator(ID_PREFIX.ROLE), name, description })
 				.returning({
 					id: roles.id,
 					name: roles.name,

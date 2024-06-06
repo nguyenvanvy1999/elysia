@@ -1,5 +1,5 @@
 import {
-	DB_ID_PREFIX,
+	ID_PREFIX,
 	POLICY_ACCESS,
 	POLICY_ACTION,
 	POLICY_ENTITY,
@@ -39,7 +39,7 @@ export async function seedAuth(): Promise<void> {
 			for (const action of Object.values(POLICY_ACTION)) {
 				for (const access of Object.values(POLICY_ACCESS)) {
 					permCreates.push({
-						id: idGenerator(DB_ID_PREFIX.PERMISSION),
+						id: idGenerator(ID_PREFIX.PERMISSION),
 						entity,
 						action,
 						access,
@@ -64,11 +64,11 @@ export async function seedAuth(): Promise<void> {
 		);
 		const roleCreates = [
 			{
-				id: idGenerator(DB_ID_PREFIX.ROLE),
+				id: idGenerator(ID_PREFIX.ROLE),
 				name: ROLE_NAME.USER,
 			},
 			{
-				id: idGenerator(DB_ID_PREFIX.ROLE),
+				id: idGenerator(ID_PREFIX.ROLE),
 				name: ROLE_NAME.ADMIN,
 			},
 		];
@@ -92,7 +92,7 @@ export async function seedAuth(): Promise<void> {
 		logger.info("👑 Created roles...");
 
 		const totalUsers: number = 3;
-		const adminId = idGenerator(DB_ID_PREFIX.USER);
+		const adminId = idGenerator(ID_PREFIX.USER);
 		const userCreates = [
 			{
 				id: adminId,
@@ -113,7 +113,7 @@ export async function seedAuth(): Promise<void> {
 		];
 		for (let i = 0; i < totalUsers; i++) {
 			const userData = createUser();
-			const id = idGenerator(DB_ID_PREFIX.USER);
+			const id = idGenerator(ID_PREFIX.USER);
 			userCreates.push({
 				id,
 				...userData,
@@ -144,7 +144,7 @@ export async function seedSettings(): Promise<void> {
 		await cleanupDB(ct, settings);
 		const settingCreate: Setting[] = [
 			{
-				id: idGenerator(DB_ID_PREFIX.SETTING),
+				id: idGenerator(ID_PREFIX.SETTING),
 				key: SETTING_KEY.MAINTENANCE,
 				value: "false",
 				isEncrypt: false,
@@ -152,7 +152,7 @@ export async function seedSettings(): Promise<void> {
 				description: "Maintenance status of app",
 			},
 			{
-				id: idGenerator(DB_ID_PREFIX.SETTING),
+				id: idGenerator(ID_PREFIX.SETTING),
 				key: SETTING_KEY.ENB_REGISTER,
 				value: "true",
 				isEncrypt: false,
@@ -160,7 +160,7 @@ export async function seedSettings(): Promise<void> {
 				description: "Enable register in app",
 			},
 			{
-				id: idGenerator(DB_ID_PREFIX.SETTING),
+				id: idGenerator(ID_PREFIX.SETTING),
 				key: SETTING_KEY.ENB_PASSWORD_EXPIRED,
 				value: "true",
 				isEncrypt: false,
@@ -168,7 +168,7 @@ export async function seedSettings(): Promise<void> {
 				description: "Enable check password expired",
 			},
 			{
-				id: idGenerator(DB_ID_PREFIX.SETTING),
+				id: idGenerator(ID_PREFIX.SETTING),
 				key: SETTING_KEY.ENB_PASSWORD_ATTEMPT,
 				value: "true",
 				isEncrypt: false,
@@ -176,7 +176,7 @@ export async function seedSettings(): Promise<void> {
 				description: "Enable check password attempt",
 			},
 			{
-				id: idGenerator(DB_ID_PREFIX.SETTING),
+				id: idGenerator(ID_PREFIX.SETTING),
 				key: SETTING_KEY.ENB_LOGIN_NEW_DEVICE_VERIFY,
 				value: "false",
 				isEncrypt: false,

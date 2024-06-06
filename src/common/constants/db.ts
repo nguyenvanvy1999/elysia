@@ -17,7 +17,7 @@ export enum DB_TABLE_NAME {
 	DEVICE = "device",
 }
 
-export enum DB_ID_PREFIX {
+export enum ID_PREFIX {
 	USER = "user",
 	ROLE = "role",
 	PERMISSION = "perm",

@@ -14,6 +14,8 @@ import {
 	logoutDeviceQuery,
 	logoutDeviceRes,
 	logoutRes,
+	magicLoginQuery,
+	magicLoginRes,
 	registerBody,
 	registerRes,
 	sendMagicLinkBody,
@@ -41,6 +43,16 @@ export const authRoutes = new Elysia<
 		detail: SW_ROUTE_DETAIL.SEND_EMAIL_MAGIC_LOGIN,
 		response: {
 			200: sendMagicLinkRes,
+			404: errorRes,
+			...errorsDefault,
+		},
+	})
+	.get(AUTH_ROUTES.MAGIC_LOGIN, authController.magicLogin, {
+		query: magicLoginQuery,
+		detail: SW_ROUTE_DETAIL.MAGIC_LOGIN,
+		response: {
+			200: magicLoginRes,
+			403: errorRes,
 			404: errorRes,
 			...errorsDefault,
 		},

@@ -1,7 +1,7 @@
 import { asc, eq, ilike } from "drizzle-orm";
 import type { Static } from "elysia";
 import {
-	DB_ID_PREFIX,
+	ID_PREFIX,
 	RES_KEY,
 	type createSettingBody,
 	type listSettingQuery,
@@ -72,7 +72,7 @@ export const settingController: ISettingController = {
 		const setting = await db
 			.insert(settings)
 			.values({
-				id: idGenerator(DB_ID_PREFIX.SETTING),
+				id: idGenerator(ID_PREFIX.SETTING),
 				key: key.toLowerCase(),
 				value: isEncrypt ? encryptSetting(strValue) : strValue,
 				type,

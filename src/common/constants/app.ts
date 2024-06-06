@@ -116,6 +116,10 @@ export const RES_KEY = {
 		message: "ERROR.ROLE_NOT_FOUND",
 		code: "NOT_FOUND_5",
 	},
+	MAGIC_LOGIN_TOKEN_NOT_FOUND: {
+		message: "ERROR.MAGIC_LOGIN_TOKEN_NOT_FOUND",
+		code: "NOT_FOUND_6",
+	},
 
 	// forbidden resource error
 	USER_PASSWORD_ATTEMPT_MAX: {
@@ -187,6 +191,10 @@ export const RES_KEY = {
 	MAGIC_LOGIN_EMAIL_RATE_LIMIT: {
 		message: "ERROR.MAGIC_LOGIN_EMAIL_RATE_LIMIT",
 		code: "BAD_REQUEST_9",
+	},
+	MAGIC_LOGIN_TOKEN_WRONG: {
+		message: "ERROR.MAGIC_LOGIN_TOKEN_WRONG",
+		code: "BAD_REQUEST_10",
 	},
 
 	// service unavailable error
@@ -292,6 +300,10 @@ export const RES_KEY = {
 		message: "RES.SEND_MAGIC_LINK",
 		code: "SUC_22",
 	},
+	MAGIC_LOGIN: {
+		message: "RES.MAGIC_LOGIN_SUCCESS",
+		code: "SUC_23",
+	},
 };
 
 export const SW_ROUTE_DETAIL = {
@@ -323,6 +335,10 @@ export const SW_ROUTE_DETAIL = {
 	SEND_EMAIL_MAGIC_LOGIN: {
 		description: "Send email magic login",
 		summary: "Send email magic login",
+	},
+	MAGIC_LOGIN: {
+		description: "Magic login",
+		summary: "Magic login",
 	},
 
 	// user APIs
@@ -527,4 +543,5 @@ export enum EMAIL_TYPE {
 
 export enum LOGIN_METHOD {
 	PASSWORD = "password",
+	MAGIC_LOGIN = "magic_login",
 }

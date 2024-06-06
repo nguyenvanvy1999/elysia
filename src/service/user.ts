@@ -1,17 +1,89 @@
+import { randomUUID } from "node:crypto";
 import { eq, sql } from "drizzle-orm";
-import { RES_KEY, USER_STATUS } from "src/common";
-import { HttpError, db } from "src/config";
-import { type UserWithRoles, users } from "src/db";
-import { increment } from "src/util";
+import ms from "ms";
+import { ID_PREFIX, type IJwtPayload, RES_KEY, USER_STATUS } from "src/common";
+import { HttpError, config, db, sessionRepository } from "src/config";
+import { type UserWithRoles, refreshTokens, users } from "src/db";
+import {
+	aes256Encrypt,
+	createAccessToken,
+	createRefreshToken,
+	idGenerator,
+	increment,
+} from "src/util";
 
 interface IUserService {
 	increasePasswordAttempt: (userId: string) => Promise<void>;
 	resetPasswordAttempt: (userId: string) => Promise<void>;
 	checkUserStatus: (status: USER_STATUS | string) => void;
 	getUserDetail: (userId: string) => Promise<UserWithRoles | undefined>;
+	generateAndSaveTokens: (userId: string) => Promise<{
+		accessToken: string;
+		refreshToken: string;
+		accessSessionId: string;
+		refreshSessionId: string;
+	}>;
 }
 
 export const userService: IUserService = {
+	generateAndSaveTokens: async (
+		userId: string,
+	): Promise<{
+		accessToken: string;
+		refreshToken: string;
+		accessSessionId: string;
+		refreshSessionId: string;
+	}> => {
+		const accessSessionId: string = idGenerator(ID_PREFIX.SESSION);
+		const refreshSessionId: string = randomUUID();
+		let accessToken: string = createAccessToken({
+			loginDate: new Date(),
+			sessionId: accessSessionId,
+			refreshSessionId,
+		} satisfies IJwtPayload);
+		let refreshToken: string = createRefreshToken({
+			loginDate: new Date(),
+			sessionId: refreshSessionId,
+		} satisfies IJwtPayload);
+		if (config.enbTokenEncrypt) {
+			accessToken = aes256Encrypt(
+				accessToken,
+				config.jwtPayloadAccessTokenEncryptKey,
+				config.jwtPayloadAccessTokenEncryptIv,
+			);
+			refreshToken = aes256Encrypt(
+				refreshToken,
+				config.jwtPayloadRefreshTokenEncryptKey,
+				config.jwtPayloadRefreshTokenEncryptIv,
+			);
+		}
+
+		await Promise.all([
+			db.insert(refreshTokens).values({
+				id: idGenerator(ID_PREFIX.REFRESH_TOKEN),
+				userId,
+				token: refreshSessionId,
+				expires: new Date(Date.now() + ms(config.jwtRefreshTokenExpired)),
+			}),
+			sessionRepository.save(accessSessionId, {
+				id: accessSessionId,
+				userId,
+				refreshSessionId,
+			}),
+		]);
+		await sessionRepository.expireAt(
+			accessSessionId,
+			new Date(Date.now() + ms(config.jwtAccessTokenExpired)),
+		);
+
+		return {
+			accessToken,
+			refreshToken,
+			accessSessionId,
+			refreshSessionId,
+		};
+	},
+
 	increasePasswordAttempt: async (userId: string): Promise<void> => {
 		await db
 			.update(users)

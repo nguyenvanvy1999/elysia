@@ -411,6 +411,30 @@ export const translates = [
 		key: RES_KEY.MAGIC_LOGIN_EMAIL_RATE_LIMIT.message,
 		value: "Vui long kiem tra hop thu truoc khi yeu cau gui email moi",
 	},
+	{
+		lang: LANGUAGE.EN,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.MAGIC_LOGIN_TOKEN_WRONG.message,
+		value: "Magic login token wrong",
+	},
+	{
+		lang: LANGUAGE.VI,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.MAGIC_LOGIN_TOKEN_WRONG.message,
+		value: "Token login sai",
+	},
+	{
+		lang: LANGUAGE.EN,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.MAGIC_LOGIN_TOKEN_NOT_FOUND.message,
+		value: "Magic login token not found",
+	},
+	{
+		lang: LANGUAGE.VI,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.MAGIC_LOGIN_TOKEN_NOT_FOUND.message,
+		value: "Token login khong ton tai",
+	},
 
 	// response
 	{
@@ -689,5 +713,17 @@ export const translates = [
 		ns: TRANSLATION_NS.BACKEND,
 		key: RES_KEY.SEND_MAGIC_LINK.message,
 		value: "Gui magic link email thanh cong",
+	},
+	{
+		lang: LANGUAGE.EN,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.MAGIC_LOGIN.message,
+		value: "Magic login success",
+	},
+	{
+		lang: LANGUAGE.VI,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.MAGIC_LOGIN.message,
+		value: "Magic login thanh cong",
 	},
 ];
