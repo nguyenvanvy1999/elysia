@@ -304,6 +304,10 @@ export const RES_KEY = {
 		message: "RES.MAGIC_LOGIN_SUCCESS",
 		code: "SUC_23",
 	},
+	GET_USER_BY_ID: {
+		message: "RES.GET_USER_BY_ID_SUCCESS",
+		code: "SUC_24",
+	},
 };
 
 export const SW_ROUTE_DETAIL = {
@@ -353,6 +357,10 @@ export const SW_ROUTE_DETAIL = {
 	VERIFY_ACCOUNT: {
 		description: "Verify account",
 		summary: "Verify account",
+	},
+	USER_BY_ID: {
+		description: "Get user information by id",
+		summary: "Get user",
 	},
 
 	// setting APIs
@@ -436,6 +444,7 @@ export enum USER_ROUTES {
 	INFO = "/info",
 	SEND_EMAIL_VERIFY = "/send-email-active-account",
 	ACTIVE_ACCOUNT = "/active-account",
+	USER_BY_ID = "/:id",
 }
 
 export enum SETTING_ROUTES {

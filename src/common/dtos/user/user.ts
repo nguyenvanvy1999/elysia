@@ -12,3 +12,7 @@ export const userDto = t.Object({
 	avatarUrl: t.String(),
 	status: t.Enum(USER_STATUS),
 });
+
+export const userParam = t.Object({
+	id: t.String(),
+});

@@ -12,6 +12,7 @@ import {
 	sendEmailVerifyRes,
 	swaggerOptions,
 	userInfoRes,
+	userParam,
 	verifyAccountQuery,
 	verifyAccountRes,
 } from "src/common";
@@ -50,6 +51,26 @@ export const userRoutes = new Elysia({
 			{
 				entity: POLICY_ENTITY.USER,
 				access: POLICY_ACCESS.OWNER,
+				action: POLICY_ACTION.READ,
+			},
+		]),
+		response: {
+			200: userInfoRes,
+			401: errorRes,
+			403: errorRes,
+			...errorsDefault,
+		},
+	})
+	.get(USER_ROUTES.USER_BY_ID, userController.userById, {
+		params: userParam,
+		detail: {
+			...SW_ROUTE_DETAIL.USER_BY_ID,
+			security: [{ accessToken: [] }],
+		},
+		beforeHandle: hasPermissions([
+			{
+				entity: POLICY_ENTITY.USER,
+				access: POLICY_ACCESS.ANY,
 				action: POLICY_ACTION.READ,
 			},
 		]),

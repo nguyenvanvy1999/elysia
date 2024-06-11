@@ -726,4 +726,16 @@ export const translates = [
 		key: RES_KEY.MAGIC_LOGIN.message,
 		value: "Magic login thanh cong",
 	},
+	{
+		lang: LANGUAGE.EN,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.GET_USER_BY_ID.message,
+		value: "Get user by id success",
+	},
+	{
+		lang: LANGUAGE.VI,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.GET_USER_BY_ID.message,
+		value: "Lay thong tin user thanh cong",
+	},
 ];

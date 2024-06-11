@@ -11,10 +11,12 @@ import {
 	USER_ROUTES,
 	USER_STATUS,
 	type sendEmailVerifyBody,
+	type userParam,
 	type verifyAccountQuery,
 } from "src/common";
 import { HttpError, config, db, sendEmailQueue } from "src/config";
 import { type UserWithRoles, users } from "src/db";
+import { userService } from "src/service";
 import {
 	createActiveAccountToken,
 	decryptActiveAccountToken,
@@ -32,6 +34,8 @@ type IUserController = {
 	}: { query: Static<typeof verifyAccountQuery> }) => Promise<any>;
 
 	userInfo: ({ user }: { user: UserWithRoles }) => Promise<any>;
+
+	userById: ({ params }: { params: Static<typeof userParam> }) => Promise<any>;
 };
 
 export const userController: IUserController = {
@@ -141,8 +145,29 @@ export const userController: IUserController = {
 				avatarUrl: user.avatarUrl,
 				name: user.name,
 				status: user.status,
+				roles: user.roles,
 			},
 			RES_KEY.USER_INFO,
+		);
+	},
+
+	userById: async ({ params: { id } }): Promise<any> => {
+		const user: UserWithRoles | undefined = await userService.getUserDetail(id);
+		if (!user) {
+			throw HttpError.NotFound(...Object.values(RES_KEY.USER_NOT_FOUND));
+		}
+
+		return resBuild(
+			{
+				id: user.id,
+				email: user.email,
+				username: user.username,
+				avatarUrl: user.avatarUrl,
+				name: user.name,
+				status: user.status,
+				roles: user.roles,
+			},
+			RES_KEY.GET_USER_BY_ID,
 		);
 	},
 };
