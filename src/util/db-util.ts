@@ -1,15 +1,15 @@
 import { faker } from "@faker-js/faker";
 import { type AnyColumn, type TableConfig, sql } from "drizzle-orm";
 import type {
+	PgQueryResultHKT,
 	PgTableWithColumns,
 	PgTransaction,
-	QueryResultHKT,
 } from "drizzle-orm/pg-core";
 import { UniqueEnforcer } from "enforce-unique";
 
 export async function cleanupDB<T extends TableConfig>(
 	schema: PgTransaction<
-		QueryResultHKT,
+		PgQueryResultHKT,
 		Record<string, unknown>,
 		Record<string, any>
 	>,
