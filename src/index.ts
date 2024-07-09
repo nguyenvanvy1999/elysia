@@ -9,6 +9,7 @@ import {
 	ElysiaAdapter,
 	config,
 	connectRedis,
+	ensurePermissions,
 	ensureRoles,
 	ensureSettings,
 	httpError,
@@ -32,6 +33,7 @@ import { gracefulShutdown } from "src/util";
 try {
 	await connectRedis();
 	await ensureSettings();
+	await ensurePermissions();
 	await ensureRoles();
 
 	const app = new Elysia();
