@@ -3,11 +3,7 @@ import { type RedisClientType, createClient } from "redis";
 import { Repository } from "redis-om";
 import { config } from "src/config/env";
 import { redisLogger } from "src/config/logger";
-import {
-	permissionSchema,
-	sessionSchema,
-	settingSchema,
-} from "src/db/redis-schemas";
+import { sessionSchema, settingSchema } from "src/db/redis-schemas";
 
 export const redisClient: RedisClientType = createClient({
 	password: config.redisPassword,
@@ -28,11 +24,6 @@ export const sessionRepository: Repository = new Repository(
 	redisClient as any,
 );
 
-export const permissionRepository: Repository = new Repository(
-	permissionSchema,
-	redisClient as any,
-);
-
 export const connectRedis = async (): Promise<void> => {
 	try {
 		await redisClient.connect();
@@ -44,10 +35,6 @@ export const connectRedis = async (): Promise<void> => {
 		await sessionRepository.createIndex();
 		redisLogger.info(
 			chalk.green("✅  Create session repository index success"),
-		);
-		await permissionRepository.createIndex();
-		redisLogger.info(
-			chalk.green("✅  Create permission repository index success"),
 		);
 	} catch (e) {
 		redisLogger.error(`❌  Connect redis failed: ${JSON.stringify(e)}`);

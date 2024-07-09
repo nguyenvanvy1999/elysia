@@ -1,9 +1,17 @@
 import { randomUUID } from "node:crypto";
-import { eq, sql } from "drizzle-orm";
+import { eq, getTableColumns } from "drizzle-orm";
 import ms from "ms";
 import { ID_PREFIX, type IJwtPayload, RES_KEY, USER_STATUS } from "src/common";
 import { HttpError, config, db, sessionRepository } from "src/config";
-import { type UserWithRoles, refreshTokens, users } from "src/db";
+import {
+	type UserWithRoles,
+	permissions,
+	permissionsToRoles,
+	refreshTokens,
+	roles,
+	users,
+	usersToRoles,
+} from "src/db";
 import {
 	aes256Encrypt,
 	createAccessToken,
@@ -114,31 +122,56 @@ export const userService: IUserService = {
 	},
 
 	getUserDetail: async (userId: string): Promise<UserWithRoles | undefined> => {
-		return (await db
-			.execute(sql`SELECT "u".*, "ur"."data" AS "roles"
-FROM "user" "u"
-         LEFT JOIN LATERAL
-    (SELECT coalesce(json_agg("utr"."data"), '[]'::JSON) AS "data"
-     FROM "user_to_role" "ur"
-              LEFT JOIN LATERAL
-         (SELECT json_build_object('id', "r"."id", 'name', r."name", 'permissions', "ptr"."data") AS "data"
-          FROM (SELECT r."id", r."name"
-                FROM "role" "r"
-                WHERE "r"."id" = "ur"."role_id"
-                LIMIT 1) "r"
-                   LEFT JOIN LATERAL
-              (SELECT coalesce(json_agg("p"."data"), '[]'::JSON) AS "data"
-               FROM "permission_to_role" "ptr"
-                        LEFT JOIN LATERAL
-                   (SELECT json_build_object('action', p."action", 'entity', p."entity", 'access', p."access") AS "data"
-                    FROM (SELECT p."action", p."entity", p."access"
-                          FROM "permission" "p"
-                          WHERE "p"."id" = "ptr"."permission_id"
-                          LIMIT 1) "p") "p" ON TRUE
-               WHERE "ptr"."role_id" = "r"."id") "ptr" ON TRUE) "utr" ON TRUE
-     WHERE "ur"."user_id" = "u"."id") "ur" ON TRUE
-WHERE "u"."id" = ${userId}
-LIMIT 1;`)
-			.then((res) => res.rows[0])) as UserWithRoles | undefined;
+		const usersRes = await db
+			.select({
+				user: getTableColumns(users),
+				role: {
+					id: roles.id,
+					name: roles.name,
+					description: roles.description,
+				},
+				permission: {
+					id: permissions.id,
+					access: permissions.access,
+					entity: permissions.entity,
+					action: permissions.action,
+				},
+			})
+			.from(users)
+			.innerJoin(usersToRoles, eq(users.id, usersToRoles.userId))
+			.innerJoin(roles, eq(roles.id, usersToRoles.roleId))
+			.innerJoin(
+				permissionsToRoles,
+				eq(permissionsToRoles.roleId, usersToRoles.roleId),
+			)
+			.innerJoin(
+				permissions,
+				eq(permissionsToRoles.permissionId, permissions.id),
+			)
+			.where(eq(users.id, userId));
+		if (!usersRes.length) {
+			return;
+		}
+
+		const setRoleIds: Map<string, any> = new Map<string, any>();
+		for (const i of usersRes) {
+			const exist = setRoleIds.get(i.role.id);
+			if (!exist) {
+				setRoleIds.set(i.role.id, {
+					...i.role,
+					permissions: [i.permission],
+				});
+			} else {
+				setRoleIds.set(i.role.id, {
+					...i.role,
+					permissions: [...exist.permissions, i.permission],
+				});
+			}
+		}
+
+		return {
+			...usersRes[0].user,
+			roles: Array.from(setRoleIds.values()),
+		};
 	},
 };
