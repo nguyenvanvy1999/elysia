@@ -14,3 +14,7 @@ export const permissionDto = t.Object({
 	createdAt: t.Date(),
 	updatedAt: t.Date(),
 });
+
+export const permissionParam = t.Object({
+	id: t.String(),
+});

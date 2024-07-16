@@ -1,6 +1,10 @@
 import { asc, desc, eq } from "drizzle-orm";
 import type { Static } from "elysia";
-import { type IResponseData, RES_KEY, type listDeviceQuery } from "src/common";
+import {
+	type IResponsePagingData,
+	RES_KEY,
+	type listDeviceQuery,
+} from "src/common";
 import { db } from "src/config";
 import { type UserWithRoles, devices } from "src/db";
 import {
@@ -18,14 +22,14 @@ interface IDeviceController {
 	}: {
 		user: UserWithRoles;
 		query: Static<typeof listDeviceQuery>;
-	}) => Promise<IResponseData>;
+	}) => Promise<IResponsePagingData>;
 }
 
 export const deviceController: IDeviceController = {
 	getList: async ({
 		user,
 		query: { limit, offset },
-	}): Promise<IResponseData> => {
+	}): Promise<IResponsePagingData> => {
 		limit = getLimit(limit);
 		offset = getOffset(offset);
 		const [data, count] = await Promise.all([

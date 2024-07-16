@@ -15,3 +15,5 @@ export const listPermissionQuery = t.Object({
 });
 
 export const listPermissionRes = resDoc(t.Array(permissionDto));
+
+export const permissionRes = resDoc(permissionDto);

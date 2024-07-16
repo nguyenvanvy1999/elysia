@@ -3,6 +3,7 @@ import type { Static } from "elysia";
 import {
 	ID_PREFIX,
 	type IResponseData,
+	type IResponsePagingData,
 	RES_KEY,
 	ROLE_NAME,
 	type createRoleBody,
@@ -49,7 +50,7 @@ interface IRoleController {
 	}: { params: Static<typeof roleParam> }) => Promise<IResponseData>;
 	getList: ({
 		query,
-	}: { query: Static<typeof listRoleQuery> }) => Promise<IResponseData>;
+	}: { query: Static<typeof listRoleQuery> }) => Promise<IResponsePagingData>;
 }
 
 export const roleController: IRoleController = {
@@ -214,7 +215,7 @@ export const roleController: IRoleController = {
 
 	getList: async ({
 		query: { limit, offset, search },
-	}): Promise<IResponseData> => {
+	}): Promise<IResponsePagingData> => {
 		limit = getLimit(limit);
 		offset = getOffset(offset);
 		const [data, count] = await Promise.all([

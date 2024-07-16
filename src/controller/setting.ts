@@ -3,6 +3,7 @@ import type { Static } from "elysia";
 import {
 	ID_PREFIX,
 	type IResponseData,
+	type IResponsePagingData,
 	RES_KEY,
 	type createSettingBody,
 	type listSettingQuery,
@@ -30,7 +31,9 @@ interface ISettingController {
 
 	getList: ({
 		query,
-	}: { query: Static<typeof listSettingQuery> }) => Promise<IResponseData>;
+	}: {
+		query: Static<typeof listSettingQuery>;
+	}) => Promise<IResponsePagingData>;
 
 	getDetail: ({
 		params,
@@ -92,7 +95,7 @@ export const settingController: ISettingController = {
 
 	getList: async ({
 		query: { limit, offset, search },
-	}): Promise<IResponseData> => {
+	}): Promise<IResponsePagingData> => {
 		limit = getLimit(limit);
 		offset = getOffset(offset);
 		const [data, count] = await Promise.all([

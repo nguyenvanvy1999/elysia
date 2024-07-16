@@ -120,6 +120,10 @@ export const RES_KEY = {
 		message: "ERROR.MAGIC_LOGIN_TOKEN_NOT_FOUND",
 		code: "NOT_FOUND_6",
 	},
+	PERMISSION_NOT_FOUND: {
+		message: "ERROR.PERMISSION_NOT_FOUND",
+		code: "NOT_FOUND_7",
+	},
 
 	// forbidden resource error
 	USER_PASSWORD_ATTEMPT_MAX: {
@@ -308,6 +312,10 @@ export const RES_KEY = {
 		message: "RES.GET_USER_BY_ID_SUCCESS",
 		code: "SUC_24",
 	},
+	UPDATE_PERMISSION: {
+		message: "RES.UPDATE_PERMISSION_SUCCESS",
+		code: "SUC_25",
+	},
 };
 
 export const SW_ROUTE_DETAIL = {
@@ -396,6 +404,10 @@ export const SW_ROUTE_DETAIL = {
 		description: "Get list permissions",
 		summary: "List permissions",
 	},
+	UPDATE_PERMISSION: {
+		description: "Update permission with id",
+		summary: "Update permission",
+	},
 
 	// role APIs
 	LIST_ROLE: {
@@ -461,6 +473,7 @@ export enum DEVICE_ROUTES {
 
 export enum PERMISSIONS_ROUTES {
 	LIST = "/list",
+	UPDATE = "/:id",
 }
 
 export enum ROLE_ROUTES {

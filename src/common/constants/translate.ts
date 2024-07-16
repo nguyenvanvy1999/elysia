@@ -435,6 +435,18 @@ export const translates = [
 		key: RES_KEY.MAGIC_LOGIN_TOKEN_NOT_FOUND.message,
 		value: "Token login khong ton tai",
 	},
+	{
+		lang: LANGUAGE.EN,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.PERMISSION_NOT_FOUND.message,
+		value: "Permission not found",
+	},
+	{
+		lang: LANGUAGE.VI,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.PERMISSION_NOT_FOUND.message,
+		value: "Quyen khong ton tai",
+	},
 
 	// response
 	{
@@ -737,5 +749,17 @@ export const translates = [
 		ns: TRANSLATION_NS.BACKEND,
 		key: RES_KEY.GET_USER_BY_ID.message,
 		value: "Lay thong tin user thanh cong",
+	},
+	{
+		lang: LANGUAGE.EN,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.UPDATE_PERMISSION.message,
+		value: "Update permission success",
+	},
+	{
+		lang: LANGUAGE.VI,
+		ns: TRANSLATION_NS.BACKEND,
+		key: RES_KEY.UPDATE_PERMISSION.message,
+		value: "Cap nhat quyen thanh cong",
 	},
 ];
