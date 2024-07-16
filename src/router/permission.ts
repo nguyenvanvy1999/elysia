@@ -14,8 +14,8 @@ import {
 	permissionParam,
 	permissionRes,
 	swaggerOptions,
+	updatePermissionBody,
 } from "src/common";
-import { updatePermissionBody } from "src/common/dtos/permission/update";
 import { permissionController } from "src/controller";
 import { hasPermissions, isAuthenticated } from "src/middleware";
 

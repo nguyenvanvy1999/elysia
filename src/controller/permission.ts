@@ -6,8 +6,8 @@ import {
 	RES_KEY,
 	type listPermissionQuery,
 	type permissionParam,
+	type updatePermissionBody,
 } from "src/common";
-import type { updatePermissionBody } from "src/common/dtos/permission/update";
 import { HttpError, db } from "src/config";
 import { permissions } from "src/db";
 import {
