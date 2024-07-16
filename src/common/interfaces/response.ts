@@ -18,7 +18,7 @@ export interface IResponse {
 }
 
 export interface IResponseData {
-	data: unknown;
+	data: any;
 	code: string;
 	message: string;
 }

@@ -2,6 +2,7 @@ import { asc, eq, ilike } from "drizzle-orm";
 import type { Static } from "elysia";
 import {
 	ID_PREFIX,
+	type IResponseData,
 	RES_KEY,
 	type createSettingBody,
 	type listSettingQuery,
@@ -25,17 +26,19 @@ import {
 interface ISettingController {
 	create: ({
 		body,
-	}: { body: Static<typeof createSettingBody> }) => Promise<any>;
+	}: { body: Static<typeof createSettingBody> }) => Promise<IResponseData>;
 
 	getList: ({
 		query,
-	}: { query: Static<typeof listSettingQuery> }) => Promise<any>;
+	}: { query: Static<typeof listSettingQuery> }) => Promise<IResponseData>;
 
 	getDetail: ({
 		params,
-	}: { params: Static<typeof settingParam> }) => Promise<any>;
+	}: { params: Static<typeof settingParam> }) => Promise<IResponseData>;
 
-	delete: ({ params }: { params: Static<typeof settingParam> }) => Promise<any>;
+	delete: ({
+		params,
+	}: { params: Static<typeof settingParam> }) => Promise<IResponseData>;
 
 	update: ({
 		params,
@@ -43,11 +46,11 @@ interface ISettingController {
 	}: {
 		params: Static<typeof settingParam>;
 		body: Static<typeof updateSettingBody>;
-	}) => Promise<any>;
+	}) => Promise<IResponseData>;
 }
 
 export const settingController: ISettingController = {
-	create: async ({ body }): Promise<any> => {
+	create: async ({ body }): Promise<IResponseData> => {
 		const { key, value, type, isEncrypt, description } = body;
 		const exist = await db.query.settings.findFirst({
 			where: eq(settings.key, key.toLowerCase()),
@@ -87,7 +90,9 @@ export const settingController: ISettingController = {
 		);
 	},
 
-	getList: async ({ query: { limit, offset, search } }): Promise<any> => {
+	getList: async ({
+		query: { limit, offset, search },
+	}): Promise<IResponseData> => {
 		limit = getLimit(limit);
 		offset = getOffset(offset);
 		const [data, count] = await Promise.all([
@@ -115,7 +120,7 @@ export const settingController: ISettingController = {
 		);
 	},
 
-	getDetail: async ({ params: { id } }): Promise<any> => {
+	getDetail: async ({ params: { id } }): Promise<IResponseData> => {
 		const setting = await db.query.settings.findFirst({
 			where: eq(settings.id, id),
 		});
@@ -128,7 +133,7 @@ export const settingController: ISettingController = {
 		);
 	},
 
-	delete: async ({ params: { id } }): Promise<any> => {
+	delete: async ({ params: { id } }): Promise<IResponseData> => {
 		const setting = await db.query.settings.findFirst({
 			where: eq(settings.id, id),
 			columns: { key: true, id: true },
@@ -152,7 +157,7 @@ export const settingController: ISettingController = {
 	update: async ({
 		params: { id },
 		body: { value, description, isEncrypt, type, isSetCache },
-	}): Promise<any> => {
+	}): Promise<IResponseData> => {
 		const strValue: string = settingService.stringifyValue(value);
 		const check: boolean = settingService.checkValue(strValue, type);
 		if (!check) {

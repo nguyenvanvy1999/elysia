@@ -11,6 +11,7 @@ import {
 	type IEmailMagicLogin,
 	type IEmailVerifyLoginNewDevice,
 	type IEmailWarningPasswordAttempt,
+	type IResponseData,
 	LOGIN_METHOD,
 	RES_KEY,
 	ROLE_NAME,
@@ -59,13 +60,13 @@ interface IAuthController {
 		body: Static<typeof loginBody>;
 		userAgent?: IResult;
 		ip: SocketAddress | string | null | undefined;
-	}) => Promise<any>;
+	}) => Promise<IResponseData>;
 
 	sendMagicLink: ({
 		body,
 	}: {
 		body: Static<typeof sendMagicLinkBody>;
-	}) => Promise<any>;
+	}) => Promise<IResponseData>;
 
 	logout: ({
 		sessionId,
@@ -73,7 +74,7 @@ interface IAuthController {
 	}: {
 		sessionId: string;
 		refreshSessionId?: string;
-	}) => Promise<any>;
+	}) => Promise<IResponseData>;
 
 	logoutDevice: ({
 		query,
@@ -81,17 +82,17 @@ interface IAuthController {
 	}: {
 		query: Static<typeof logoutDeviceQuery>;
 		user: UserWithRoles;
-	}) => Promise<any>;
+	}) => Promise<IResponseData>;
 
 	logoutAll: ({
 		user,
 	}: {
 		user: UserWithRoles;
-	}) => Promise<any>;
+	}) => Promise<IResponseData>;
 
 	confirmDevice: ({
 		query,
-	}: { query: Static<typeof confirmDeviceQuery> }) => Promise<any>;
+	}: { query: Static<typeof confirmDeviceQuery> }) => Promise<IResponseData>;
 
 	magicLogin: ({
 		query,
@@ -101,11 +102,15 @@ interface IAuthController {
 		query: Static<typeof magicLoginQuery>;
 		userAgent?: IResult;
 		ip: SocketAddress | string | null | undefined;
-	}) => Promise<any>;
+	}) => Promise<IResponseData>;
 }
 
 export const authController: IAuthController = {
-	magicLogin: async ({ query: { token }, userAgent, ip }): Promise<any> => {
+	magicLogin: async ({
+		query: { token },
+		userAgent,
+		ip,
+	}): Promise<IResponseData> => {
 		const user = await db.query.users.findFirst({
 			where: eq(users.magicLoginToken, token),
 			columns: { id: true, email: true },
@@ -192,7 +197,7 @@ export const authController: IAuthController = {
 		return resBuild({ accessToken, refreshToken }, RES_KEY.MAGIC_LOGIN);
 	},
 
-	sendMagicLink: async ({ body: { email } }): Promise<any> => {
+	sendMagicLink: async ({ body: { email } }): Promise<IResponseData> => {
 		const user = await db.query.users.findFirst({
 			where: eq(users.email, email),
 			columns: {
@@ -207,37 +212,36 @@ export const authController: IAuthController = {
 		}
 		userService.checkUserStatus(user.status);
 
-		if (user.magicLoginToken) {
-			const { expiredIn } = decryptActiveAccountToken(user.magicLoginToken);
-			if (Date.now() < expiredIn) {
-				throw HttpError.BadRequest(
-					...Object.values(RES_KEY.MAGIC_LOGIN_EMAIL_RATE_LIMIT),
-				);
-			}
-		} else {
-			const newToken: string = createMagicLoginToken(user.id);
-			await db
-				.update(users)
-				.set({ magicLoginToken: newToken })
-				.where(eq(users.id, user.id));
-
-			const jobId = idGenerator(BULL_QUEUE.SEND_MAIL, BULL_JOB_ID_LENGTH);
-			const queueData = {
-				email,
-				emailType: EMAIL_TYPE.MAGIC_LOGIN,
-				data: {
-					url: encodeURI(
-						`${config.appEndpoint}${ROUTES.AUTH_V1}${AUTH_ROUTES.MAGIC_LOGIN}?token=${newToken}`,
-					),
-				},
-			} satisfies IEmailMagicLogin;
-			await sendEmailQueue.add(jobId, queueData, { jobId });
-
-			return resBuild({ id: user.id }, RES_KEY.SEND_MAGIC_LINK);
+		if (
+			user.magicLoginToken &&
+			Date.now() < decryptActiveAccountToken(user.magicLoginToken).expiredIn
+		) {
+			throw HttpError.BadRequest(
+				...Object.values(RES_KEY.MAGIC_LOGIN_EMAIL_RATE_LIMIT),
+			);
 		}
+		const newToken: string = createMagicLoginToken(user.id);
+		await db
+			.update(users)
+			.set({ magicLoginToken: newToken })
+			.where(eq(users.id, user.id));
+
+		const jobId = idGenerator(BULL_QUEUE.SEND_MAIL, BULL_JOB_ID_LENGTH);
+		const queueData = {
+			email,
+			emailType: EMAIL_TYPE.MAGIC_LOGIN,
+			data: {
+				url: encodeURI(
+					`${config.appEndpoint}${ROUTES.AUTH_V1}${AUTH_ROUTES.MAGIC_LOGIN}?token=${newToken}`,
+				),
+			},
+		} satisfies IEmailMagicLogin;
+		await sendEmailQueue.add(jobId, queueData, { jobId });
+
+		return resBuild({ id: user.id }, RES_KEY.SEND_MAGIC_LINK);
 	},
 
-	register: async ({ body }): Promise<any> => {
+	register: async ({ body }): Promise<IResponseData> => {
 		const enbRegister: string | null = await redisClient.get(
 			SETTING_KEY.ENB_REGISTER,
 		);
@@ -292,7 +296,7 @@ export const authController: IAuthController = {
 		return resBuild(user, RES_KEY.REGISTER);
 	},
 
-	login: async ({ body, userAgent, ip }): Promise<any> => {
+	login: async ({ body, userAgent, ip }): Promise<IResponseData> => {
 		const { email, password } = body;
 		const user = await db.query.users.findFirst({
 			where: eq(users.email, email),
@@ -450,7 +454,7 @@ export const authController: IAuthController = {
 		return resBuild({ accessToken, refreshToken }, RES_KEY.LOGIN);
 	},
 
-	logout: async ({ sessionId, refreshSessionId }): Promise<any> => {
+	logout: async ({ sessionId, refreshSessionId }): Promise<IResponseData> => {
 		await Promise.allSettled([
 			sessionService.removeSessionById(sessionId),
 			db
@@ -464,7 +468,7 @@ export const authController: IAuthController = {
 		return resBuild(null, RES_KEY.LOGOUT);
 	},
 
-	logoutAll: async ({ user }): Promise<any> => {
+	logoutAll: async ({ user }): Promise<IResponseData> => {
 		await Promise.allSettled([
 			sessionService.removeSessionByUserId(user.id),
 			db.delete(refreshTokens).where(eq(refreshTokens.userId, user.id)),
@@ -476,7 +480,10 @@ export const authController: IAuthController = {
 		return resBuild(null, RES_KEY.LOGOUT_ALL);
 	},
 
-	logoutDevice: async ({ user, query: { deviceId } }): Promise<any> => {
+	logoutDevice: async ({
+		user,
+		query: { deviceId },
+	}): Promise<IResponseData> => {
 		const device = await db.query.devices.findFirst({
 			where: and(eq(devices.id, deviceId), eq(devices.userId, user.id)),
 			columns: { sessionId: true },
@@ -499,7 +506,7 @@ export const authController: IAuthController = {
 		return resBuild(null, RES_KEY.LOGOUT_DEVICE);
 	},
 
-	confirmDevice: async ({ query }): Promise<any> => {
+	confirmDevice: async ({ query }): Promise<IResponseData> => {
 		const { token } = query;
 		if (!token) {
 			throw HttpError.BadRequest(...Object.values(RES_KEY.DEVICE_TOKEN_WRONG));

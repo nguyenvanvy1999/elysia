@@ -6,6 +6,7 @@ import {
 	EMAIL_TYPE,
 	type IEmailActiveAccount,
 	type IEmailWelcome,
+	type IResponseData,
 	RES_KEY,
 	ROUTES,
 	USER_ROUTES,
@@ -27,19 +28,21 @@ import {
 type IUserController = {
 	sendEmailVerifyAccount: ({
 		body,
-	}: { body: Static<typeof sendEmailVerifyBody> }) => Promise<any>;
+	}: { body: Static<typeof sendEmailVerifyBody> }) => Promise<IResponseData>;
 
 	activeAccount: ({
 		query,
-	}: { query: Static<typeof verifyAccountQuery> }) => Promise<any>;
+	}: { query: Static<typeof verifyAccountQuery> }) => Promise<IResponseData>;
 
-	userInfo: ({ user }: { user: UserWithRoles }) => Promise<any>;
+	userInfo: ({ user }: { user: UserWithRoles }) => Promise<IResponseData>;
 
-	userById: ({ params }: { params: Static<typeof userParam> }) => Promise<any>;
+	userById: ({
+		params,
+	}: { params: Static<typeof userParam> }) => Promise<IResponseData>;
 };
 
 export const userController: IUserController = {
-	sendEmailVerifyAccount: async ({ body }): Promise<any> => {
+	sendEmailVerifyAccount: async ({ body }): Promise<IResponseData> => {
 		const { email } = body;
 		const user = await db.query.users.findFirst({
 			where: eq(users.email, email),
@@ -68,36 +71,35 @@ export const userController: IUserController = {
 				break;
 		}
 
-		if (user.activeAccountToken) {
-			const { expiredIn } = decryptActiveAccountToken(user.activeAccountToken);
-			if (Date.now() < expiredIn) {
-				throw HttpError.BadRequest(
-					...Object.values(RES_KEY.ACTIVE_ACCOUNT_EMAIL_RATE_LIMIT),
-				);
-			}
-		} else {
-			const newToken: string = createActiveAccountToken(user.id);
-			await db
-				.update(users)
-				.set({ activeAccountToken: newToken })
-				.where(eq(users.id, user.id));
-
-			const jobId = idGenerator(BULL_QUEUE.SEND_MAIL, BULL_JOB_ID_LENGTH);
-			const queueData = {
-				email,
-				emailType: EMAIL_TYPE.VERIFY_ACCOUNT,
-				data: {
-					url: encodeURI(
-						`${config.appEndpoint}${ROUTES.USER_V1}${USER_ROUTES.ACTIVE_ACCOUNT}?token=${newToken}`,
-					),
-				},
-			} satisfies IEmailActiveAccount;
-			await sendEmailQueue.add(jobId, queueData, { jobId });
-			return resBuild(null, RES_KEY.SEND_EMAIL_VERIFY_ACCOUNT);
+		if (
+			user.activeAccountToken &&
+			Date.now() < decryptActiveAccountToken(user.activeAccountToken).expiredIn
+		) {
+			throw HttpError.BadRequest(
+				...Object.values(RES_KEY.ACTIVE_ACCOUNT_EMAIL_RATE_LIMIT),
+			);
 		}
+		const newToken: string = createActiveAccountToken(user.id);
+		await db
+			.update(users)
+			.set({ activeAccountToken: newToken })
+			.where(eq(users.id, user.id));
+
+		const jobId = idGenerator(BULL_QUEUE.SEND_MAIL, BULL_JOB_ID_LENGTH);
+		const queueData = {
+			email,
+			emailType: EMAIL_TYPE.VERIFY_ACCOUNT,
+			data: {
+				url: encodeURI(
+					`${config.appEndpoint}${ROUTES.USER_V1}${USER_ROUTES.ACTIVE_ACCOUNT}?token=${newToken}`,
+				),
+			},
+		} satisfies IEmailActiveAccount;
+		await sendEmailQueue.add(jobId, queueData, { jobId });
+		return resBuild(null, RES_KEY.SEND_EMAIL_VERIFY_ACCOUNT);
 	},
 
-	activeAccount: async ({ query }): Promise<any> => {
+	activeAccount: async ({ query }): Promise<IResponseData> => {
 		const { token } = query;
 		if (!token) {
 			throw HttpError.BadRequest(
@@ -136,7 +138,7 @@ export const userController: IUserController = {
 		return resBuild(null, RES_KEY.VERIFY_ACCOUNT);
 	},
 
-	userInfo: async ({ user }): Promise<any> => {
+	userInfo: async ({ user }): Promise<IResponseData> => {
 		return resBuild(
 			{
 				id: user.id,
@@ -151,7 +153,7 @@ export const userController: IUserController = {
 		);
 	},
 
-	userById: async ({ params: { id } }): Promise<any> => {
+	userById: async ({ params: { id } }): Promise<IResponseData> => {
 		const user: UserWithRoles | undefined = await userService.getUserDetail(id);
 		if (!user) {
 			throw HttpError.NotFound(...Object.values(RES_KEY.USER_NOT_FOUND));

@@ -2,6 +2,7 @@ import { and, asc, eq, ilike, inArray, ne, or } from "drizzle-orm";
 import type { Static } from "elysia";
 import {
 	ID_PREFIX,
+	type IResponseData,
 	RES_KEY,
 	ROLE_NAME,
 	type createRoleBody,
@@ -30,21 +31,29 @@ import {
 } from "src/util";
 
 interface IRoleController {
-	create: ({ body }: { body: Static<typeof createRoleBody> }) => Promise<any>;
+	create: ({
+		body,
+	}: { body: Static<typeof createRoleBody> }) => Promise<IResponseData>;
 	update: ({
 		body,
 		params,
 	}: {
 		body: Static<typeof updateRoleBody>;
 		params: Static<typeof roleParam>;
-	}) => Promise<any>;
-	delete: ({ params }: { params: Static<typeof roleParam> }) => Promise<any>;
-	get: ({ params }: { params: Static<typeof roleParam> }) => Promise<any>;
-	getList: ({ query }: { query: Static<typeof listRoleQuery> }) => Promise<any>;
+	}) => Promise<IResponseData>;
+	delete: ({
+		params,
+	}: { params: Static<typeof roleParam> }) => Promise<IResponseData>;
+	get: ({
+		params,
+	}: { params: Static<typeof roleParam> }) => Promise<IResponseData>;
+	getList: ({
+		query,
+	}: { query: Static<typeof listRoleQuery> }) => Promise<IResponseData>;
 }
 
 export const roleController: IRoleController = {
-	create: async ({ body }): Promise<any> => {
+	create: async ({ body }): Promise<IResponseData> => {
 		const { name, description } = body;
 		const permissionIds = uniqueArr(body.permissionIds);
 
@@ -88,7 +97,7 @@ export const roleController: IRoleController = {
 		);
 	},
 
-	update: async ({ body, params: { id } }): Promise<any> => {
+	update: async ({ body, params: { id } }): Promise<IResponseData> => {
 		const { description } = body;
 		const name = body.name.toLowerCase();
 		const permissionIds = uniqueArr(body.permissionIds);
@@ -162,7 +171,7 @@ export const roleController: IRoleController = {
 		);
 	},
 
-	delete: async ({ params: { id } }): Promise<any> => {
+	delete: async ({ params: { id } }): Promise<IResponseData> => {
 		const exist = await db.query.roles.findFirst({
 			where: eq(roles.id, id),
 			columns: { id: true, name: true },
@@ -188,7 +197,7 @@ export const roleController: IRoleController = {
 		return resBuild({ id: result.id }, RES_KEY.DELETE_ROLE);
 	},
 
-	get: async ({ params: { id } }): Promise<any> => {
+	get: async ({ params: { id } }): Promise<IResponseData> => {
 		const role = await db.query.roles.findFirst({
 			where: eq(settings.id, id),
 			columns: { createdAt: false, updatedAt: false },
@@ -203,7 +212,9 @@ export const roleController: IRoleController = {
 		);
 	},
 
-	getList: async ({ query: { limit, offset, search } }): Promise<any> => {
+	getList: async ({
+		query: { limit, offset, search },
+	}): Promise<IResponseData> => {
 		limit = getLimit(limit);
 		offset = getOffset(offset);
 		const [data, count] = await Promise.all([

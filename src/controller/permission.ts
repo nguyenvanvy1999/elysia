@@ -1,6 +1,10 @@
 import { and, asc, eq, ilike, or } from "drizzle-orm";
 import type { Static } from "elysia";
-import { RES_KEY, type listPermissionQuery } from "src/common";
+import {
+	type IResponseData,
+	RES_KEY,
+	type listPermissionQuery,
+} from "src/common";
 import { db } from "src/config";
 import { permissions } from "src/db";
 import { resBuild } from "src/util";
@@ -8,13 +12,13 @@ import { resBuild } from "src/util";
 interface IPermissionController {
 	getList: ({
 		query,
-	}: { query: Static<typeof listPermissionQuery> }) => Promise<any>;
+	}: { query: Static<typeof listPermissionQuery> }) => Promise<IResponseData>;
 }
 
 export const permissionController: IPermissionController = {
 	getList: async ({
 		query: { search, entity, action, access },
-	}): Promise<any> => {
+	}): Promise<IResponseData> => {
 		const data = await db
 			.select()
 			.from(permissions)
