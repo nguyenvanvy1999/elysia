@@ -2,4 +2,4 @@
 # always enable coverage
 coverage = false
 
-preload = ["./src/config/env.ts", "./src/config/setting.ts"]
+preload = ["./src/config/env.ts"]
